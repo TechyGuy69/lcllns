@@ -1,6 +1,12 @@
 {
   "placeholderImages": [
     {
+      "id": "hero-india",
+      "description": "Cinematic archway view of Taj Mahal",
+      "imageUrl": "https://picsum.photos/seed/india-hero/1920/1080",
+      "imageHint": "india travel"
+    },
+    {
       "id": "kolkata-cafe",
       "description": "Artisan cafe in Kolkata",
       "imageUrl": "https://picsum.photos/seed/kol-cafe/800/600",
@@ -35,12 +41,6 @@
       "description": "Quiet beach in South Goa",
       "imageUrl": "https://picsum.photos/seed/goa-beach/800/600",
       "imageHint": "goa beach"
-    },
-    {
-      "id": "map-bg",
-      "description": "Abstract dark map background",
-      "imageUrl": "https://picsum.photos/seed/dark-map/1920/1080",
-      "imageHint": "dark map"
     }
   ]
 }
