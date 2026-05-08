@@ -45,7 +45,7 @@ const SUGGESTIONS = [
 export default function LocalLensApp() {
   const db = useFirestore();
   const placesCollection = useMemo(() => collection(db, 'places'), [db]);
-  const { data: firestorePlaces, loading } = useCollection(placesCollection);
+  const { data: firestorePlaces, loading: firestoreLoading } = useCollection(placesCollection);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [mode, setMode] = useState<'tourist' | 'hidden'>('tourist');
@@ -180,7 +180,16 @@ export default function LocalLensApp() {
               {SUGGESTIONS.map((s) => (
                 <button 
                   key={s}
-                  onClick={() => { setSearchQuery(s); setIsExploring(true); }}
+                  onClick={() => { 
+                    setSearchQuery(s); 
+                    // Set mode automatically based on suggestions
+                    if (s.toLowerCase().includes('hidden') || s.toLowerCase().includes('gems')) {
+                      setMode('hidden');
+                    } else {
+                      setMode('tourist');
+                    }
+                    setIsExploring(true); 
+                  }}
                   className="px-5 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/30 text-white text-[9px] md:text-[10px] font-bold hover:bg-white/30 transition-all shadow-sm uppercase tracking-widest"
                 >
                   {s}
