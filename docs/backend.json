@@ -1,0 +1,35 @@
+
+{
+  "entities": {
+    "Place": {
+      "title": "Place",
+      "description": "A curated travel destination, either a tourist favorite or a hidden gem.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Name of the place" },
+        "city": { "type": "string", "description": "City where the place is located" },
+        "category": { "type": "string", "enum": ["Cafe", "Park", "Historic", "Beach", "Nature"] },
+        "description": { "type": "string", "description": "Detailed description of the place" },
+        "imageUrl": { "type": "string", "description": "URL to the place's image" },
+        "crowdLevel": { "type": "string", "enum": ["Low", "Medium", "High"] },
+        "authenticityScore": { "type": "number", "description": "Score from 0-100 indicating local feel" },
+        "rating": { "type": "number" },
+        "reviews": { "type": "number" },
+        "lat": { "type": "number" },
+        "lng": { "type": "number" },
+        "isTouristFavorite": { "type": "boolean" },
+        "isHiddenGem": { "type": "boolean" }
+      },
+      "required": ["name", "city", "category", "lat", "lng"]
+    }
+  },
+  "auth": {
+    "providers": ["google.com"]
+  },
+  "firestore": {
+    "/places/{placeId}": {
+      "schema": "Place",
+      "description": "Collection of all curated travel spots in India."
+    }
+  }
+}

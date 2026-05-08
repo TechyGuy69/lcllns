@@ -1,8 +1,9 @@
+
 "use client"
 
-import React from 'react';
+import React, { useCallback, useState } from 'react';
+import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 import { Place } from '@/lib/mock-data';
-import { MapPin } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface InteractiveMapProps {
@@ -11,62 +12,102 @@ interface InteractiveMapProps {
   onPlaceSelect: (place: Place) => void;
 }
 
+const containerStyle = {
+  width: '100%',
+  height: '100%'
+};
+
+const defaultCenter = {
+  lat: 20.5937,
+  lng: 78.9629
+};
+
+const mapOptions = {
+  disableDefaultUI: true,
+  styles: [
+    {
+      "featureType": "all",
+      "elementType": "geometry.fill",
+      "stylers": [{ "color": "#fdf8f4" }]
+    },
+    {
+      "featureType": "water",
+      "elementType": "geometry",
+      "stylers": [{ "color": "#e0e0e0" }]
+    },
+    {
+      "featureType": "poi",
+      "stylers": [{ "visibility": "off" }]
+    },
+    {
+      "featureType": "administrative",
+      "elementType": "labels.text.fill",
+      "stylers": [{ "color": "#444444" }]
+    },
+    {
+      "featureType": "landscape",
+      "elementType": "all",
+      "stylers": [{ "color": "#fdf8f4" }]
+    },
+    {
+      "featureType": "road",
+      "elementType": "all",
+      "stylers": [{ "visibility": "off" }]
+    }
+  ]
+};
+
 export function InteractiveMap({ places, selectedPlace, onPlaceSelect }: InteractiveMapProps) {
+  const { isLoaded } = useJsApiLoader({
+    id: 'google-map-script',
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''
+  });
+
+  const [map, setMap] = useState<google.maps.Map | null>(null);
+
+  const onLoad = useCallback(function callback(map: google.maps.Map) {
+    setMap(map);
+  }, []);
+
+  const onUnmount = useCallback(function callback() {
+    setMap(null);
+  }, []);
+
+  if (!isLoaded) return (
+    <div className="w-full h-full bg-secondary/20 flex items-center justify-center animate-pulse">
+      <span className="text-[10px] font-bold tracking-widest uppercase opacity-40">Loading Map Intelligence...</span>
+    </div>
+  );
+
   return (
     <div className="relative w-full h-full bg-background overflow-hidden">
-      {/* Subtle Map Grid */}
-      <div className="absolute inset-0 opacity-[0.05]" 
-           style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, #000 1px, transparent 0)', backgroundSize: '60px 60px' }} />
-      
-      {/* India Background Label */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-[0.03]">
-        <h2 className="text-[20vw] font-headline font-bold text-primary uppercase tracking-tighter">Bharat</h2>
-      </div>
-
-      {/* Markers */}
-      <div className="absolute inset-0">
-        {places.map((place) => {
-          // Heuristic coordinate mapping for demo purposes
-          const x = ((place.lng - 68) / (97 - 68)) * 70 + 15;
-          const y = (1 - (place.lat - 8) / (37 - 8)) * 70 + 15;
-          const isSelected = selectedPlace?.id === place.id;
-
-          return (
-            <button
-              key={place.id}
-              onClick={() => onPlaceSelect(place)}
-              className={cn(
-                "absolute -translate-x-1/2 -translate-y-1/2 p-2 transition-all duration-500",
-                "hover:scale-110 focus:outline-none group",
-                isSelected ? "z-30 scale-125" : "z-10"
-              )}
-              style={{ left: `${x}%`, top: `${y}%` }}
-            >
-              <div className="relative">
-                <div className={cn(
-                  "relative bg-white border-2 rounded-full p-2.5 md:p-3.5 shadow-xl transition-all duration-300",
-                  isSelected ? "border-accent scale-110 shadow-accent/20" : "border-primary/5 group-hover:border-accent/40"
-                )}>
-                  <MapPin className={cn(
-                    "w-5 h-5 md:w-6 md:h-6 transition-colors",
-                    isSelected ? "text-accent fill-accent/20" : "text-primary/30 group-hover:text-accent"
-                  )} />
-                </div>
-
-                <div className={cn(
-                  "absolute top-full left-1/2 -translate-x-1/2 mt-3 px-4 py-2 rounded-full bg-white shadow-xl border border-border/50 whitespace-nowrap text-[9px] md:text-[10px] font-bold tracking-widest text-primary uppercase transition-all duration-500",
-                  isSelected ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0"
-                )}>
-                  {place.name}
-                </div>
-              </div>
-            </button>
-          );
-        })}
-      </div>
+      <GoogleMap
+        mapContainerStyle={containerStyle}
+        center={selectedPlace ? { lat: selectedPlace.lat, lng: selectedPlace.lng } : defaultCenter}
+        zoom={selectedPlace ? 12 : 5}
+        onLoad={onLoad}
+        onUnmount={onUnmount}
+        options={mapOptions}
+      >
+        {places.map((place) => (
+          <Marker
+            key={place.id}
+            position={{ lat: place.lat, lng: place.lng }}
+            onClick={() => onPlaceSelect(place)}
+            icon={{
+              path: google.maps.SymbolPath.CIRCLE,
+              scale: selectedPlace?.id === place.id ? 10 : 7,
+              fillColor: place.isHiddenGem ? '#1a2e1a' : '#2b221a',
+              fillOpacity: 1,
+              strokeWeight: 2,
+              strokeColor: '#ffffff',
+            }}
+          />
+        ))}
+      </GoogleMap>
 
       {/* Legend */}
-      <div className="absolute bottom-48 left-8 pointer-events-none hidden lg:block">
+      <div className="absolute bottom-48 left-8 pointer-events-none hidden lg:block z-20">
         <div className="bg-white/80 backdrop-blur-md px-6 py-4 rounded-[2rem] shadow-xl border border-white/40 flex flex-col gap-3">
           <div className="flex items-center gap-3">
             <div className="w-2 h-2 rounded-full bg-primary" />

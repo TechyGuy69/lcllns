@@ -1,3 +1,4 @@
+
 "use client"
 
 import React, { useState, useMemo, useEffect } from 'react';
@@ -11,6 +12,8 @@ import { Toaster } from '@/components/ui/toaster';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { useFirestore, useCollection } from '@/firebase';
+import { collection, query, limit, getDocs, addDoc } from 'firebase/firestore';
 
 const HERO_IMAGES = [
   {
@@ -40,12 +43,31 @@ const SUGGESTIONS = [
 ];
 
 export default function LocalLensApp() {
+  const db = useFirestore();
+  const placesCollection = useMemo(() => collection(db, 'places'), [db]);
+  const { data: firestorePlaces, loading } = useCollection(placesCollection);
+
   const [searchQuery, setSearchQuery] = useState('');
   const [mode, setMode] = useState<'tourist' | 'hidden'>('tourist');
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   const [isPanelExpanded, setIsPanelExpanded] = useState(false);
   const [isExploring, setIsExploring] = useState(false);
   const [heroIndex, setHeroIndex] = useState(0);
+
+  // One-time seed function to populate Firestore with mock data if it's empty
+  useEffect(() => {
+    async function seedData() {
+      const q = query(collection(db, 'places'), limit(1));
+      const snapshot = await getDocs(q);
+      if (snapshot.empty) {
+        MOCK_PLACES.forEach(place => {
+          const { id, ...data } = place;
+          addDoc(collection(db, 'places'), data);
+        });
+      }
+    }
+    seedData();
+  }, [db]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -54,21 +76,22 @@ export default function LocalLensApp() {
     return () => clearInterval(interval);
   }, []);
 
+  const places = (firestorePlaces as Place[]) || [];
+
   const filteredPlaces = useMemo(() => {
     const queryWords = searchQuery.toLowerCase().split(/\s+/).filter(Boolean);
     
-    return MOCK_PLACES.filter((place) => {
+    return places.filter((place) => {
       const matchesMode = mode === 'tourist' ? place.isTouristFavorite : place.isHiddenGem;
       
       if (queryWords.length === 0) return matchesMode;
       
-      // If user typed "Mumbai cafes", we want words to match across city, category, or name
       const searchableText = `${place.name} ${place.city} ${place.category} ${place.description}`.toLowerCase();
       const matchesSearch = queryWords.every(word => searchableText.includes(word));
 
       return matchesSearch && matchesMode;
     });
-  }, [searchQuery, mode]);
+  }, [searchQuery, mode, places]);
 
   const handlePlaceSelect = (place: Place) => {
     setSelectedPlace(place);
@@ -121,14 +144,13 @@ export default function LocalLensApp() {
         <div className="absolute inset-0 flex flex-col items-center justify-center px-4 md:px-8 text-center z-10">
           <div className="mb-8 md:mb-12 max-w-4xl transform animate-in fade-in slide-in-from-bottom-8 duration-1000">
             <h1 className="font-headline font-bold text-white tracking-tight leading-tight text-4xl md:text-7xl mb-4 md:mb-6 text-shadow-strong">
-              See India <span className="italic font-normal">differently.</span>
+              See India differently.
             </h1>
             <p className="text-sm md:text-lg text-white font-medium max-w-xl mx-auto leading-relaxed text-shadow-soft opacity-90">
               Skip the crowds. Discover the quiet sanctuaries and local haunts where India truly lives.
             </p>
           </div>
 
-          {/* Search Bar */}
           <div className="w-full max-w-3xl px-4 animate-in zoom-in-95 duration-700 delay-300">
             <div className="bg-white/95 backdrop-blur-md rounded-full p-1 md:p-1.5 flex items-center shadow-2xl border border-white/40">
               <div className="pl-4 md:pl-5 text-primary/60">
@@ -169,7 +191,6 @@ export default function LocalLensApp() {
         "absolute inset-0 z-20 bg-background transition-transform duration-1000 ease-in-out flex flex-col overflow-hidden",
         isExploring ? "translate-x-0" : "translate-x-full"
       )}>
-        {/* Navigation / Header */}
         <header className="relative z-30 flex items-center justify-between px-6 py-6 md:px-12">
           <button 
             onClick={goHome}
@@ -199,7 +220,7 @@ export default function LocalLensApp() {
             </button>
           </div>
           
-          <div className="w-20 hidden md:block" /> {/* Spacer */}
+          <div className="w-20 hidden md:block" />
         </header>
 
         <div className="flex-1 relative">
@@ -218,7 +239,6 @@ export default function LocalLensApp() {
         </div>
       </section>
 
-      {/* Place Detail View (Slides from right over everything) */}
       <PlaceDetailView 
         place={selectedPlace} 
         onClose={closePlaceDetail} 
