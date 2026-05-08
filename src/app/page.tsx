@@ -34,7 +34,6 @@ export default function LocalLensApp() {
   const [isPanelExpanded, setIsPanelExpanded] = useState(false);
   const [isExploring, setIsExploring] = useState(false);
 
-  // Seed initial data if Firestore is empty (Client-side only)
   useEffect(() => {
     async function seedData() {
       if (!db) return;
@@ -55,7 +54,6 @@ export default function LocalLensApp() {
     seedData();
   }, [db]);
 
-  // Stable data filtering to prevent hydration mismatches
   const allPlaces = useMemo(() => {
     if (firestorePlaces && firestorePlaces.length > 0) {
       return firestorePlaces.filter((p: any) => p.lat && p.lng) as Place[];
@@ -67,7 +65,6 @@ export default function LocalLensApp() {
     const queryWords = searchQuery.toLowerCase().split(/\s+/).filter(Boolean);
     
     return allPlaces.filter((place) => {
-      // Dynamic Mode Filtering Logic
       let matchesMode = false;
       if (mode === 'tourist') {
         matchesMode = (place.rating >= 4.2 && place.reviewCount > 800);
@@ -77,7 +74,6 @@ export default function LocalLensApp() {
 
       if (!matchesMode) return false;
 
-      // Search filtering
       if (queryWords.length === 0) return true;
       const searchableText = `${place.name} ${place.city} ${place.category} ${place.description}`.toLowerCase();
       return queryWords.every(word => searchableText.includes(word));
@@ -112,13 +108,11 @@ export default function LocalLensApp() {
   return (
     <main className="relative min-h-screen w-full bg-black overflow-hidden selection:bg-accent/30 selection:text-white">
       
-      {/* Home Page Section */}
       <section className={cn(
         "absolute inset-0 z-10 transition-transform duration-1000 ease-in-out min-h-screen flex items-center justify-center",
         isExploring ? "-translate-y-full" : "translate-y-0"
       )}>
         
-        {/* Background Layer */}
         <div className="absolute inset-0 z-0 bg-neutral-950">
           <Image
             src={STATIC_HERO_IMAGE}
@@ -131,12 +125,10 @@ export default function LocalLensApp() {
           <div className="absolute inset-0 bg-black/45 z-10" />
         </div>
 
-        {/* Branding */}
         <div className="absolute top-6 left-6 text-white text-xl font-bold tracking-tight z-30 animate-in fade-in duration-1000">
           LocalLens
         </div>
 
-        {/* Hero Content */}
         <div className="relative z-30 w-full max-w-5xl px-6 flex flex-col items-center text-center space-y-12">
           
           <div className="space-y-6">
@@ -151,14 +143,13 @@ export default function LocalLensApp() {
           </div>
 
           <div className="flex flex-col items-center space-y-10 w-full animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-400">
-            {/* Search Bar */}
-            <div className="w-full flex items-center bg-white/95 backdrop-blur-xl rounded-full p-1.5 border border-white/20 shadow-2xl max-w-2xl transition-all group focus-within:ring-2 focus-within:ring-green-600/30">
+            <div className="w-full flex items-center bg-white rounded-full p-1.5 border border-white/20 shadow-2xl max-w-2xl transition-all duration-500 ease-in-out group focus-within:bg-white/40 focus-within:backdrop-blur-xl focus-within:ring-2 focus-within:ring-white/50">
               <input 
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && onExplore()}
                 placeholder="Find a hidden café or quiet trail..."
-                className="flex-1 bg-transparent outline-none text-gray-800 px-6 text-sm md:text-lg h-12 md:h-14 placeholder:text-gray-400"
+                className="flex-1 bg-transparent outline-none text-gray-800 focus-within:text-white transition-colors duration-500 px-6 text-sm md:text-lg h-12 md:h-14 placeholder:text-gray-400"
               />
               <button 
                 onClick={onExplore}
@@ -168,7 +159,6 @@ export default function LocalLensApp() {
               </button>
             </div>
 
-            {/* Quick Shortcuts */}
             <div className="flex flex-wrap justify-center gap-3">
               {SHORTCUTS.map((shortcut) => (
                 <button 
@@ -184,7 +174,6 @@ export default function LocalLensApp() {
         </div>
       </section>
 
-      {/* Discovery Page Section */}
       <section className={cn(
         "absolute inset-0 z-20 bg-background transition-transform duration-1000 ease-in-out flex flex-col overflow-hidden min-h-screen",
         isExploring ? "translate-y-0" : "translate-y-full"
