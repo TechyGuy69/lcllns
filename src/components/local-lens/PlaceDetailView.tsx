@@ -36,7 +36,6 @@ export function PlaceDetailView({ place, onClose }: PlaceDetailViewProps) {
       return;
     }
 
-    // Automatically trigger analysis for premium feel
     const runAnalysis = async () => {
       setIsAnalyzing(true);
       try {
@@ -52,159 +51,139 @@ export function PlaceDetailView({ place, onClose }: PlaceDetailViewProps) {
     runAnalysis();
   }, [place]);
 
-  if (!place) return null;
-
   return (
     <div 
       className={cn(
-        "fixed inset-0 z-[100] bg-background transition-all duration-700 ease-in-out transform",
-        place ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"
+        "fixed inset-0 z-[100] bg-background transition-all duration-700 ease-in-out transform flex flex-col md:flex-row overflow-hidden",
+        place ? "translate-x-0" : "translate-x-full"
       )}
     >
-      <div className="relative h-full w-full flex flex-col md:flex-row overflow-y-auto no-scrollbar">
-        
-        {/* Back Button */}
-        <button 
-          onClick={onClose}
-          className="absolute top-6 left-6 z-50 bg-white/80 backdrop-blur-md p-3 rounded-full shadow-xl border border-white hover:scale-110 transition-all"
-        >
-          <ArrowLeft className="w-5 h-5 text-primary" />
-        </button>
+      {place && (
+        <>
+          {/* Back Button */}
+          <button 
+            onClick={onClose}
+            className="absolute top-6 left-6 z-50 bg-white/90 backdrop-blur-md p-3 rounded-full shadow-2xl border border-white hover:scale-110 active:scale-95 transition-all"
+          >
+            <ArrowLeft className="w-5 h-5 text-primary" />
+          </button>
 
-        {/* Visual Column */}
-        <div className="relative w-full md:w-1/2 h-[50vh] md:h-full shrink-0">
-          <Image 
-            src={place.imageUrl} 
-            alt={place.name}
-            fill
-            className="object-cover"
-            priority
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent md:bg-gradient-to-r" />
-          
-          <div className="absolute bottom-8 left-8 right-8 text-white md:hidden">
-            <h1 className="text-3xl font-headline font-bold mb-2">{place.name}</h1>
-            <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest opacity-90">
-              <MapPin className="w-4 h-4 text-accent" />
-              {place.city}
-            </div>
-          </div>
-        </div>
-
-        {/* Content Column */}
-        <div className="flex-1 bg-background p-8 md:p-16 flex flex-col gap-10">
-          <div className="hidden md:block">
-            <Badge className="mb-4 bg-accent/10 text-accent hover:bg-accent/20 border-0 px-4 py-1.5 rounded-full font-bold uppercase tracking-[0.2em] text-[10px]">
-              {place.category}
-            </Badge>
-            <h1 className="text-5xl font-headline font-bold text-primary mb-4 leading-tight">
-              {place.name}
-            </h1>
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-muted-foreground">
-              <MapPin className="w-4 h-4 text-accent" />
-              {place.city}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div className="flex flex-col gap-1">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Rating</span>
-              <div className="flex items-center gap-1.5 text-lg font-bold text-amber-600">
-                <Star className="w-4 h-4 fill-current" />
-                {place.rating}
-              </div>
-            </div>
-            <div className="flex flex-col gap-1">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Reviews</span>
-              <div className="text-lg font-bold text-primary">
-                {place.reviews.toLocaleString()}
-              </div>
-            </div>
-            <div className="flex flex-col gap-1">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Crowd</span>
-              <div className="flex items-center gap-1.5 text-lg font-bold text-primary">
-                <Users className="w-4 h-4 opacity-60" />
-                {place.crowdLevel}
-              </div>
-            </div>
-            <div className="flex flex-col gap-1">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Local Feel</span>
-              <div className="flex items-center gap-1.5 text-lg font-bold text-accent">
-                <Sparkles className="w-4 h-4" />
-                {place.authenticityScore}%
+          {/* Image Column */}
+          <div className="relative w-full md:w-1/2 h-[45vh] md:h-full shrink-0">
+            <Image 
+              src={place.imageUrl} 
+              alt={place.name}
+              fill
+              className="object-cover"
+              priority
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent md:bg-gradient-to-r md:from-black/40 md:to-transparent" />
+            
+            <div className="absolute bottom-10 left-10 right-10 text-white">
+              <Badge className="mb-4 bg-white/20 backdrop-blur-md text-white border-white/30 px-4 py-1.5 rounded-full font-bold uppercase tracking-[0.2em] text-[10px]">
+                {place.category}
+              </Badge>
+              <h1 className="text-4xl md:text-6xl font-headline font-bold mb-4 leading-tight text-shadow-strong">
+                {place.name}
+              </h1>
+              <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest opacity-90">
+                <MapPin className="w-5 h-5 text-accent" />
+                {place.city}
               </div>
             </div>
           </div>
 
-          <div className="max-w-2xl">
-            <h2 className="text-[10px] font-bold uppercase tracking-[0.25em] text-muted-foreground mb-4">About this experience</h2>
-            <p className="text-lg text-primary/80 font-medium leading-relaxed font-body">
-              {place.description}
-            </p>
-          </div>
-
-          {/* AI Analysis Section */}
-          <div className="mt-auto pt-10 border-t border-border/60">
-            <div className="bg-accent/5 rounded-[2.5rem] p-8 md:p-10 border border-accent/10 relative overflow-hidden group">
-              <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:scale-110 transition-transform">
-                <Sparkles className="w-24 h-24 text-accent" />
-              </div>
-
-              <div className="relative z-10">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="bg-accent text-white p-2 rounded-full shadow-lg shadow-accent/20">
-                    <ShieldCheck className="w-5 h-5" />
+          {/* Content Column */}
+          <div className="flex-1 bg-background h-[55vh] md:h-full overflow-y-auto no-scrollbar p-8 md:p-20 flex flex-col gap-12">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+              {[
+                { label: 'Rating', val: place.rating, icon: <Star className="w-4 h-4 fill-current text-amber-500" /> },
+                { label: 'Reviews', val: place.reviews.toLocaleString(), icon: <Users className="w-4 h-4 text-muted-foreground" /> },
+                { label: 'Crowd', val: place.crowdLevel, icon: <div className="w-4 h-4 rounded-full bg-primary/20 flex items-center justify-center text-[10px]">!</div> },
+                { label: 'Local Vibe', val: `${place.authenticityScore}%`, icon: <Sparkles className="w-4 h-4 text-accent" /> },
+              ].map((stat, i) => (
+                <div key={i} className="flex flex-col gap-2">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{stat.label}</span>
+                  <div className="flex items-center gap-2 text-xl font-bold text-primary">
+                    {stat.icon}
+                    {stat.val}
                   </div>
-                  <h3 className="text-sm font-bold uppercase tracking-widest text-primary">Intelligent Analysis</h3>
+                </div>
+              ))}
+            </div>
+
+            <div className="max-w-3xl">
+              <h2 className="text-[10px] font-bold uppercase tracking-[0.3em] text-muted-foreground mb-6">Discovery Details</h2>
+              <p className="text-xl md:text-2xl text-primary/80 font-medium leading-relaxed font-body italic">
+                {place.description}
+              </p>
+            </div>
+
+            {/* AI Analysis Section */}
+            <div className="mt-auto pt-12 border-t border-border/60">
+              <div className="bg-accent/5 rounded-[3rem] p-8 md:p-12 border border-accent/10 relative overflow-hidden group">
+                <div className="absolute top-0 right-0 p-12 opacity-[0.03] group-hover:scale-110 transition-transform duration-1000">
+                  <Sparkles className="w-48 h-48 text-accent" />
                 </div>
 
-                {isAnalyzing ? (
-                  <div className="flex flex-col gap-4 animate-pulse">
-                    <div className="h-4 w-32 bg-accent/20 rounded-full" />
-                    <div className="h-20 w-full bg-accent/10 rounded-2xl" />
+                <div className="relative z-10">
+                  <div className="flex items-center gap-3 mb-8">
+                    <div className="bg-accent text-white p-2.5 rounded-full shadow-lg shadow-accent/20">
+                      <ShieldCheck className="w-5 h-5" />
+                    </div>
+                    <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-primary">Expert AI Intelligence</h3>
                   </div>
-                ) : aiAnalysis ? (
-                  <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-                    <div className="flex items-center gap-4">
-                      <div className="flex flex-col">
-                        <span className="text-[9px] font-bold uppercase tracking-widest text-accent mb-1">Authenticity Score</span>
-                        <span className="text-4xl font-headline font-bold text-accent">{aiAnalysis.authenticityScore}/100</span>
-                      </div>
-                      <div className="h-10 w-px bg-accent/20 mx-2" />
-                      <div className="flex flex-col">
-                        <span className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground mb-1">Status</span>
-                        <Badge className={cn(
-                          "uppercase tracking-widest text-[9px] px-3 py-1 rounded-full",
-                          aiAnalysis.isHiddenGem ? "bg-accent text-white" : "bg-muted text-muted-foreground"
-                        )}>
-                          {aiAnalysis.isHiddenGem ? 'Hidden Gem' : 'Tourist Spot'}
-                        </Badge>
+
+                  {isAnalyzing ? (
+                    <div className="flex flex-col gap-6">
+                      <div className="h-6 w-48 bg-accent/10 rounded-full animate-pulse" />
+                      <div className="space-y-3">
+                        <div className="h-4 w-full bg-accent/5 rounded-full animate-pulse" />
+                        <div className="h-4 w-5/6 bg-accent/5 rounded-full animate-pulse" />
                       </div>
                     </div>
-                    
-                    <div>
-                      <span className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-1.5 mb-3">
-                        <Info className="w-3 h-3" /> Expert Reasoning
-                      </span>
-                      <p className="text-sm md:text-base text-primary/70 font-medium leading-relaxed italic">
-                        "{aiAnalysis.reasoning}"
-                      </p>
+                  ) : aiAnalysis ? (
+                    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+                      <div className="flex items-center gap-8">
+                        <div>
+                          <span className="text-[10px] font-bold uppercase tracking-widest text-accent mb-2 block">Authenticity</span>
+                          <span className="text-5xl font-headline font-bold text-accent">{aiAnalysis.authenticityScore}<span className="text-xl">/100</span></span>
+                        </div>
+                        <div className="h-16 w-px bg-accent/20" />
+                        <div>
+                          <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2 block">Classification</span>
+                          <Badge className={cn(
+                            "uppercase tracking-[0.1em] text-[10px] px-5 py-2 rounded-full border-0",
+                            aiAnalysis.isHiddenGem ? "bg-accent text-white shadow-lg shadow-accent/20" : "bg-muted text-muted-foreground"
+                          )}>
+                            {aiAnalysis.isHiddenGem ? 'Hidden Gem' : 'Popular Spot'}
+                          </Badge>
+                        </div>
+                      </div>
+                      
+                      <div className="bg-white/50 backdrop-blur-sm p-6 rounded-2xl border border-white">
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2 mb-4">
+                          <Info className="w-4 h-4 text-accent" /> Why we recommend this
+                        </span>
+                        <p className="text-base md:text-lg text-primary/70 font-medium leading-relaxed italic">
+                          "{aiAnalysis.reasoning}"
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                ) : (
-                  <Button 
-                    onClick={() => setIsAnalyzing(true)}
-                    variant="outline"
-                    className="rounded-full border-accent/20 hover:bg-accent/5 text-accent font-bold uppercase tracking-widest text-[10px]"
-                  >
-                    Generate Analysis
-                  </Button>
-                )}
+                  ) : (
+                    <Button 
+                      onClick={() => setIsAnalyzing(true)}
+                      className="rounded-full bg-accent text-white hover:bg-accent/90 font-bold uppercase tracking-widest text-[10px] px-10 py-6"
+                    >
+                      Run Fresh Analysis
+                    </Button>
+                  )}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
+        </>
+      )}
     </div>
   );
 }
