@@ -34,6 +34,7 @@ export default function LocalLensApp() {
   const [isPanelExpanded, setIsPanelExpanded] = useState(false);
   const [isExploring, setIsExploring] = useState(false);
 
+  // Seed initial data if Firestore is empty
   useEffect(() => {
     async function seedData() {
       if (!db) return;
@@ -47,7 +48,9 @@ export default function LocalLensApp() {
           });
           await Promise.all(promises);
         }
-      } catch (e) {}
+      } catch (e) {
+        console.error("Error seeding data:", e);
+      }
     }
     seedData();
   }, [db]);
@@ -63,12 +66,14 @@ export default function LocalLensApp() {
     const queryWords = searchQuery.toLowerCase().split(/\s+/).filter(Boolean);
     
     return allPlaces.filter((place) => {
-      // Logic for Mode Filtering based on Tags and intention
+      // Dynamic Mode Filtering Logic
       let matchesMode = false;
       if (mode === 'tourist') {
-        matchesMode = place.tags.includes('tourist');
+        // Tourist Mode: rating >= 4.2 AND reviewCount > 800
+        matchesMode = (place.rating >= 4.2 && place.reviewCount > 800);
       } else {
-        matchesMode = place.tags.includes('hidden');
+        // Hidden Gems Mode: reviewCount < 300 OR tags include "hidden" or "local"
+        matchesMode = (place.reviewCount < 300 || place.tags.includes('hidden') || place.tags.includes('local'));
       }
 
       if (!matchesMode) return false;
@@ -82,7 +87,8 @@ export default function LocalLensApp() {
 
   const handlePlaceSelect = (place: Place) => {
     setSelectedPlace(place);
-    setIsPanelExpanded(false); 
+    // Don't auto-collapse the panel if we want the user to see which card they clicked
+    // but on mobile it's helpful. For now, let's keep expanded if already expanded.
   };
 
   const closePlaceDetail = () => {
@@ -196,7 +202,10 @@ export default function LocalLensApp() {
 
           <div className="bg-white/90 backdrop-blur-xl p-1 rounded-full flex gap-1 shadow-md border border-border/40 w-full max-w-[140px] md:max-w-xs">
             <button
-              onClick={() => setMode('tourist')}
+              onClick={() => {
+                setMode('tourist');
+                setSelectedPlace(null); // Reset selection on mode change
+              }}
               className={cn(
                 "flex-1 flex items-center justify-center gap-2 py-2 rounded-full text-[9px] md:text-[10px] font-bold uppercase tracking-[0.15em] transition-all",
                 mode === 'tourist' ? "bg-primary text-white shadow-sm" : "text-muted-foreground hover:text-primary/60"
@@ -205,7 +214,10 @@ export default function LocalLensApp() {
               <Compass className="w-3.5 h-3.5" /> <span className="hidden xs:inline">Tourist</span>
             </button>
             <button
-              onClick={() => setMode('hidden')}
+              onClick={() => {
+                setMode('hidden');
+                setSelectedPlace(null); // Reset selection on mode change
+              }}
               className={cn(
                 "flex-1 flex items-center justify-center gap-2 py-2 rounded-full text-[9px] md:text-[10px] font-bold uppercase tracking-[0.15em] transition-all",
                 mode === 'hidden' ? "bg-accent text-white shadow-sm" : "text-muted-foreground hover:text-accent/60"
@@ -223,6 +235,7 @@ export default function LocalLensApp() {
             places={filteredPlaces} 
             selectedPlace={selectedPlace}
             onPlaceSelect={handlePlaceSelect}
+            mode={mode}
           />
           
           <ResultsPanel 
@@ -231,6 +244,7 @@ export default function LocalLensApp() {
             isExpanded={isPanelExpanded}
             setIsExpanded={setIsPanelExpanded}
             onPlaceClick={handlePlaceSelect}
+            selectedPlaceId={selectedPlace?.id}
           />
         </div>
       </section>

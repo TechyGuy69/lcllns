@@ -13,9 +13,10 @@ interface ResultsPanelProps {
   isExpanded: boolean;
   setIsExpanded: (val: boolean) => void;
   onPlaceClick: (place: Place) => void;
+  selectedPlaceId?: number;
 }
 
-export function ResultsPanel({ places, mode, isExpanded, setIsExpanded, onPlaceClick }: ResultsPanelProps) {
+export function ResultsPanel({ places, mode, isExpanded, setIsExpanded, onPlaceClick, selectedPlaceId }: ResultsPanelProps) {
   const panelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -77,10 +78,11 @@ export function ResultsPanel({ places, mode, isExpanded, setIsExpanded, onPlaceC
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-12 md:gap-16 py-4">
               {places.map((place) => (
                 <PlaceCard 
-                  key={place.id} 
+                  key={place.id || `${place.lat}-${place.lng}`} 
                   place={place} 
                   mode={mode}
                   onClick={() => onPlaceClick(place)}
+                  className={cn(selectedPlaceId === place.id && "ring-2 ring-accent ring-offset-4")}
                 />
               ))}
             </div>

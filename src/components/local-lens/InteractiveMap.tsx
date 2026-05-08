@@ -1,15 +1,15 @@
 
 "use client"
 
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect, useRef } from 'react';
 import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 import { Place } from '@/lib/mock-data';
-import { cn } from '@/lib/utils';
 
 interface InteractiveMapProps {
   places: Place[];
   selectedPlace?: Place | null;
   onPlaceSelect: (place: Place) => void;
+  mode: 'tourist' | 'hidden';
 }
 
 const containerStyle = {
@@ -57,13 +57,25 @@ const mapOptions = {
   ]
 };
 
-export function InteractiveMap({ places, selectedPlace, onPlaceSelect }: InteractiveMapProps) {
+export function InteractiveMap({ places, selectedPlace, onPlaceSelect, mode }: InteractiveMapProps) {
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''
   });
 
   const [map, setMap] = useState<google.maps.Map | null>(null);
+  const placesRef = useRef<Place[]>(places);
+
+  useEffect(() => {
+    placesRef.current = places;
+    if (map && places.length > 0) {
+      const bounds = new google.maps.LatLngBounds();
+      places.forEach(place => {
+        bounds.extend({ lat: place.lat, lng: place.lng });
+      });
+      map.fitBounds(bounds);
+    }
+  }, [map, places]);
 
   const onLoad = useCallback(function callback(map: google.maps.Map) {
     setMap(map);
@@ -91,13 +103,13 @@ export function InteractiveMap({ places, selectedPlace, onPlaceSelect }: Interac
       >
         {places.map((place) => (
           <Marker
-            key={place.id}
+            key={place.id || `${place.lat}-${place.lng}`}
             position={{ lat: place.lat, lng: place.lng }}
             onClick={() => onPlaceSelect(place)}
             icon={{
               path: google.maps.SymbolPath.CIRCLE,
               scale: selectedPlace?.id === place.id ? 10 : 7,
-              fillColor: place.isHiddenGem ? '#1a2e1a' : '#2b221a',
+              fillColor: mode === 'hidden' ? '#1a2e1a' : '#ea580c', // Green for hidden, Warm orange for tourist
               fillOpacity: 1,
               strokeWeight: 2,
               strokeColor: '#ffffff',
@@ -110,7 +122,7 @@ export function InteractiveMap({ places, selectedPlace, onPlaceSelect }: Interac
       <div className="absolute bottom-48 left-8 pointer-events-none hidden lg:block z-20">
         <div className="bg-white/80 backdrop-blur-md px-6 py-4 rounded-[2rem] shadow-xl border border-white/40 flex flex-col gap-3">
           <div className="flex items-center gap-3">
-            <div className="w-2 h-2 rounded-full bg-primary" />
+            <div className="w-2 h-2 rounded-full bg-amber-600" />
             <span className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">Tourist Favorites</span>
           </div>
           <div className="flex items-center gap-3">
