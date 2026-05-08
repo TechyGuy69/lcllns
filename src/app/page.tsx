@@ -65,9 +65,7 @@ export default function LocalLensApp() {
           });
           await Promise.all(promises);
         }
-      } catch (e) {
-        // Silent fail
-      }
+      } catch (e) {}
     }
     seedData();
   }, [db]);
@@ -124,12 +122,12 @@ export default function LocalLensApp() {
   };
 
   return (
-    <main className="relative h-screen w-full bg-background overflow-hidden">
+    <main className="relative h-screen w-full bg-black overflow-hidden selection:bg-accent/30 selection:text-white">
       
       {/* Home Page Section */}
       <section className={cn(
-        "absolute inset-0 z-10 transition-transform duration-1000 ease-in-out bg-black",
-        isExploring ? "-translate-x-full" : "translate-x-0"
+        "absolute inset-0 z-10 transition-transform duration-1000 ease-in-out",
+        isExploring ? "-translate-y-full" : "translate-y-0"
       )}>
         
         {/* Carousel Background */}
@@ -138,15 +136,16 @@ export default function LocalLensApp() {
             key={img.url}
             className={cn(
               "absolute inset-0 transition-opacity duration-[2000ms] ease-in-out",
-              heroIndex === idx ? "opacity-100" : "opacity-0"
+              heroIndex === idx ? "opacity-100 scale-105" : "opacity-0 scale-100"
             )}
+            style={{ transitionProperty: 'opacity, transform' }}
           >
             <Image 
               src={img.url}
-              alt="Discover India"
+              alt="India Landscapes"
               fill
               priority={idx === 0}
-              className="object-cover"
+              className="object-cover brightness-[0.7]"
               data-ai-hint={img.hint}
             />
           </div>
@@ -155,55 +154,59 @@ export default function LocalLensApp() {
         <div className="absolute inset-0 hero-overlay z-[1]" />
 
         {/* Home Screen Content */}
-        <div className="relative z-10 h-full w-full flex flex-col justify-between px-6 py-10 md:px-12 md:py-16">
+        <div className="relative z-10 h-full w-full flex flex-col justify-between p-6 md:p-12 lg:p-16">
           
           {/* Top Branding Area */}
           <header className="w-full flex justify-start items-center">
-            <span className="text-xl md:text-3xl font-bold text-white tracking-tighter drop-shadow-2xl">
+            <span className="text-xl md:text-2xl font-bold text-white tracking-tighter drop-shadow-xl opacity-90 hover:opacity-100 transition-opacity cursor-default">
               LocalLens
             </span>
           </header>
 
           {/* Center Content - IMPACTFUL Headline */}
-          <div className="flex-1 flex flex-col items-center justify-center text-center max-w-5xl mx-auto w-full px-4">
-            <h1 className="font-headline font-bold text-white tracking-tight leading-[0.85] text-6xl sm:text-7xl md:text-8xl lg:text-9xl mb-8 animate-in fade-in slide-in-from-bottom-8 duration-1000">
-              See India <br />
-              <span className="italic font-normal opacity-90">differently.</span>
-            </h1>
-            
-            <p className="text-sm md:text-xl text-white/90 font-medium max-w-2xl mx-auto leading-relaxed text-shadow-soft opacity-80 animate-in fade-in duration-1000 delay-300 px-4">
-              Skip the tour buses. Find the places locals actually love — from <br className="hidden md:block" />
-              hidden cafés to sacred spots tourists never reach.
-            </p>
+          <div className="flex-1 flex flex-col items-center justify-center text-center w-full px-4 max-w-5xl mx-auto space-y-6 md:space-y-10">
+            <div className="space-y-4 md:space-y-6">
+              <h1 className="font-headline font-bold text-white tracking-tight leading-[1] text-6xl md:text-8xl lg:text-[10rem] animate-in fade-in slide-in-from-bottom-12 duration-1000">
+                See India <br />
+                <span className="italic font-normal opacity-90">differently.</span>
+              </h1>
+              
+              <p className="text-sm md:text-lg text-white/80 font-medium max-w-xl mx-auto leading-relaxed text-shadow-soft animate-in fade-in duration-1000 delay-300">
+                Skip the tour buses. Find the places locals actually love — from hidden cafés to sacred spots tourists never reach.
+              </p>
+            </div>
+
+            {/* Search Bar Area */}
+            <div className="w-full max-w-3xl mx-auto animate-in zoom-in-95 duration-700 delay-500">
+              <div className="bg-white/10 backdrop-blur-2xl border border-white/20 rounded-full p-1.5 md:p-2.5 flex items-center shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-all hover:bg-white/15 focus-within:bg-white/20 focus-within:ring-2 focus-within:ring-white/20">
+                <div className="pl-5 md:pl-7 text-white/50">
+                  <Search className="w-5 h-5 md:w-6 md:h-6" />
+                </div>
+                <Input 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && onExplore()}
+                  placeholder="Quiet trails in Munnar..."
+                  className="bg-transparent border-0 ring-0 focus-visible:ring-0 text-base md:text-xl h-12 md:h-14 placeholder:text-white/30 text-white font-medium"
+                />
+                <Button 
+                  onClick={onExplore}
+                  className="rounded-full bg-[#346b51] hover:bg-[#2a5641] text-white h-11 md:h-14 px-6 md:px-10 font-bold text-[10px] md:text-xs tracking-[0.2em] gap-2 shadow-lg shrink-0 mr-0.5 transition-all hover:scale-105 active:scale-95"
+                >
+                  EXPLORE <ArrowRight className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
           </div>
 
-          {/* Bottom Area - Search & Shortcuts */}
-          <div className="w-full max-w-4xl mx-auto pb-4 md:pb-8 px-4">
-            <div className="bg-white/10 backdrop-blur-2xl border border-white/20 rounded-full p-1.5 md:p-2 flex items-center shadow-2xl overflow-hidden mb-6 md:mb-10 animate-in zoom-in-95 duration-700 delay-500">
-              <div className="pl-5 md:pl-7 text-white/60">
-                <Search className="w-5 h-5 md:w-6 md:h-6" />
-              </div>
-              <Input 
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && onExplore()}
-                placeholder="Quiet trails in Munnar..."
-                className="bg-transparent border-0 ring-0 focus-visible:ring-0 text-base md:text-2xl h-12 md:h-20 placeholder:text-white/30 text-white font-medium"
-              />
-              <Button 
-                onClick={onExplore}
-                className="rounded-full bg-[#346b51] hover:bg-[#2a5641] text-white h-11 md:h-16 px-8 md:px-14 font-bold text-[10px] md:text-xs tracking-[0.2em] gap-3 shadow-lg shrink-0 mr-0.5 transition-all hover:scale-105 active:scale-95"
-              >
-                EXPLORE <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
-              </Button>
-            </div>
-            
-            <div className="flex flex-wrap justify-center gap-2 md:gap-4 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-700">
+          {/* Bottom Shortcuts */}
+          <div className="w-full max-w-2xl mx-auto pb-4 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-700">
+            <div className="flex flex-wrap justify-center gap-2 md:gap-3">
               {SHORTCUTS.map((shortcut) => (
                 <button 
                   key={shortcut.label}
                   onClick={() => handleShortcutClick(shortcut.query)}
-                  className="px-4 py-2 md:px-8 md:py-4 rounded-full bg-black/20 backdrop-blur-xl border border-white/10 text-white/80 text-[8px] md:text-[11px] font-bold hover:bg-white/10 transition-all uppercase tracking-[0.2em]"
+                  className="px-5 py-2.5 md:px-8 md:py-3.5 rounded-full bg-black/30 backdrop-blur-md border border-white/10 text-white/70 text-[9px] md:text-[10px] font-bold hover:bg-white/10 hover:text-white transition-all uppercase tracking-[0.2em] shadow-lg"
                 >
                   {shortcut.label}
                 </button>
@@ -216,38 +219,38 @@ export default function LocalLensApp() {
       {/* Discovery Page Section */}
       <section className={cn(
         "absolute inset-0 z-20 bg-background transition-transform duration-1000 ease-in-out flex flex-col overflow-hidden",
-        isExploring ? "translate-x-0" : "translate-x-full"
+        isExploring ? "translate-y-0" : "translate-y-full"
       )}>
-        <header className="relative z-30 flex items-center justify-between px-6 py-4 md:px-12 md:py-6 shrink-0 bg-background/50 backdrop-blur-sm border-b border-border/10">
+        <header className="relative z-30 flex items-center justify-between px-6 py-4 md:px-12 md:py-6 shrink-0 bg-background/80 backdrop-blur-md border-b border-border/10">
           <button 
             onClick={goHome}
-            className="flex items-center gap-2 text-primary/60 hover:text-primary font-bold text-[9px] md:text-[10px] uppercase tracking-[0.15em] transition-all bg-white/70 backdrop-blur-md px-4 py-2.5 md:px-5 md:py-3 rounded-full border border-white/50 shadow-sm"
+            className="flex items-center gap-2 text-primary/70 hover:text-primary font-bold text-[10px] uppercase tracking-[0.2em] transition-all bg-white/50 backdrop-blur-sm px-4 py-2.5 rounded-full border border-border/20 shadow-sm"
           >
-            <ChevronLeft className="w-4 h-4" /> <span className="hidden sm:inline">Back Home</span>
+            <ChevronLeft className="w-4 h-4" /> <span className="hidden sm:inline">Home</span>
           </button>
 
-          <div className="bg-white/95 backdrop-blur-xl p-1 rounded-full flex gap-1 shadow-md border border-border/40 w-full max-w-[150px] md:max-w-xs">
+          <div className="bg-white/90 backdrop-blur-xl p-1 rounded-full flex gap-1 shadow-md border border-border/40 w-full max-w-[140px] md:max-w-xs">
             <button
               onClick={() => setMode('tourist')}
               className={cn(
-                "flex-1 flex items-center justify-center gap-1.5 md:gap-2 py-1.5 md:py-2.5 rounded-full text-[8px] md:text-[10px] font-bold uppercase tracking-[0.1em] md:tracking-[0.15em] transition-all",
-                mode === 'tourist' ? "bg-primary text-white" : "text-muted-foreground"
+                "flex-1 flex items-center justify-center gap-2 py-2 rounded-full text-[9px] md:text-[10px] font-bold uppercase tracking-[0.15em] transition-all",
+                mode === 'tourist' ? "bg-primary text-white shadow-sm" : "text-muted-foreground hover:text-primary/60"
               )}
             >
-              <Compass className="w-3.5 h-3.5 md:w-4 md:h-4" /> Tourist
+              <Compass className="w-3.5 h-3.5" /> <span className="hidden xs:inline">Tourist</span>
             </button>
             <button
               onClick={() => setMode('hidden')}
               className={cn(
-                "flex-1 flex items-center justify-center gap-1.5 md:gap-2 py-1.5 md:py-2.5 rounded-full text-[8px] md:text-[10px] font-bold uppercase tracking-[0.1em] md:tracking-[0.15em] transition-all",
-                mode === 'hidden' ? "bg-accent text-white" : "text-muted-foreground"
+                "flex-1 flex items-center justify-center gap-2 py-2 rounded-full text-[9px] md:text-[10px] font-bold uppercase tracking-[0.15em] transition-all",
+                mode === 'hidden' ? "bg-accent text-white shadow-sm" : "text-muted-foreground hover:text-accent/60"
               )}
             >
-              <Sparkles className="w-3.5 h-3.5 md:w-4 md:h-4" /> Hidden
+              <Sparkles className="w-3.5 h-3.5" /> <span className="hidden xs:inline">Hidden</span>
             </button>
           </div>
           
-          <div className="w-10 md:w-20" />
+          <div className="w-10" />
         </header>
 
         <div className="flex-1 relative">
