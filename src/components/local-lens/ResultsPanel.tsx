@@ -1,3 +1,4 @@
+
 "use client"
 
 import React, { useRef, useEffect } from 'react';
@@ -43,7 +44,7 @@ export function ResultsPanel({ places, isExpanded, setIsExpanded, onPlaceClick }
           </div>
         </div>
 
-        {/* Results Grid - uses local scrolling inside panel */}
+        {/* Results Grid */}
         <div 
           ref={panelRef}
           className="flex-1 overflow-y-auto no-scrollbar px-6 md:px-12 pb-16"

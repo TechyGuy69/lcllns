@@ -1,3 +1,4 @@
+
 "use client"
 
 import React, { useState, useMemo, useEffect } from 'react';
@@ -5,6 +6,7 @@ import Image from 'next/image';
 import { Search, ArrowRight, Compass, Sparkles, ChevronLeft } from 'lucide-react';
 import { InteractiveMap } from '@/components/local-lens/InteractiveMap';
 import { ResultsPanel } from '@/components/local-lens/ResultsPanel';
+import { PlaceDetailView } from '@/components/local-lens/PlaceDetailView';
 import { MOCK_PLACES, Place } from '@/lib/mock-data';
 import { Toaster } from '@/components/ui/toaster';
 import { Input } from '@/components/ui/input';
@@ -70,7 +72,10 @@ export default function LocalLensApp() {
 
   const handlePlaceSelect = (place: Place) => {
     setSelectedPlace(place);
-    setIsPanelExpanded(false);
+  };
+
+  const closePlaceDetail = () => {
+    setSelectedPlace(null);
   };
 
   const onExplore = () => {
@@ -117,7 +122,7 @@ export default function LocalLensApp() {
         {isExploring && (
           <button 
             onClick={goHome}
-            className="absolute top-6 left-6 z-20 flex items-center gap-2 text-white/80 hover:text-white font-bold text-[10px] uppercase tracking-[0.2em] transition-all"
+            className="absolute top-6 left-6 z-20 flex items-center gap-2 text-white hover:text-white/80 font-bold text-[10px] uppercase tracking-[0.2em] transition-all"
           >
             <ChevronLeft className="w-4 h-4" /> Home
           </button>
@@ -129,13 +134,13 @@ export default function LocalLensApp() {
             isExploring ? "mb-2 md:mb-4 scale-90" : "mb-8 md:mb-12"
           )}>
             <h1 className={cn(
-              "font-headline font-bold text-white tracking-tight leading-tight transition-all duration-700 drop-shadow-2xl",
+              "font-headline font-bold text-white tracking-tight leading-tight transition-all duration-700 text-shadow-strong",
               isExploring ? "text-2xl md:text-4xl" : "text-4xl md:text-7xl mb-4 md:mb-6"
             )}>
               See India <span className="italic font-normal">differently.</span>
             </h1>
             {!isExploring && (
-              <p className="text-sm md:text-lg text-white font-medium max-w-xl mx-auto leading-relaxed drop-shadow-lg animate-in fade-in duration-1000 delay-300">
+              <p className="text-sm md:text-lg text-white/90 font-medium max-w-xl mx-auto leading-relaxed text-shadow-soft animate-in fade-in duration-1000 delay-300">
                 Skip the crowds. Discover the quiet sanctuaries and local haunts where India truly lives.
               </p>
             )}
@@ -146,7 +151,7 @@ export default function LocalLensApp() {
             "w-full max-w-3xl px-4 transition-all duration-700",
             isExploring ? "translate-y-0" : "animate-in zoom-in-95"
           )}>
-            <div className="glass rounded-full p-1 md:p-1.5 flex items-center shadow-2xl">
+            <div className="bg-white/90 backdrop-blur-md rounded-full p-1 md:p-1.5 flex items-center shadow-2xl border border-white/20">
               <div className="pl-4 md:pl-5 text-primary/60">
                 <Search className="w-5 h-5 md:w-6 md:h-6" />
               </div>
@@ -182,7 +187,7 @@ export default function LocalLensApp() {
         </div>
       </section>
 
-      {/* Discovery Section - Fills the rest of the screen */}
+      {/* Discovery Section */}
       <section className={cn(
         "relative w-full flex-1 bg-background flex flex-col overflow-hidden transition-all duration-700",
         isExploring ? "opacity-100" : "opacity-0 pointer-events-none"
@@ -215,7 +220,7 @@ export default function LocalLensApp() {
           </div>
         </div>
 
-        {/* Map Container - constrained by parent flex-1 */}
+        {/* Map Container */}
         <div className="w-full h-full relative">
           <InteractiveMap 
             places={filteredPlaces} 
@@ -232,6 +237,12 @@ export default function LocalLensApp() {
           onPlaceClick={handlePlaceSelect}
         />
       </section>
+
+      {/* Full Screen Place Detail View */}
+      <PlaceDetailView 
+        place={selectedPlace} 
+        onClose={closePlaceDetail} 
+      />
 
       <Toaster />
     </main>
