@@ -32,59 +32,67 @@ const CITY_COORDS = {
 const CITIES = Object.keys(CITY_COORDS);
 
 /**
- * Deterministic generation of 250 places (125 Tourist, 125 Hidden Gems).
- * No Math.random() to ensure zero hydration mismatches.
- * Coordinates are precisely offset around real Indian city centers.
+ * Deterministic generation of 250 places.
+ * 125 Tourist Favorites (High rating, high reviews, high crowd)
+ * 125 Hidden Gems (Low reviews, low crowd, peaceful tags)
  */
 const generatePlaces = (): Place[] => {
   const places: Place[] = [];
 
-  // 1-125: Tourist Favorites
+  // 1-125: Tourist Favorites (including ~25 Cafes and ~25 Restaurants)
   for (let i = 0; i < 125; i++) {
     const id = i + 1;
     const cityName = CITIES[i % CITIES.length];
     const base = CITY_COORDS[cityName as keyof typeof CITY_COORDS];
-    // Deterministic spread using trig functions
     const offsetLat = Math.sin(id * 1.5) * 0.035;
     const offsetLng = Math.cos(id * 1.5) * 0.035;
 
+    const categories = ["Historic", "Cafe", "Restaurant", "Park", "Historic"];
+    const names = ["Palace", "Bistro", "Kitchen", "Gardens", "Fort"];
+    const category = categories[i % 5];
+    const namePrefix = names[i % 5];
+
     places.push({
       id,
-      name: `Popular ${["Palace", "Museum", "Temple", "Gardens", "Fort"][i % 5]} ${id}`,
+      name: `Grand ${namePrefix} ${id}`,
       city: cityName,
-      category: ["Historic", "Historic", "Historic", "Park", "Historic"][i % 5],
+      category: category,
       lat: base.lat + offsetLat,
       lng: base.lng + offsetLng,
       rating: Number((4.2 + (id % 8) * 0.1).toFixed(1)),
       reviewCount: 850 + (id * 15) % 5000,
       tags: ["popular", "tourist"],
       crowdLevel: "High",
-      description: "A world-renowned landmark attracting visitors with its grand architecture and rich historical significance.",
+      description: `A legendary ${category.toLowerCase()} that has become a cornerstone of ${cityName}'s vibrant culture, known for its iconic status and high energy.`,
       image: `https://picsum.photos/seed/${id}/600/400`
     });
   }
 
-  // 126-250: Hidden Gems
+  // 126-250: Hidden Gems (including ~25 Cafes and ~25 Restaurants)
   for (let i = 0; i < 125; i++) {
     const id = i + 126;
     const cityName = CITIES[i % CITIES.length];
     const base = CITY_COORDS[cityName as keyof typeof CITY_COORDS];
-    // Different deterministic spread for hidden gems
     const offsetLat = Math.sin(id * 2.1) * 0.05;
     const offsetLng = Math.cos(id * 2.1) * 0.05;
 
+    const categories = ["Nature", "Cafe", "Restaurant", "Historic", "Nature"];
+    const names = ["Retreat", "Nook", "Table", "Library", "Trail"];
+    const category = categories[i % 5];
+    const namePrefix = names[i % 5];
+
     places.push({
       id,
-      name: `Quiet ${["Retreat", "Library", "Backwater", "Trail", "Courtyard"][i % 5]} ${id}`,
+      name: `Secret ${namePrefix} ${id}`,
       city: cityName,
-      category: ["Nature", "Historic", "Nature", "Nature", "Cafe"][i % 5],
+      category: category,
       lat: base.lat + offsetLat,
       lng: base.lng + offsetLng,
       rating: Number((4.0 + (id % 10) * 0.1).toFixed(1)),
       reviewCount: 15 + (id % 250),
       tags: ["hidden", "local", "peaceful"],
       crowdLevel: "Low",
-      description: "A serene hidden gem cherished by locals for its peaceful atmosphere and authentic charm, far from the tourist rush.",
+      description: `Tucked away in the quiet corners of ${cityName}, this ${category.toLowerCase()} is a local secret offering an authentic, peaceful escape from the city rush.`,
       image: `https://picsum.photos/seed/${id}/600/400`
     });
   }
@@ -92,77 +100,150 @@ const generatePlaces = (): Place[] => {
   return places;
 };
 
-// Hardcoded real examples for the first few slots to ensure quality
+// Real-world samples to ground the dataset in authenticity
 const REAL_SAMPLES: Place[] = [
+  // POPULAR CAFES/RESTAURANTS
   {
     id: 1,
-    name: "Gateway of India Plaza",
+    name: "Leopold Cafe & Bar",
     city: "Mumbai",
-    category: "Historic",
-    lat: 18.9220,
-    lng: 72.8347,
-    rating: 4.8,
-    reviewCount: 4500,
+    category: "Cafe",
+    lat: 18.9229,
+    lng: 72.8317,
+    rating: 4.4,
+    reviewCount: 12400,
     tags: ["popular", "tourist"],
     crowdLevel: "High",
-    description: "The iconic arch monument overlooking the Arabian Sea, a must-visit for every traveler to Mumbai.",
+    description: "An iconic multi-cuisine restaurant and bar in Colaba, famous for its history and bustling atmosphere.",
     image: "https://picsum.photos/seed/1/600/400"
   },
   {
     id: 2,
-    name: "Red Fort Heritage Park",
-    city: "Delhi",
-    category: "Historic",
-    lat: 28.6562,
-    lng: 77.2410,
-    rating: 4.6,
-    reviewCount: 5200,
+    name: "Indian Coffee House",
+    city: "Kolkata",
+    category: "Cafe",
+    lat: 22.5756,
+    lng: 88.3630,
+    rating: 4.2,
+    reviewCount: 9800,
     tags: ["popular", "tourist"],
     crowdLevel: "High",
-    description: "A massive sandstone fort and a UNESCO World Heritage site representing the peak of Mughal architecture.",
+    description: "A historic intellectual hub on College Street, known for its old-world charm and 'Adda' culture.",
     image: "https://picsum.photos/seed/2/600/400"
   },
   {
     id: 3,
-    name: "Victoria Memorial Grounds",
-    city: "Kolkata",
-    category: "Historic",
-    lat: 22.5448,
-    lng: 88.3426,
-    rating: 4.7,
-    reviewCount: 3800,
+    name: "Karim's Hotel",
+    city: "Delhi",
+    category: "Restaurant",
+    lat: 28.6496,
+    lng: 77.2335,
+    rating: 4.5,
+    reviewCount: 15600,
     tags: ["popular", "tourist"],
     crowdLevel: "High",
-    description: "A large marble building and museum, dedicated to the memory of Queen Victoria.",
+    description: "World-famous Mughlai restaurant located near Jama Masjid, serving legendary kebabs since 1913.",
     image: "https://picsum.photos/seed/3/600/400"
   },
   {
+    id: 4,
+    name: "Koshy's Parade Cafe",
+    city: "Bangalore",
+    category: "Cafe",
+    lat: 12.9750,
+    lng: 77.6000,
+    rating: 4.3,
+    reviewCount: 5400,
+    tags: ["popular", "tourist"],
+    crowdLevel: "High",
+    description: "A beloved Bangalore institution on St. Marks Road, frequented by artists, writers, and journalists.",
+    image: "https://picsum.photos/seed/4/600/400"
+  },
+  {
+    id: 5,
+    name: "Amethyst Cafe",
+    city: "Chennai",
+    category: "Cafe",
+    lat: 13.0510,
+    lng: 80.2540,
+    rating: 4.6,
+    reviewCount: 3200,
+    tags: ["popular", "tourist"],
+    crowdLevel: "High",
+    description: "A stunning garden cafe set in a restored colonial mansion, offering a sophisticated escape in the city.",
+    image: "https://picsum.photos/seed/5/600/400"
+  },
+
+  // HIDDEN CAFES/RESTAURANTS
+  {
     id: 126,
-    name: "The Old City Library",
-    city: "Delhi",
-    category: "Historic",
-    lat: 28.6500,
-    lng: 77.2300,
+    name: "The Artisanal Bakehouse",
+    city: "Goa",
+    category: "Cafe",
+    lat: 15.4909,
+    lng: 73.8278,
     rating: 4.7,
-    reviewCount: 45,
+    reviewCount: 142,
     tags: ["hidden", "local", "peaceful"],
     crowdLevel: "Low",
-    description: "A quiet, dusty sanctuary filled with rare colonial-era manuscripts and comfortable armchairs.",
+    description: "A quiet, family-run bakery hidden in a traditional Goan house, serving the freshest sourdough and poi.",
     image: "https://picsum.photos/seed/126/600/400"
   },
   {
     id: 127,
-    name: "Secret Garden Cafe",
-    city: "Mumbai",
+    name: "Zen Garden Cafe",
+    city: "Jaipur",
     category: "Cafe",
-    lat: 19.0600,
-    lng: 72.8500,
-    rating: 4.5,
-    reviewCount: 82,
+    lat: 26.8900,
+    lng: 75.8100,
+    rating: 4.8,
+    reviewCount: 88,
     tags: ["hidden", "local", "peaceful"],
     crowdLevel: "Low",
-    description: "Tucked away in a narrow lane, this cafe offers artisan coffee and a peaceful green courtyard.",
+    description: "A peaceful sanctuary tucked behind a textile workshop, offering organic teas and local heritage snacks.",
     image: "https://picsum.photos/seed/127/600/400"
+  },
+  {
+    id: 128,
+    name: "The Old Banyan Cafe",
+    city: "Mumbai",
+    category: "Cafe",
+    lat: 19.0500,
+    lng: 72.8400,
+    rating: 4.6,
+    reviewCount: 210,
+    tags: ["hidden", "local", "peaceful"],
+    crowdLevel: "Low",
+    description: "A quiet courtyard cafe in Bandra, shaded by a massive banyan tree, serving artisanal coffee to locals.",
+    image: "https://picsum.photos/seed/128/600/400"
+  },
+  {
+    id: 129,
+    name: "Saffron Courtyard",
+    city: "Hyderabad",
+    category: "Restaurant",
+    lat: 17.4400,
+    lng: 78.4300,
+    rating: 4.5,
+    reviewCount: 156,
+    tags: ["hidden", "local", "peaceful"],
+    crowdLevel: "Low",
+    description: "A hidden gem serving traditional Deccani cuisine in a quiet residential bungalow courtyard.",
+    image: "https://picsum.photos/seed/129/600/400"
+  },
+  {
+    id: 130,
+    name: "Mango Tree Riverside",
+    city: "Hampi",
+    category: "Restaurant",
+    lat: 15.3400,
+    lng: 76.4550,
+    rating: 4.7,
+    reviewCount: 280,
+    tags: ["hidden", "local", "peaceful"],
+    crowdLevel: "Low",
+    description: "A serene spot overlooking the Tungabhadra river, offering authentic local meals under a canopy of trees.",
+    image: "https://picsum.photos/seed/130/600/400"
   }
 ];
 
