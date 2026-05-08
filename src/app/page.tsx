@@ -136,7 +136,7 @@ export default function LocalLensApp() {
               "font-headline font-bold text-white tracking-tight leading-tight transition-all duration-700 text-shadow-strong",
               isExploring ? "text-2xl md:text-4xl" : "text-4xl md:text-7xl mb-4 md:mb-6"
             )}>
-              See India <span className="italic font-normal">differently.</span>
+              See India <span className="italic font-normal text-white">differently.</span>
             </h1>
             {!isExploring && (
               <p className="text-sm md:text-lg text-white font-medium max-w-xl mx-auto leading-relaxed text-shadow-soft animate-in fade-in duration-1000 delay-300">
