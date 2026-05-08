@@ -14,17 +14,13 @@ interface InteractiveMapProps {
 export function InteractiveMap({ places, selectedPlace, onPlaceSelect }: InteractiveMapProps) {
   return (
     <div className="relative w-full h-full bg-background overflow-hidden">
-      {/* Abstract Map Grid Pattern - Very Subtle */}
-      <div className="absolute inset-0 opacity-[0.02]" 
-           style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, #5D4037 1px, transparent 0)', backgroundSize: '60px 60px' }} />
+      {/* Subtle Map Grid */}
+      <div className="absolute inset-0 opacity-[0.03]" 
+           style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, #000 1px, transparent 0)', backgroundSize: '40px 40px' }} />
       
-      {/* Warm Premium Glowing Elements */}
-      <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-secondary/20 blur-[150px] rounded-full animate-pulse duration-[8000ms]" />
-      <div className="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] bg-accent/5 blur-[200px] rounded-full animate-pulse delay-1000 duration-[10000ms]" />
-
-      {/* Abstract India Background Text - Decorative */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-[0.03]">
-        <h2 className="text-[30vw] font-headline font-bold text-primary uppercase tracking-tighter">India</h2>
+      {/* India Background Label */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-[0.04]">
+        <h2 className="text-[25vw] font-headline font-bold text-primary uppercase tracking-tighter">Bharat</h2>
       </div>
 
       {/* Markers */}
@@ -39,30 +35,26 @@ export function InteractiveMap({ places, selectedPlace, onPlaceSelect }: Interac
               key={place.id}
               onClick={() => onPlaceSelect(place)}
               className={cn(
-                "absolute -translate-x-1/2 -translate-y-1/2 p-2 rounded-full transition-all duration-700",
-                "hover:scale-125 focus:outline-none group",
-                isSelected ? "z-30 scale-125 md:scale-150" : "z-10"
+                "absolute -translate-x-1/2 -translate-y-1/2 p-2 rounded-full transition-all duration-500",
+                "hover:scale-110 focus:outline-none group",
+                isSelected ? "z-30 scale-125" : "z-10"
               )}
               style={{ left: `${x}%`, top: `${y}%` }}
             >
               <div className="relative">
-                {isSelected && (
-                  <div className="absolute -inset-6 bg-accent/10 rounded-full animate-ping duration-[3000ms]" />
-                )}
-                
                 <div className={cn(
-                  "relative bg-white border-2 rounded-full p-2 md:p-3 shadow-2xl transition-all duration-500",
-                  isSelected ? "border-accent scale-110 shadow-accent/20" : "border-primary/10 group-hover:border-accent group-hover:shadow-lg"
+                  "relative bg-white border-2 rounded-full p-2 md:p-3 shadow-xl transition-all duration-300",
+                  isSelected ? "border-accent scale-110" : "border-primary/10 group-hover:border-accent"
                 )}>
                   <MapPin className={cn(
                     "w-5 h-5 md:w-6 md:h-6 transition-colors",
-                    isSelected ? "text-accent fill-accent/20" : "text-primary/30 group-hover:text-accent"
+                    isSelected ? "text-accent fill-accent/20" : "text-primary/40 group-hover:text-accent"
                   )} />
                 </div>
 
                 <div className={cn(
-                  "absolute top-full left-1/2 -translate-x-1/2 mt-3 px-4 py-2 rounded-full bg-white/80 backdrop-blur-md border border-primary/5 shadow-xl whitespace-nowrap text-[9px] md:text-[11px] font-bold tracking-[0.2em] uppercase text-primary transition-all duration-500",
-                  isSelected ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0"
+                  "absolute top-full left-1/2 -translate-x-1/2 mt-3 px-4 py-1.5 rounded-full bg-white shadow-lg border border-border whitespace-nowrap text-[10px] md:text-[11px] font-bold tracking-wider text-primary transition-all duration-300",
+                  isSelected ? "opacity-100 translate-y-0" : "opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0"
                 )}>
                   {place.name}
                 </div>
@@ -72,16 +64,16 @@ export function InteractiveMap({ places, selectedPlace, onPlaceSelect }: Interac
         })}
       </div>
 
-      {/* Legend - Soft Premium Style */}
-      <div className="absolute bottom-48 left-10 pointer-events-none hidden lg:block">
-        <div className="glass px-7 py-5 rounded-[2rem] flex flex-col gap-3 border-white/60">
-          <div className="flex items-center gap-4">
-            <div className="w-3 h-3 rounded-full bg-primary" />
-            <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-muted-foreground">Tourist Mainstays</span>
+      {/* Legend */}
+      <div className="absolute bottom-48 left-8 pointer-events-none hidden lg:block">
+        <div className="bg-white px-6 py-4 rounded-2xl shadow-xl border border-border flex flex-col gap-3">
+          <div className="flex items-center gap-3">
+            <div className="w-2.5 h-2.5 rounded-full bg-primary" />
+            <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Tourist Mainstays</span>
           </div>
-          <div className="flex items-center gap-4">
-            <div className="w-3 h-3 rounded-full bg-accent" />
-            <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-muted-foreground">Hidden Sanctuaries</span>
+          <div className="flex items-center gap-3">
+            <div className="w-2.5 h-2.5 rounded-full bg-accent" />
+            <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Hidden Gems</span>
           </div>
         </div>
       </div>
