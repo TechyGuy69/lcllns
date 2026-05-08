@@ -130,8 +130,8 @@ export default function LocalLensApp() {
         isExploring ? "-translate-x-full" : "translate-x-0"
       )}>
         {/* Branding Overlay */}
-        <div className="absolute top-10 left-10 z-[20] animate-in fade-in slide-in-from-top-4 duration-1000">
-          <span className="text-white font-headline font-bold text-2xl md:text-3xl tracking-tight text-shadow-strong select-none">
+        <div className="absolute top-12 left-12 z-[20] animate-in fade-in slide-in-from-top-4 duration-1000">
+          <span className="text-white font-headline font-bold text-3xl md:text-4xl tracking-tight text-shadow-strong select-none">
             LocalLens
           </span>
         </div>
@@ -159,12 +159,12 @@ export default function LocalLensApp() {
         <div className="absolute inset-0 hero-overlay z-[1]" />
 
         {/* Home Screen Content */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center px-4 md:px-8 text-center z-10">
-          <div className="mb-8 md:mb-12 max-w-4xl transform animate-in fade-in slide-in-from-bottom-8 duration-1000">
-            <h1 className="font-headline font-bold text-white tracking-tight leading-tight text-4xl md:text-7xl mb-4 md:mb-6 text-shadow-strong">
+        <div className="absolute inset-0 flex flex-col items-center justify-center px-4 md:px-8 text-center z-10 pt-20">
+          <div className="mb-10 md:mb-16 max-w-4xl transform animate-in fade-in slide-in-from-bottom-8 duration-1000">
+            <h1 className="font-headline font-bold text-white tracking-tight leading-tight text-5xl md:text-8xl mb-6 md:mb-8 text-shadow-strong">
               See India <span className="text-white">differently.</span>
             </h1>
-            <p className="text-sm md:text-lg text-white font-medium max-w-xl mx-auto leading-relaxed text-shadow-soft opacity-90">
+            <p className="text-sm md:text-xl text-white font-medium max-w-2xl mx-auto leading-relaxed text-shadow-soft opacity-90 px-6">
               Skip the crowds. Discover the quiet sanctuaries and local haunts where India truly lives.
             </p>
           </div>
@@ -189,7 +189,7 @@ export default function LocalLensApp() {
               </Button>
             </div>
             
-            <div className="mt-8 flex flex-wrap justify-center gap-2 md:gap-3 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500">
+            <div className="mt-10 flex flex-wrap justify-center gap-2 md:gap-4 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500">
               {SHORTCUTS.map((city) => (
                 <button 
                   key={city}
@@ -197,7 +197,7 @@ export default function LocalLensApp() {
                     setSearchQuery(city); 
                     onExplore(); 
                   }}
-                  className="px-6 py-2.5 rounded-full bg-white/10 backdrop-blur-md border border-white/30 text-white text-[10px] md:text-[11px] font-bold hover:bg-white/30 transition-all shadow-sm uppercase tracking-widest"
+                  className="px-8 py-3 rounded-full bg-white/10 backdrop-blur-md border border-white/30 text-white text-[10px] md:text-[12px] font-bold hover:bg-white/30 transition-all shadow-sm uppercase tracking-widest"
                 >
                   {city}
                 </button>
