@@ -55,8 +55,10 @@ export default function LocalLensApp() {
   }, [db]);
 
   const allPlaces = useMemo(() => {
+    // If we have firestore data, use it. Otherwise use MOCK_PLACES.
     if (firestorePlaces && firestorePlaces.length > 0) {
-      return firestorePlaces.filter((p: any) => p.lat && p.lng) as Place[];
+      // Ensure we have lat/lng for mapping
+      return firestorePlaces.filter((p: any) => p.lat != null && p.lng != null) as Place[];
     }
     return MOCK_PLACES;
   }, [firestorePlaces]);
@@ -64,53 +66,60 @@ export default function LocalLensApp() {
   const filteredPlaces = useMemo(() => {
     const queryWords = searchQuery.toLowerCase().split(/\s+/).filter(Boolean);
     
-    // 1. Initial filter based on mode to provide a baseline set
-    const modeMatches = allPlaces.filter((place) => {
-      if (mode === 'tourist') {
-        return (place.rating >= 4.2 && place.reviewCount > 800);
-      } else {
-        return (place.reviewCount < 300 || place.tags.includes('hidden') || place.tags.includes('local'));
-      }
-    });
+    // Default mode-specific filtering when NO search query is present
+    if (queryWords.length === 0) {
+      return allPlaces.filter((place) => {
+        if (mode === 'tourist') {
+          return (place.rating >= 4.2 && (place.reviewCount || 0) > 800);
+        } else {
+          return ((place.reviewCount || 0) < 300 || place.tags?.includes('hidden') || place.tags?.includes('local'));
+        }
+      });
+    }
 
-    // 2. If no search query, return mode-matched places
-    if (queryWords.length === 0) return modeMatches;
-
-    // 3. Scoring System for Intelligent Local Search
-    const scored = modeMatches.map(place => {
+    // Intelligent weighted search across ALL places when a query IS present
+    const scored = allPlaces.map(place => {
       let score = 0;
-      const name = place.name.toLowerCase();
-      const city = place.city.toLowerCase();
-      const cat = place.category.toLowerCase();
-      const desc = place.description.toLowerCase();
-      const tags = place.tags.map(t => t.toLowerCase());
+      const name = (place.name || '').toLowerCase();
+      const city = (place.city || '').toLowerCase();
+      const cat = (place.category || '').toLowerCase();
+      const desc = (place.description || '').toLowerCase();
+      const tags = (place.tags || []).map(t => t.toLowerCase());
 
       queryWords.forEach(word => {
-        // Category match (+3)
-        if (cat.includes(word)) score += 3;
+        // High priority matches
+        if (cat.includes(word)) score += 4;
+        if (city.includes(word)) score += 3;
         
-        // Tag match (+2)
+        // Tag and description matches
         if (tags.some(t => t.includes(word))) score += 2;
+        if (name.includes(word) || desc.includes(word)) score += 1;
         
-        // Name, City, or Description match (+1)
-        if (name.includes(word) || city.includes(word) || desc.includes(word)) score += 1;
-        
-        // Intent detection boost (+2)
+        // Mode alignment boost: Prioritize results that match the current toggle
+        if (mode === 'hidden') {
+          const isHidden = tags.includes('hidden') || tags.includes('local') || (place.reviewCount || 0) < 300;
+          if (isHidden) score += 5;
+        } else {
+          const isTourist = place.rating >= 4.2 && (place.reviewCount || 0) > 800;
+          if (isTourist) score += 5;
+        }
+
+        // Specific intent boost
         const isHiddenIntent = ['hidden', 'quiet', 'peaceful', 'local', 'gem'].includes(word);
         const isPopularIntent = ['popular', 'tourist', 'famous', 'trending'].includes(word);
         
         if (isHiddenIntent && (tags.includes('hidden') || tags.includes('local'))) {
-          score += 2;
+          score += 3;
         }
         if (isPopularIntent && (tags.includes('popular') || tags.includes('tourist'))) {
-          score += 2;
+          score += 3;
         }
       });
 
       return { ...place, searchScore: score };
     });
 
-    // 4. Filter by score > 0, sort by score, and limit to top 20
+    // Return all items with a positive relevance score, sorted by best match
     return scored
       .filter(p => (p as any).searchScore > 0)
       .sort((a, b) => (b as any).searchScore - (a as any).searchScore)
@@ -137,8 +146,8 @@ export default function LocalLensApp() {
     setIsPanelExpanded(false);
   };
 
-  const handleShortcutClick = (query: string) => {
-    setSearchQuery(query);
+  const handleShortcutClick = (queryText: string) => {
+    setSearchQuery(queryText);
     onExplore();
   };
 
