@@ -14,10 +14,10 @@ import { useFirestore, useCollection } from '@/firebase';
 import { collection, query, limit, getDocs, addDoc } from 'firebase/firestore';
 
 const HERO_IMAGES = [
-  "https://images.unsplash.com/photo-1524492412937-b28074a5d7da",
-  "https://images.unsplash.com/photo-1506461883276-594a12b11cf3",
-  "https://images.unsplash.com/photo-1526715469105-2365c34c256a",
-  "https://images.unsplash.com/photo-1477587458883-47145ed94245"
+  "https://images.unsplash.com/photo-1564507592333-c60657451dd7?q=80&w=2000&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1561361513-2d000a50f0dc?q=80&w=2000&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1599661046289-e31887846eac?q=80&w=2000&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?q=80&w=2000&auto=format&fit=crop"
 ];
 
 const SHORTCUTS = [
@@ -123,34 +123,39 @@ export default function LocalLensApp() {
         isExploring ? "-translate-y-full" : "translate-y-0"
       )}>
         
-        {/* Optimized Background Layer */}
+        {/* Optimized Cross-Fade Background Layer */}
         <div className="absolute inset-0 bg-neutral-950 overflow-hidden">
-          {HERO_IMAGES.map((url, idx) => (
-            <div 
-              key={url}
-              className={cn(
-                "absolute inset-0 w-full h-full transition-all duration-[1000ms] ease-in-out",
-                heroIndex === idx && loadedImages[idx] ? "opacity-100 scale-105" : "opacity-0 scale-100"
-              )}
-            >
-              <Image
-                src={url}
-                alt="India Landscape"
-                fill
-                sizes="100vw"
-                priority={idx === 0}
-                onLoad={() => handleImageLoad(idx)}
-                className="object-cover"
-              />
-            </div>
-          ))}
-          <div className="absolute inset-0 bg-black/40" />
+          {HERO_IMAGES.map((url, idx) => {
+            const isCurrent = heroIndex === idx;
+            const isLoaded = loadedImages[idx];
+            
+            return (
+              <div 
+                key={url}
+                className={cn(
+                  "absolute inset-0 w-full h-full transition-all duration-[1500ms] ease-in-out",
+                  isCurrent && isLoaded ? "opacity-100 z-10 scale-105" : "opacity-0 z-0 scale-100"
+                )}
+              >
+                <Image
+                  src={url}
+                  alt="India Landscape"
+                  fill
+                  sizes="100vw"
+                  priority={idx === 0}
+                  onLoad={() => handleImageLoad(idx)}
+                  className="object-cover"
+                />
+              </div>
+            );
+          })}
+          <div className="absolute inset-0 bg-black/40 z-20" />
         </div>
 
         {/* Content Container */}
-        <div className="relative z-10 min-h-screen w-full flex flex-col items-center justify-center px-6">
+        <div className="relative z-30 min-h-screen w-full flex flex-col items-center justify-center px-6">
           
-          {/* Top-Left Signature Branding */}
+          {/* Logo */}
           <div className="absolute top-8 left-8 text-white text-xl font-bold tracking-tight z-20">
             LocalLens
           </div>

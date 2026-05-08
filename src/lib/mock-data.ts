@@ -42,7 +42,7 @@ export const MOCK_PLACES: Place[] = [
     city: 'Mumbai',
     category: 'Cafe',
     description: 'Tucked away in a restored bungalow in Bandra, this roastery represents modern Indian coffee culture at its most authentic.',
-    imageUrl: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=1200&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1570160897040-30430122112e?q=80&w=1200&auto=format&fit=crop',
     crowdLevel: 'Medium',
     authenticityScore: 92,
     rating: 4.8,
