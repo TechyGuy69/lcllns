@@ -54,7 +54,7 @@ export function PlaceDetailView({ place, onClose }: PlaceDetailViewProps) {
   return (
     <div 
       className={cn(
-        "fixed inset-0 z-[100] bg-background transition-all duration-700 ease-in-out transform flex flex-col md:flex-row overflow-hidden",
+        "fixed inset-0 z-[100] bg-background transition-transform duration-700 ease-in-out transform flex flex-col md:flex-row overflow-hidden",
         place ? "translate-x-0" : "translate-x-full"
       )}
     >

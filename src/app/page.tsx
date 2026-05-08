@@ -151,7 +151,7 @@ export default function LocalLensApp() {
             "w-full max-w-3xl px-4 transition-all duration-700",
             isExploring ? "translate-y-0" : "animate-in zoom-in-95"
           )}>
-            <div className="bg-white/90 backdrop-blur-md rounded-full p-1 md:p-1.5 flex items-center shadow-2xl border border-white/20">
+            <div className="bg-white/95 backdrop-blur-md rounded-full p-1 md:p-1.5 flex items-center shadow-2xl border border-white/40">
               <div className="pl-4 md:pl-5 text-primary/60">
                 <Search className="w-5 h-5 md:w-6 md:h-6" />
               </div>
@@ -194,7 +194,7 @@ export default function LocalLensApp() {
       )}>
         {/* Mode Toggle */}
         <div className="absolute top-6 left-1/2 -translate-x-1/2 z-30 w-full max-w-[90vw] md:max-w-sm">
-          <div className="bg-white/80 backdrop-blur-xl p-1 rounded-full flex gap-1 shadow-lg border border-border/40">
+          <div className="bg-white/90 backdrop-blur-xl p-1 rounded-full flex gap-1 shadow-lg border border-border/40">
             <button
               onClick={() => { setMode('tourist'); setSelectedPlace(null); }}
               className={cn(
