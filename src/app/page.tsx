@@ -133,6 +133,13 @@ export default function LocalLensApp() {
         "absolute inset-0 z-10 transition-transform duration-1000 ease-in-out bg-black",
         isExploring ? "-translate-x-full" : "translate-x-0"
       )}>
+        {/* Branding Branding */}
+        <div className="absolute top-6 left-6 md:top-10 md:left-10 z-[100] pointer-events-none">
+          <span className="text-2xl md:text-3xl font-headline font-bold text-white text-shadow-strong tracking-tighter">
+            LocalLens
+          </span>
+        </div>
+
         {/* Carousel Images */}
         {HERO_IMAGES.map((img, idx) => (
           <div 
@@ -156,50 +163,50 @@ export default function LocalLensApp() {
         <div className="absolute inset-0 hero-overlay z-[1]" />
 
         {/* Home Screen Content */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center z-10 pb-20">
+        <div className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center z-10 pb-20 max-w-5xl mx-auto">
           <div className="mb-6 transform animate-in fade-in slide-in-from-bottom-8 duration-1000">
-            <div className="inline-block px-5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 mb-10">
-              <span className="text-white/80 text-[10px] font-bold uppercase tracking-[0.3em]">
-                IN INDIA&apos;S ANTI-TOURIST GUIDE
+            <div className="inline-block px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 mb-8 md:mb-10">
+              <span className="text-white/80 text-[9px] md:text-[10px] font-bold uppercase tracking-[0.2em] md:tracking-[0.3em]">
+                INDIA&apos;S ANTI-TOURIST GUIDE
               </span>
             </div>
             
-            <h1 className="font-headline font-bold text-white tracking-tight leading-[1.1] text-6xl md:text-8xl mb-8 text-shadow-strong">
+            <h1 className="font-headline font-bold text-white tracking-tight leading-[1.1] text-5xl md:text-8xl mb-6 md:mb-8 text-shadow-strong">
               See India <br />
               <span className="opacity-90 italic">differently.</span>
             </h1>
             
-            <p className="text-sm md:text-lg text-white/80 font-medium max-w-xl mx-auto leading-relaxed text-shadow-soft px-4">
+            <p className="text-sm md:text-lg text-white/80 font-medium max-w-xl mx-auto leading-relaxed text-shadow-soft">
               Skip the tour buses. Find the places locals actually love — from hidden cafés to sacred spots tourists never reach.
             </p>
           </div>
 
-          <div className="w-full max-w-2xl px-4 animate-in zoom-in-95 duration-700 delay-300">
+          <div className="w-full max-w-2xl animate-in zoom-in-95 duration-700 delay-300">
             <div className="bg-white rounded-full p-1 flex items-center shadow-2xl overflow-hidden mb-6">
-              <div className="pl-5 text-gray-400">
-                <Search className="w-5 h-5" />
+              <div className="pl-4 md:pl-5 text-gray-400">
+                <Search className="w-4 h-4 md:w-5 md:h-5" />
               </div>
               <Input 
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && onExplore()}
                 placeholder="Quiet trails in Munnar..."
-                className="bg-transparent border-0 ring-0 focus-visible:ring-0 text-sm md:text-base h-12 md:h-14 placeholder:text-gray-300 text-gray-800 font-medium"
+                className="bg-transparent border-0 ring-0 focus-visible:ring-0 text-sm md:text-base h-11 md:h-14 placeholder:text-gray-300 text-gray-800 font-medium"
               />
               <Button 
                 onClick={onExplore}
-                className="rounded-full bg-[#346b51] hover:bg-[#2a5641] text-white h-11 md:h-12 px-8 font-bold text-xs tracking-wider gap-2 shadow-lg shrink-0 mr-1"
+                className="rounded-full bg-[#346b51] hover:bg-[#2a5641] text-white h-9 md:h-12 px-6 md:px-8 font-bold text-[10px] md:text-xs tracking-wider gap-2 shadow-lg shrink-0 mr-1"
               >
-                Explore <ArrowRight className="w-4 h-4" />
+                <span className="hidden xs:inline">Explore</span> <ArrowRight className="w-3.5 h-3.5 md:w-4 md:h-4" />
               </Button>
             </div>
             
-            <div className="flex flex-wrap justify-center gap-3 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500">
+            <div className="flex flex-wrap justify-center gap-2 md:gap-3 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500">
               {SHORTCUTS.map((shortcut) => (
                 <button 
                   key={shortcut.label}
                   onClick={() => handleShortcutClick(shortcut.query)}
-                  className="px-5 py-2 rounded-full bg-black/30 backdrop-blur-sm border border-white/20 text-white/90 text-[10px] font-bold hover:bg-white/10 transition-all uppercase tracking-wider"
+                  className="px-4 py-1.5 md:px-5 md:py-2 rounded-full bg-black/30 backdrop-blur-sm border border-white/20 text-white/90 text-[8px] md:text-[10px] font-bold hover:bg-white/10 transition-all uppercase tracking-wider"
                 >
                   {shortcut.label}
                 </button>
@@ -214,36 +221,36 @@ export default function LocalLensApp() {
         "absolute inset-0 z-20 bg-background transition-transform duration-1000 ease-in-out flex flex-col overflow-hidden",
         isExploring ? "translate-x-0" : "translate-x-full"
       )}>
-        <header className="relative z-30 flex items-center justify-between px-6 py-4 md:px-12">
+        <header className="relative z-30 flex items-center justify-between px-4 py-4 md:px-12">
           <button 
             onClick={goHome}
-            className="flex items-center gap-2 text-primary/60 hover:text-primary font-bold text-[10px] uppercase tracking-[0.2em] transition-all bg-white/50 backdrop-blur-md px-4 py-2 rounded-full border border-white/40 shadow-sm"
+            className="flex items-center gap-2 text-primary/60 hover:text-primary font-bold text-[8px] md:text-[10px] uppercase tracking-[0.2em] transition-all bg-white/50 backdrop-blur-md px-3 py-2 md:px-4 md:py-2.5 rounded-full border border-white/40 shadow-sm"
           >
-            <ChevronLeft className="w-4 h-4" /> Back Home
+            <ChevronLeft className="w-3.5 h-3.5 md:w-4 md:h-4" /> <span className="hidden xs:inline">Back Home</span>
           </button>
 
-          <div className="bg-white/90 backdrop-blur-xl p-1 rounded-full flex gap-1 shadow-md border border-border/40 w-full max-w-[180px] md:max-w-sm">
+          <div className="bg-white/90 backdrop-blur-xl p-1 rounded-full flex gap-1 shadow-md border border-border/40 w-full max-w-[150px] xs:max-w-[180px] md:max-w-sm">
             <button
               onClick={() => setMode('tourist')}
               className={cn(
-                "flex-1 flex items-center justify-center gap-2 py-2 rounded-full text-[8px] md:text-[9px] font-bold uppercase tracking-[0.15em] transition-all",
+                "flex-1 flex items-center justify-center gap-1.5 md:gap-2 py-1.5 md:py-2 rounded-full text-[7px] md:text-[9px] font-bold uppercase tracking-[0.1em] md:tracking-[0.15em] transition-all",
                 mode === 'tourist' ? "bg-primary text-white" : "text-muted-foreground"
               )}
             >
-              <Compass className="w-3.5 h-3.5" /> Tourist
+              <Compass className="w-3 h-3 md:w-3.5 md:h-3.5" /> Tourist
             </button>
             <button
               onClick={() => setMode('hidden')}
               className={cn(
-                "flex-1 flex items-center justify-center gap-2 py-2 rounded-full text-[8px] md:text-[9px] font-bold uppercase tracking-[0.15em] transition-all",
+                "flex-1 flex items-center justify-center gap-1.5 md:gap-2 py-1.5 md:py-2 rounded-full text-[7px] md:text-[9px] font-bold uppercase tracking-[0.1em] md:tracking-[0.15em] transition-all",
                 mode === 'hidden' ? "bg-accent text-white" : "text-muted-foreground"
               )}
             >
-              <Sparkles className="w-3.5 h-3.5" /> Hidden Gems
+              <Sparkles className="w-3 h-3 md:w-3.5 md:h-3.5" /> Hidden
             </button>
           </div>
           
-          <div className="w-20 hidden md:block" />
+          <div className="w-10 md:w-20" />
         </header>
 
         <div className="flex-1 relative">
