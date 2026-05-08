@@ -65,7 +65,6 @@ export default function LocalLensApp() {
         const q = query(collection(db, 'places'), limit(1));
         const snapshot = await getDocs(q);
         if (snapshot.empty) {
-          // Filter out any potential non-place entities and seed correctly
           const validMockPlaces = MOCK_PLACES.filter(p => p.name && p.lat && p.lng);
           const promises = validMockPlaces.map(place => {
             const { id, ...data } = place;
@@ -89,7 +88,6 @@ export default function LocalLensApp() {
 
   const places = useMemo(() => {
     if (firestorePlaces && firestorePlaces.length > 0) {
-      // Filter out anything that might have been accidentally seeded as a place but isn't
       return firestorePlaces.filter((p: any) => p.lat && p.lng) as Place[];
     }
     return MOCK_PLACES;
@@ -128,31 +126,33 @@ export default function LocalLensApp() {
   return (
     <main className="relative h-screen w-full bg-background overflow-hidden">
       
-      {/* PERSISTENT BRAND LOGO - Fixed position at top left */}
-      <div className="absolute top-6 left-6 md:top-10 md:left-10 z-[100]">
-        {logoImage ? (
-          <div 
-            className="relative w-40 h-12 md:w-56 md:h-16 cursor-pointer group animate-in fade-in slide-in-from-top-4 duration-1000"
-            onClick={goHome}
-          >
-            <Image 
-              src={logoImage.imageUrl}
-              alt="LocalLens Logo"
-              fill
-              className="object-contain drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)] transition-transform duration-300 group-hover:scale-105"
-              priority
-              data-ai-hint={logoImage.imageHint}
-            />
-          </div>
-        ) : (
-          <h1 
-            className="text-white font-headline text-2xl md:text-3xl font-bold tracking-tight cursor-pointer drop-shadow-xl"
-            onClick={goHome}
-          >
-            LocalLens
-          </h1>
-        )}
-      </div>
+      {/* PERSISTENT NAVIGATION BAR */}
+      <nav className="fixed top-0 left-0 w-full h-20 md:h-24 px-6 md:px-12 flex items-center justify-between z-[100] pointer-events-none">
+        <div className="flex items-center pointer-events-auto">
+          {logoImage ? (
+            <div 
+              className="relative w-40 h-10 md:w-56 md:h-14 cursor-pointer group animate-in fade-in slide-in-from-top-4 duration-1000"
+              onClick={goHome}
+            >
+              <Image 
+                src={logoImage.imageUrl}
+                alt="LocalLens Logo"
+                fill
+                className="object-contain drop-shadow-[0_4px_12px_rgba(0,0,0,0.6)] transition-transform duration-300 group-hover:scale-105"
+                priority
+                data-ai-hint={logoImage.imageHint}
+              />
+            </div>
+          ) : (
+            <h1 
+              className="text-white font-headline text-2xl md:text-3xl font-bold tracking-tight cursor-pointer drop-shadow-xl"
+              onClick={goHome}
+            >
+              LocalLens
+            </h1>
+          )}
+        </div>
+      </nav>
 
       {/* Home Page Section */}
       <section className={cn(
@@ -234,11 +234,10 @@ export default function LocalLensApp() {
         "absolute inset-0 z-20 bg-background transition-transform duration-1000 ease-in-out flex flex-col overflow-hidden",
         isExploring ? "translate-x-0" : "translate-x-full"
       )}>
-        <header className="relative z-30 flex items-center justify-between px-6 py-6 md:px-12">
-          {/* Back button offset to avoid logo collision on mobile */}
+        <header className="relative z-30 flex items-center justify-between px-6 py-6 md:px-12 mt-20 md:mt-24">
           <button 
             onClick={goHome}
-            className="flex items-center gap-2 text-primary/60 hover:text-primary font-bold text-[10px] uppercase tracking-[0.2em] transition-all ml-0 md:ml-48"
+            className="flex items-center gap-2 text-primary/60 hover:text-primary font-bold text-[10px] uppercase tracking-[0.2em] transition-all"
           >
             <ChevronLeft className="w-4 h-4" /> Back Home
           </button>
