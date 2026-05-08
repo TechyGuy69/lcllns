@@ -2,7 +2,6 @@
 "use client"
 
 import React, { useState, useMemo, useEffect } from 'react';
-import Image from 'next/image';
 import { ArrowRight, Compass, Sparkles, ChevronLeft } from 'lucide-react';
 import { InteractiveMap } from '@/components/local-lens/InteractiveMap';
 import { ResultsPanel } from '@/components/local-lens/ResultsPanel';
@@ -39,6 +38,7 @@ export default function LocalLensApp() {
   const [isPanelExpanded, setIsPanelExpanded] = useState(false);
   const [isExploring, setIsExploring] = useState(false);
   const [heroIndex, setHeroIndex] = useState(0);
+  const [loadedImages, setLoadedImages] = useState<Record<number, boolean>>({});
 
   useEffect(() => {
     async function seedData() {
@@ -64,6 +64,10 @@ export default function LocalLensApp() {
     }, 8000);
     return () => clearInterval(interval);
   }, []);
+
+  const handleImageLoad = (idx: number) => {
+    setLoadedImages(prev => ({ ...prev, [idx]: true }));
+  };
 
   const places = useMemo(() => {
     if (firestorePlaces && firestorePlaces.length > 0) {
@@ -118,73 +122,68 @@ export default function LocalLensApp() {
         isExploring ? "-translate-y-full" : "translate-y-0"
       )}>
         
-        {/* Background Layer */}
-        <div className="absolute inset-0">
+        {/* Optimized Background Layer */}
+        <div className="absolute inset-0 bg-neutral-950 overflow-hidden">
           {HERO_IMAGES.map((url, idx) => (
-            <div 
+            <img
               key={url}
+              src={`${url}?auto=format&fit=crop&q=80&w=1920`}
+              alt="India Landscape"
+              onLoad={() => handleImageLoad(idx)}
               className={cn(
-                "absolute inset-0 transition-opacity duration-[2000ms] ease-in-out",
-                heroIndex === idx ? "opacity-100 scale-105" : "opacity-0 scale-100"
+                "absolute inset-0 w-full h-full object-cover transition-all duration-[1000ms] ease-in-out",
+                heroIndex === idx && loadedImages[idx] ? "opacity-100 scale-105" : "opacity-0 scale-100"
               )}
-            >
-              <Image 
-                src={url}
-                alt="India"
-                fill
-                priority={idx === 0}
-                className="object-cover"
-              />
-            </div>
+            />
           ))}
-          <div className="absolute inset-0 bg-black/50" />
+          <div className="absolute inset-0 bg-black/40" />
         </div>
 
-        {/* Logo - Fixed Top Left of Screen */}
-        <div className="absolute top-8 left-8 text-white text-lg md:text-xl font-semibold z-20">
-          LocalLens
-        </div>
+        {/* Content Container */}
+        <div className="relative z-10 min-h-screen w-full flex flex-col items-center justify-center px-6">
+          
+          {/* Top-Left Signature Branding */}
+          <div className="absolute top-8 left-8 text-white text-xl font-bold tracking-tight z-20">
+            LocalLens
+          </div>
 
-        {/* Main Content Layer */}
-        <div className="relative z-10 min-h-screen w-full flex items-center justify-center px-6">
-          <div className="max-w-5xl w-full text-center flex flex-col items-center space-y-10 md:space-y-14">
+          <div className="max-w-5xl w-full text-center flex flex-col items-center space-y-12">
             
-            {/* Heading - Refined Typography for Luxury Impact */}
-            <h1 className="text-white text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-headline leading-[1.05] tracking-tight drop-shadow-2xl">
+            {/* High-End Cinematic Typography */}
+            <h1 className="text-white text-6xl md:text-9xl font-headline leading-[0.95] tracking-tighter drop-shadow-2xl animate-in fade-in slide-in-from-bottom-6 duration-1000">
               See India <br />
               <span className="italic font-normal">differently.</span>
             </h1>
 
-            {/* Subtext and Search in a secondary group */}
-            <div className="flex flex-col items-center space-y-8 w-full">
-              <p className="text-white/80 text-base md:text-xl max-w-xl leading-relaxed text-shadow-soft">
+            <div className="flex flex-col items-center space-y-10 w-full animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200">
+              <p className="text-white/80 text-lg md:text-2xl max-w-2xl leading-relaxed text-shadow-soft font-medium">
                 Skip the crowds. Discover the quiet sanctuaries and local haunts where India truly lives.
               </p>
 
-              {/* Search Bar - Maintained Structure with Glass Look */}
-              <div className="w-full flex items-center bg-white/95 backdrop-blur-md rounded-full px-2 py-2 shadow-2xl max-w-xl transition-all border border-white/20">
+              {/* Refined Glass Search Bar */}
+              <div className="w-full flex items-center bg-white/10 backdrop-blur-2xl rounded-full p-2 border border-white/20 shadow-2xl max-w-2xl transition-all group focus-within:bg-white/15">
                 <input 
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && onExplore()}
                   placeholder="Find a hidden café or quiet trail..."
-                  className="flex-1 bg-transparent outline-none text-gray-700 px-4 text-sm md:text-base h-10 md:h-12"
+                  className="flex-1 bg-transparent outline-none text-white px-6 text-sm md:text-lg h-12 md:h-14 placeholder:text-white/50"
                 />
                 <button 
                   onClick={onExplore}
-                  className="bg-green-700 text-white px-6 md:px-8 h-10 md:h-12 rounded-full hover:bg-green-800 transition-all font-bold text-xs uppercase tracking-widest flex items-center gap-2"
+                  className="bg-green-700 text-white px-8 md:px-10 h-12 md:h-14 rounded-full hover:bg-green-600 active:scale-95 transition-all font-bold text-sm uppercase tracking-widest flex items-center gap-2 shadow-lg"
                 >
                   Explore <ArrowRight className="w-4 h-4" />
                 </button>
               </div>
 
-              {/* Pills */}
+              {/* Category Pills */}
               <div className="flex flex-wrap justify-center gap-3">
                 {SHORTCUTS.map((shortcut) => (
                   <button 
                     key={shortcut.label}
                     onClick={() => handleShortcutClick(shortcut.query)}
-                    className="px-5 py-2 text-[10px] md:text-xs font-bold uppercase tracking-widest bg-white/10 text-white rounded-full backdrop-blur-sm border border-white/10 hover:bg-white/20 transition-all"
+                    className="px-6 py-2.5 text-[10px] md:text-xs font-bold uppercase tracking-widest bg-white/5 text-white/90 rounded-full backdrop-blur-md border border-white/10 hover:bg-white/20 hover:text-white transition-all active:scale-95"
                   >
                     {shortcut.label}
                   </button>
