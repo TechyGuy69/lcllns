@@ -1,3 +1,4 @@
+
 "use client"
 
 import React, { useState, useMemo, useEffect } from 'react';
@@ -88,12 +89,12 @@ export default function LocalLensApp() {
   };
 
   return (
-    <main className="relative h-screen w-full bg-background flex flex-col overflow-hidden">
+    <main className="relative h-screen w-full bg-background overflow-hidden">
       
-      {/* Hero Section */}
+      {/* Home Page Section */}
       <section className={cn(
-        "relative w-full transition-all duration-700 ease-in-out shrink-0",
-        isExploring ? "h-[35vh] md:h-[40vh]" : "h-screen"
+        "absolute inset-0 z-10 transition-transform duration-1000 ease-in-out bg-black",
+        isExploring ? "-translate-x-full" : "translate-x-0"
       )}>
         {/* Carousel Images */}
         {HERO_IMAGES.map((img, idx) => (
@@ -117,40 +118,18 @@ export default function LocalLensApp() {
         
         <div className="absolute inset-0 hero-overlay z-[1]" />
 
-        {/* Home Navigation */}
-        {isExploring && (
-          <button 
-            onClick={goHome}
-            className="absolute top-6 left-6 z-20 flex items-center gap-2 text-white hover:text-white/80 font-bold text-[10px] uppercase tracking-[0.2em] transition-all"
-          >
-            <ChevronLeft className="w-4 h-4" /> Home
-          </button>
-        )}
-
         <div className="absolute inset-0 flex flex-col items-center justify-center px-4 md:px-8 text-center z-10">
-          <div className={cn(
-            "transition-all duration-700 transform max-w-4xl",
-            isExploring ? "mb-2 md:mb-4 scale-90" : "mb-8 md:mb-12"
-          )}>
-            <h1 className={cn(
-              "font-headline font-bold text-white tracking-tight leading-tight transition-all duration-700 text-shadow-strong",
-              isExploring ? "text-2xl md:text-4xl" : "text-4xl md:text-7xl mb-4 md:mb-6"
-            )}>
-              <span className="text-white">See India </span>
-              <span className="italic font-normal text-white">differently.</span>
+          <div className="mb-8 md:mb-12 max-w-4xl transform animate-in fade-in slide-in-from-bottom-8 duration-1000">
+            <h1 className="font-headline font-bold text-white tracking-tight leading-tight text-4xl md:text-7xl mb-4 md:mb-6 text-shadow-strong">
+              See India <span className="italic font-normal">differently.</span>
             </h1>
-            {!isExploring && (
-              <p className="text-sm md:text-lg text-white font-medium max-w-xl mx-auto leading-relaxed text-shadow-soft animate-in fade-in duration-1000 delay-300">
-                Skip the crowds. Discover the quiet sanctuaries and local haunts where India truly lives.
-              </p>
-            )}
+            <p className="text-sm md:text-lg text-white font-medium max-w-xl mx-auto leading-relaxed text-shadow-soft opacity-90">
+              Skip the crowds. Discover the quiet sanctuaries and local haunts where India truly lives.
+            </p>
           </div>
 
           {/* Search Bar */}
-          <div className={cn(
-            "w-full max-w-3xl px-4 transition-all duration-700",
-            isExploring ? "translate-y-0" : "animate-in zoom-in-95"
-          )}>
+          <div className="w-full max-w-3xl px-4 animate-in zoom-in-95 duration-700 delay-300">
             <div className="bg-white/95 backdrop-blur-md rounded-full p-1 md:p-1.5 flex items-center shadow-2xl border border-white/40">
               <div className="pl-4 md:pl-5 text-primary/60">
                 <Search className="w-5 h-5 md:w-6 md:h-6" />
@@ -170,35 +149,40 @@ export default function LocalLensApp() {
               </Button>
             </div>
             
-            {!isExploring && (
-              <div className="mt-8 flex flex-wrap justify-center gap-2 md:gap-3 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500">
-                {SUGGESTIONS.map((s) => (
-                  <button 
-                    key={s}
-                    onClick={() => { setSearchQuery(s); setIsExploring(true); }}
-                    className="px-5 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/30 text-white text-[9px] md:text-[10px] font-bold hover:bg-white/30 transition-all shadow-sm uppercase tracking-widest"
-                  >
-                    {s}
-                  </button>
-                ))}
-              </div>
-            )}
+            <div className="mt-8 flex flex-wrap justify-center gap-2 md:gap-3 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500">
+              {SUGGESTIONS.map((s) => (
+                <button 
+                  key={s}
+                  onClick={() => { setSearchQuery(s); setIsExploring(true); }}
+                  className="px-5 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/30 text-white text-[9px] md:text-[10px] font-bold hover:bg-white/30 transition-all shadow-sm uppercase tracking-widest"
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Discovery Content */}
+      {/* Discovery Page Section */}
       <section className={cn(
-        "relative w-full flex-1 bg-background flex flex-col overflow-hidden transition-all duration-700",
-        isExploring ? "opacity-100" : "opacity-0 pointer-events-none"
+        "absolute inset-0 z-20 bg-background transition-transform duration-1000 ease-in-out flex flex-col overflow-hidden",
+        isExploring ? "translate-x-0" : "translate-x-full"
       )}>
-        {/* Map and Controls */}
-        <div className="absolute top-6 left-1/2 -translate-x-1/2 z-30 w-full max-w-[90vw] md:max-w-sm">
-          <div className="bg-white/90 backdrop-blur-xl p-1 rounded-full flex gap-1 shadow-lg border border-border/40">
+        {/* Navigation / Header */}
+        <header className="relative z-30 flex items-center justify-between px-6 py-6 md:px-12">
+          <button 
+            onClick={goHome}
+            className="flex items-center gap-2 text-primary/60 hover:text-primary font-bold text-[10px] uppercase tracking-[0.2em] transition-all"
+          >
+            <ChevronLeft className="w-4 h-4" /> Back Home
+          </button>
+
+          <div className="bg-white/90 backdrop-blur-xl p-1 rounded-full flex gap-1 shadow-md border border-border/40 w-full max-w-[200px] md:max-w-sm">
             <button
               onClick={() => setMode('tourist')}
               className={cn(
-                "flex-1 flex items-center justify-center gap-2 py-2 rounded-full text-[9px] font-bold uppercase tracking-[0.15em] transition-all",
+                "flex-1 flex items-center justify-center gap-2 py-2 rounded-full text-[8px] md:text-[9px] font-bold uppercase tracking-[0.15em] transition-all",
                 mode === 'tourist' ? "bg-primary text-white" : "text-muted-foreground"
               )}
             >
@@ -207,14 +191,16 @@ export default function LocalLensApp() {
             <button
               onClick={() => setMode('hidden')}
               className={cn(
-                "flex-1 flex items-center justify-center gap-2 py-2 rounded-full text-[9px] font-bold uppercase tracking-[0.15em] transition-all",
+                "flex-1 flex items-center justify-center gap-2 py-2 rounded-full text-[8px] md:text-[9px] font-bold uppercase tracking-[0.15em] transition-all",
                 mode === 'hidden' ? "bg-accent text-white" : "text-muted-foreground"
               )}
             >
               <Sparkles className="w-3.5 h-3.5" /> Hidden Gems
             </button>
           </div>
-        </div>
+          
+          <div className="w-20 hidden md:block" /> {/* Spacer */}
+        </header>
 
         <div className="flex-1 relative">
           <InteractiveMap 
@@ -232,7 +218,7 @@ export default function LocalLensApp() {
         </div>
       </section>
 
-      {/* Full-Screen Page Detail (Slides from right) */}
+      {/* Place Detail View (Slides from right over everything) */}
       <PlaceDetailView 
         place={selectedPlace} 
         onClose={closePlaceDetail} 

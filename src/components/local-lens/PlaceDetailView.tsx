@@ -1,3 +1,4 @@
+
 "use client"
 
 import React, { useState, useEffect } from 'react';
@@ -53,7 +54,7 @@ export function PlaceDetailView({ place, onClose }: PlaceDetailViewProps) {
   return (
     <div 
       className={cn(
-        "fixed inset-0 z-[100] bg-background transition-transform duration-700 ease-in-out transform flex flex-col md:flex-row overflow-hidden",
+        "fixed inset-0 z-[100] bg-background transition-transform duration-700 ease-in-out transform flex flex-col md:flex-row overflow-hidden shadow-2xl",
         place ? "translate-x-0" : "translate-x-full"
       )}
     >
@@ -62,13 +63,13 @@ export function PlaceDetailView({ place, onClose }: PlaceDetailViewProps) {
           {/* Back Button */}
           <button 
             onClick={onClose}
-            className="absolute top-6 left-6 z-50 bg-white/90 backdrop-blur-md p-3 rounded-full shadow-2xl border border-white hover:scale-110 active:scale-95 transition-all"
+            className="absolute top-6 left-6 z-[110] bg-white/90 backdrop-blur-md p-3 rounded-full shadow-2xl border border-white hover:scale-110 active:scale-95 transition-all"
           >
             <ArrowLeft className="w-5 h-5 text-primary" />
           </button>
 
           {/* Image Column */}
-          <div className="relative w-full md:w-1/2 h-[45vh] md:h-full shrink-0">
+          <div className="relative w-full md:w-1/2 h-[40vh] md:h-full shrink-0">
             <Image 
               src={place.imageUrl} 
               alt={place.name}
@@ -76,7 +77,7 @@ export function PlaceDetailView({ place, onClose }: PlaceDetailViewProps) {
               className="object-cover"
               priority
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent md:bg-gradient-to-r md:from-black/40 md:to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent md:bg-gradient-to-r md:from-black/60 md:to-transparent" />
             
             <div className="absolute bottom-10 left-10 right-10 text-white">
               <Badge className="mb-4 bg-white/20 backdrop-blur-md text-white border-white/30 px-4 py-1.5 rounded-full font-bold uppercase tracking-[0.2em] text-[10px]">
@@ -93,12 +94,12 @@ export function PlaceDetailView({ place, onClose }: PlaceDetailViewProps) {
           </div>
 
           {/* Content Column */}
-          <div className="flex-1 bg-background h-[55vh] md:h-full overflow-y-auto no-scrollbar p-8 md:p-20 flex flex-col gap-12">
+          <div className="flex-1 bg-background h-[60vh] md:h-full overflow-y-auto no-scrollbar p-8 md:p-20 flex flex-col gap-12">
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
               {[
                 { label: 'Rating', val: place.rating, icon: <Star className="w-4 h-4 fill-current text-amber-500" /> },
                 { label: 'Reviews', val: place.reviews.toLocaleString(), icon: <Users className="w-4 h-4 text-muted-foreground" /> },
-                { label: 'Crowd', val: place.crowdLevel, icon: <div className="w-4 h-4 rounded-full bg-primary/20 flex items-center justify-center text-[10px]">!</div> },
+                { label: 'Crowd', val: place.crowdLevel, icon: <div className="w-4 h-4 rounded-full bg-primary/20 flex items-center justify-center text-[10px] font-bold">!</div> },
                 { label: 'Local Vibe', val: `${place.authenticityScore}%`, icon: <Sparkles className="w-4 h-4 text-accent" /> },
               ].map((stat, i) => (
                 <div key={i} className="flex flex-col gap-2">
@@ -113,14 +114,14 @@ export function PlaceDetailView({ place, onClose }: PlaceDetailViewProps) {
 
             <div className="max-w-3xl">
               <h2 className="text-[10px] font-bold uppercase tracking-[0.3em] text-muted-foreground mb-6">Discovery Details</h2>
-              <p className="text-xl md:text-2xl text-primary/80 font-medium leading-relaxed font-body italic">
+              <p className="text-lg md:text-2xl text-primary/80 font-medium leading-relaxed font-body italic">
                 {place.description}
               </p>
             </div>
 
             {/* AI Analysis Section */}
             <div className="mt-auto pt-12 border-t border-border/60">
-              <div className="bg-accent/5 rounded-[3rem] p-8 md:p-12 border border-accent/10 relative overflow-hidden group">
+              <div className="bg-accent/5 rounded-[2rem] md:rounded-[3rem] p-6 md:p-12 border border-accent/10 relative overflow-hidden group">
                 <div className="absolute top-0 right-0 p-12 opacity-[0.03] group-hover:scale-110 transition-transform duration-1000">
                   <Sparkles className="w-48 h-48 text-accent" />
                 </div>
@@ -146,7 +147,7 @@ export function PlaceDetailView({ place, onClose }: PlaceDetailViewProps) {
                       <div className="flex items-center gap-8">
                         <div>
                           <span className="text-[10px] font-bold uppercase tracking-widest text-accent mb-2 block">Authenticity</span>
-                          <span className="text-5xl font-headline font-bold text-accent">{aiAnalysis.authenticityScore}<span className="text-xl">/100</span></span>
+                          <span className="text-4xl md:text-5xl font-headline font-bold text-accent">{aiAnalysis.authenticityScore}<span className="text-xl">/100</span></span>
                         </div>
                         <div className="h-16 w-px bg-accent/20" />
                         <div>
