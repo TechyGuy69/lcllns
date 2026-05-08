@@ -18,12 +18,12 @@ export function PlaceCard({ place, onClick, className }: PlaceCardProps) {
   return (
     <Card 
       className={cn(
-        "group relative overflow-hidden glass-card cursor-pointer flex flex-col rounded-3xl",
+        "group relative overflow-hidden glass-card cursor-pointer flex flex-col rounded-[2rem] border-0",
         className
       )}
       onClick={onClick}
     >
-      <div className="relative h-48 md:h-52 w-full overflow-hidden shrink-0">
+      <div className="relative h-40 md:h-48 w-full overflow-hidden shrink-0">
         <Image 
           src={place.imageUrl} 
           alt={place.name}
@@ -31,40 +31,40 @@ export function PlaceCard({ place, onClick, className }: PlaceCardProps) {
           className="object-cover transition-transform duration-700 group-hover:scale-105"
         />
         <div className="absolute top-4 right-4">
-          <Badge className="bg-white/95 text-primary border-0 font-bold uppercase tracking-widest text-[10px] px-3 py-1 rounded-full shadow-sm">
+          <Badge className="bg-white/95 text-primary border-0 font-bold uppercase tracking-widest text-[9px] px-3 py-1 rounded-full shadow-sm">
             {place.category}
           </Badge>
         </div>
       </div>
 
-      <div className="p-6 flex-1 flex flex-col">
-        <div className="flex justify-between items-start gap-4 mb-2">
-          <h3 className="text-xl font-headline font-bold text-primary leading-tight">
+      <div className="p-5 md:p-6 flex-1 flex flex-col">
+        <div className="flex justify-between items-start gap-3 mb-2">
+          <h3 className="text-lg md:text-xl font-headline font-bold text-primary leading-tight">
             {place.name}
           </h3>
-          <div className="flex items-center gap-1 text-xs font-bold text-amber-600">
-            <Star className="w-3.5 h-3.5 fill-current" />
+          <div className="flex items-center gap-1 text-[11px] font-bold text-amber-600 shrink-0">
+            <Star className="w-3 h-3 fill-current" />
             {place.rating}
           </div>
         </div>
 
-        <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-4">
-          <MapPin className="w-3.5 h-3.5 text-accent" />
+        <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-3">
+          <MapPin className="w-3 h-3 text-accent" />
           {place.city}
         </div>
 
-        <p className="text-sm text-muted-foreground font-medium line-clamp-2 leading-relaxed mb-6">
+        <p className="text-xs md:text-sm text-muted-foreground font-medium line-clamp-2 leading-relaxed mb-4">
           {place.description}
         </p>
 
-        <div className="flex items-center justify-between pt-4 mt-auto border-t border-border">
-          <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase text-muted-foreground">
-            <Users className="w-3.5 h-3.5 opacity-60" />
-            {place.crowdLevel}
+        <div className="flex items-center justify-between pt-4 mt-auto border-t border-border/50">
+          <div className="flex items-center gap-1.5 text-[9px] font-bold uppercase text-muted-foreground tracking-tighter">
+            <Users className="w-3 h-3 opacity-60" />
+            {place.crowdLevel} Crowd
           </div>
           
-          <div className="flex items-center gap-1.5 text-accent text-[10px] font-bold uppercase">
-            <Sparkles className="w-3.5 h-3.5" />
+          <div className="flex items-center gap-1.5 text-accent text-[9px] font-bold uppercase tracking-tighter">
+            <Sparkles className="w-3 h-3" />
             {place.authenticityScore}% Local
           </div>
         </div>
