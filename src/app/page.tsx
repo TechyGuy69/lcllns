@@ -125,29 +125,37 @@ export default function LocalLensApp() {
   return (
     <main className="relative h-screen w-full bg-background overflow-hidden">
       
+      {/* Persistent Logo Container - Outside of sliding sections for visibility */}
+      <div className="absolute top-8 left-8 md:top-12 md:left-12 z-[60] pointer-events-none">
+        {logoImage ? (
+          <div 
+            className="relative w-48 h-16 md:w-64 md:h-20 pointer-events-auto cursor-pointer group animate-in fade-in slide-in-from-top-4 duration-1000"
+            onClick={goHome}
+          >
+            <Image 
+              src={logoImage.imageUrl}
+              alt="LocalLens Logo"
+              fill
+              className="object-contain transition-transform duration-300 group-hover:scale-105 drop-shadow-2xl"
+              priority
+              data-ai-hint={logoImage.imageHint}
+            />
+          </div>
+        ) : (
+          <h1 
+            className="text-white font-headline text-3xl font-bold tracking-tight pointer-events-auto cursor-pointer drop-shadow-lg"
+            onClick={goHome}
+          >
+            LocalLens
+          </h1>
+        )}
+      </div>
+
       {/* Home Page Section */}
       <section className={cn(
         "absolute inset-0 z-10 transition-transform duration-1000 ease-in-out bg-black",
         isExploring ? "-translate-x-full" : "translate-x-0"
       )}>
-        {/* Logo Container */}
-        <div className="absolute top-8 left-8 md:top-12 md:left-12 z-30 animate-in fade-in slide-in-from-top-4 duration-1000">
-          {logoImage ? (
-            <div className="relative w-48 h-16 md:w-64 md:h-20">
-              <Image 
-                src={logoImage.imageUrl}
-                alt="LocalLens Logo"
-                fill
-                className="object-contain"
-                priority
-                data-ai-hint={logoImage.imageHint}
-              />
-            </div>
-          ) : (
-            <h1 className="text-white font-headline text-3xl font-bold tracking-tight">LocalLens</h1>
-          )}
-        </div>
-
         {/* Carousel Images */}
         {HERO_IMAGES.map((img, idx) => (
           <div 
