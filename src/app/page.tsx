@@ -35,12 +35,11 @@ const HERO_IMAGES = [
 ];
 
 const SUGGESTIONS = [
-  "Mumbai cafes",
-  "Kolkata cafes",
-  "Hidden Hampi",
-  "Varanasi ghats",
-  "Jaipur gems",
-  "Munnar trails"
+  "Mumbai",
+  "Kolkata",
+  "Hampi",
+  "Jaipur",
+  "Munnar"
 ];
 
 export default function LocalLensApp() {
@@ -97,6 +96,7 @@ export default function LocalLensApp() {
     const queryWords = searchQuery.toLowerCase().split(/\s+/).filter(Boolean);
     
     return places.filter((place) => {
+      // Filtering logic: matches the selected mode (tourist vs hidden)
       const matchesMode = mode === 'tourist' ? place.isTouristFavorite : place.isHiddenGem;
       
       if (queryWords.length === 0) return matchesMode;
@@ -192,15 +192,10 @@ export default function LocalLensApp() {
                   key={s}
                   onClick={() => { 
                     setSearchQuery(s); 
-                    // Set mode automatically based on suggestions
-                    if (s.toLowerCase().includes('hidden') || s.toLowerCase().includes('gems')) {
-                      setMode('hidden');
-                    } else {
-                      setMode('tourist');
-                    }
+                    // Automatically transition to the exploration page for the selected area
                     setIsExploring(true); 
                   }}
-                  className="px-5 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/30 text-white text-[9px] md:text-[10px] font-bold hover:bg-white/30 transition-all shadow-sm uppercase tracking-widest"
+                  className="px-6 py-2.5 rounded-full bg-white/10 backdrop-blur-md border border-white/30 text-white text-[10px] md:text-[11px] font-bold hover:bg-white/30 transition-all shadow-sm uppercase tracking-widest"
                 >
                   {s}
                 </button>
