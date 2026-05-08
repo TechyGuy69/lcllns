@@ -191,7 +191,7 @@ export default function LocalLensApp() {
               />
               <button 
                 onClick={onExplore}
-                className="bg-green-700 text-white px-8 md:px-10 h-12 md:h-14 rounded-full hover:bg-green-600 active:scale-95 transition-all font-bold text-xs uppercase tracking-widest flex items-center gap-2 shadow-lg mr-4"
+                className="bg-green-700 text-white px-8 md:px-10 h-12 md:h-14 rounded-full hover:bg-green-600 active:scale-95 transition-all font-bold text-xs uppercase tracking-widest flex items-center gap-2 shadow-lg mr-6"
               >
                 Explore <ArrowRight className="w-4 h-4" />
               </button>
