@@ -22,7 +22,7 @@ export function ResultsPanel({ places, mode, isExpanded, setIsExpanded, onPlaceC
     if (panelRef.current) {
       panelRef.current.scrollTo({ top: 0, behavior: 'smooth' });
     }
-  }, [places]);
+  }, [places, mode]);
 
   return (
     <div 
@@ -53,20 +53,18 @@ export function ResultsPanel({ places, mode, isExpanded, setIsExpanded, onPlaceC
             isExpanded ? "opacity-100" : "opacity-0 pointer-events-none"
           )}
         >
-          {/* Mode Context Heading */}
-          {places.length > 0 && (
-            <div className="mb-6 md:mb-10 animate-in fade-in slide-in-from-left-4 duration-700">
-              <h2 className="text-xl md:text-3xl font-headline font-bold text-primary">
-                {mode === 'hidden' ? 'Showing Hidden Gems near you 🌿' : 'Popular Tourist Spots 🧳'}
-              </h2>
-              <p className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-muted-foreground mt-1 opacity-70">
-                {mode === 'hidden' ? 'Authentic experiences away from the crowds' : 'Must-see landmarks and trending destinations'}
-              </p>
-            </div>
-          )}
+          {/* Dynamic Mode Header */}
+          <div className="mb-8 md:mb-12 animate-in fade-in slide-in-from-left-4 duration-700">
+            <h2 className="text-2xl md:text-4xl font-headline font-bold text-primary">
+              {mode === 'hidden' ? 'Hidden Gems 🌿' : 'Popular Tourist Spots 🧳'}
+            </h2>
+            <p className="text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground mt-2 opacity-70">
+              {mode === 'hidden' ? 'Authentic experiences curated for low crowds' : 'Must-see landmarks with high global acclaim'}
+            </p>
+          </div>
 
           {places.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-full text-center py-20 opacity-60">
+            <div className="flex flex-col items-center justify-center h-[60%] text-center py-20 opacity-60">
               <div className="bg-secondary/20 p-6 rounded-full mb-6">
                 <Sparkles className="w-8 h-8 text-muted-foreground" />
               </div>
@@ -76,13 +74,13 @@ export function ResultsPanel({ places, mode, isExpanded, setIsExpanded, onPlaceC
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 md:gap-12 py-2 md:py-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-12 md:gap-16 py-4">
               {places.map((place) => (
                 <PlaceCard 
                   key={place.id} 
                   place={place} 
+                  mode={mode}
                   onClick={() => onPlaceClick(place)}
-                  className="animate-in fade-in slide-in-from-bottom-4 duration-700"
                 />
               ))}
             </div>

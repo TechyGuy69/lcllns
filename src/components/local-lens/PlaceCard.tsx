@@ -13,26 +13,22 @@ interface PlaceCardProps {
   place: Place;
   onClick?: () => void;
   className?: string;
+  mode?: 'tourist' | 'hidden';
 }
 
-export function PlaceCard({ place, onClick, className }: PlaceCardProps) {
+export function PlaceCard({ place, onClick, className, mode = 'tourist' }: PlaceCardProps) {
   // Description-based logic for "Why this place?"
   const getRecommendationReason = () => {
-    if (place.isHiddenGem) {
-      if (place.crowdLevel === 'Low') return "Loved by locals, low crowd";
-      return "An authentic pocket of local culture";
+    if (mode === 'hidden') {
+      return "Loved by locals, low crowd";
     }
-    if (place.isTouristFavorite) {
-      if (place.rating > 4.5) return "Highly rated, trending spot";
-      return "Iconic landmark, must-visit";
-    }
-    return "Curated for authentic vibes";
+    return "Highly rated, trending spot";
   };
 
   return (
     <Card 
       className={cn(
-        "group relative overflow-hidden glass-card cursor-pointer flex flex-col rounded-[2.5rem] border-0 transition-all duration-500 hover:scale-[1.03] hover:shadow-2xl",
+        "group relative overflow-hidden glass-card cursor-pointer flex flex-col rounded-[2.5rem] border-0 transition-all duration-500 hover:scale-[1.03] hover:shadow-2xl animate-in fade-in slide-in-from-bottom-4 duration-700",
         className
       )}
       onClick={onClick}
@@ -49,7 +45,7 @@ export function PlaceCard({ place, onClick, className }: PlaceCardProps) {
           <Badge className="bg-white/95 text-primary border-0 font-bold uppercase tracking-widest text-[8px] px-3 py-1 rounded-full shadow-sm">
             {place.category}
           </Badge>
-          {place.isHiddenGem ? (
+          {mode === 'hidden' ? (
             <Badge className="bg-accent text-white border-0 font-bold uppercase tracking-widest text-[8px] px-3 py-1 rounded-full shadow-lg">
               Hidden Gem
             </Badge>
@@ -61,7 +57,7 @@ export function PlaceCard({ place, onClick, className }: PlaceCardProps) {
         </div>
       </div>
 
-      <div className="p-6 md:p-8 flex-1 flex flex-col">
+      <div className="p-8 md:p-10 flex-1 flex flex-col">
         <div className="flex justify-between items-start gap-4 mb-2">
           <h3 className="text-xl md:text-2xl font-headline font-bold text-primary leading-tight group-hover:text-accent transition-colors">
             {place.name}
@@ -81,9 +77,9 @@ export function PlaceCard({ place, onClick, className }: PlaceCardProps) {
           {place.description}
         </p>
 
-        {/* Why this place? Feature */}
-        <div className="bg-secondary/30 rounded-2xl p-3 mb-6 flex items-start gap-2 border border-secondary/50">
-          <Info className="w-3.5 h-3.5 text-accent mt-0.5 shrink-0" />
+        {/* Intelligence Feature */}
+        <div className="bg-secondary/30 rounded-2xl p-4 mb-6 flex items-start gap-3 border border-secondary/50">
+          <Info className="w-4 h-4 text-accent mt-0.5 shrink-0" />
           <span className="text-[10px] font-bold text-primary/70 leading-tight">
             {getRecommendationReason()}
           </span>

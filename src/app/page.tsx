@@ -52,7 +52,7 @@ export default function LocalLensApp() {
     seedData();
   }, [db]);
 
-  const places = useMemo(() => {
+  const allPlaces = useMemo(() => {
     if (firestorePlaces && firestorePlaces.length > 0) {
       return firestorePlaces.filter((p: any) => p.lat && p.lng) as Place[];
     }
@@ -62,18 +62,32 @@ export default function LocalLensApp() {
   const filteredPlaces = useMemo(() => {
     const queryWords = searchQuery.toLowerCase().split(/\s+/).filter(Boolean);
     
-    return places.filter((place) => {
-      const matchesMode = mode === 'tourist' ? place.isTouristFavorite : place.isHiddenGem;
-      if (queryWords.length === 0) return matchesMode;
+    return allPlaces.filter((place) => {
+      // 1. Intelligence Logic for Modes
+      let matchesMode = false;
+      const desc = place.description.toLowerCase();
+      const hasHiddenKeywords = ["quiet", "local", "peaceful", "hidden", "authentic", "tucked"].some(kw => desc.includes(kw));
+      
+      if (mode === 'tourist') {
+        // Tourist Mode: High rating and high reviews or explicit flag
+        matchesMode = place.isTouristFavorite || (place.rating >= 4.2 && place.reviews > 100);
+      } else {
+        // Hidden Gems Mode: Low review count, explicit flag, or specific keywords
+        matchesMode = place.isHiddenGem || (place.reviews < 80 || hasHiddenKeywords);
+      }
+
+      if (!matchesMode) return false;
+
+      // 2. Search filtering
+      if (queryWords.length === 0) return true;
       const searchableText = `${place.name} ${place.city} ${place.category} ${place.description}`.toLowerCase();
-      const matchesSearch = queryWords.every(word => searchableText.includes(word));
-      return matchesSearch && matchesMode;
+      return queryWords.every(word => searchableText.includes(word));
     });
-  }, [searchQuery, mode, places]);
+  }, [searchQuery, mode, allPlaces]);
 
   const handlePlaceSelect = (place: Place) => {
     setSelectedPlace(place);
-    setIsPanelExpanded(false); // Collapse panel to see map if on mobile
+    setIsPanelExpanded(false); 
   };
 
   const closePlaceDetail = () => {
@@ -106,7 +120,7 @@ export default function LocalLensApp() {
         isExploring ? "-translate-y-full" : "translate-y-0"
       )}>
         
-        {/* Static Background Layer */}
+        {/* Background Layer */}
         <div className="absolute inset-0 z-0 bg-neutral-950">
           <Image
             src={STATIC_HERO_IMAGE}
@@ -116,21 +130,19 @@ export default function LocalLensApp() {
             priority
             className="object-cover"
           />
-          {/* Overlay for Readability */}
           <div className="absolute inset-0 bg-black/45 z-10" />
         </div>
 
-        {/* Branding - Fixed Top Left */}
+        {/* Branding */}
         <div className="absolute top-8 left-8 text-white text-xl font-bold tracking-tight z-30 animate-in fade-in duration-1000">
           LocalLens
         </div>
 
-        {/* Content Container */}
+        {/* Hero Content */}
         <div className="relative z-30 w-full max-w-5xl px-6 flex flex-col items-center text-center space-y-12">
           
-          {/* Cinematic Hero Heading */}
           <div className="space-y-6">
-            <h1 className="text-white text-6xl md:text-9xl font-headline leading-[1.1] tracking-tighter drop-shadow-2xl animate-in fade-in slide-in-from-bottom-8 duration-1000">
+            <h1 className="text-white text-7xl md:text-9xl font-headline leading-[1.05] tracking-tighter drop-shadow-2xl animate-in fade-in slide-in-from-bottom-8 duration-1000">
               See India <br />
               <span className="italic font-normal">differently.</span>
             </h1>
@@ -141,18 +153,18 @@ export default function LocalLensApp() {
           </div>
 
           <div className="flex flex-col items-center space-y-10 w-full animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-400">
-            {/* Professional Glass Search Bar */}
-            <div className="w-full flex items-center bg-white/10 backdrop-blur-xl rounded-full p-2 border border-white/20 shadow-2xl max-w-2xl transition-all group focus-within:bg-white/15">
+            {/* Search Bar */}
+            <div className="w-full flex items-center bg-white/95 backdrop-blur-xl rounded-full p-1.5 border border-white/20 shadow-2xl max-w-2xl transition-all group focus-within:ring-2 focus-within:ring-green-600/30">
               <input 
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && onExplore()}
                 placeholder="Find a hidden café or quiet trail..."
-                className="flex-1 bg-transparent outline-none text-white px-6 text-sm md:text-lg h-12 md:h-14 placeholder:text-white/50"
+                className="flex-1 bg-transparent outline-none text-gray-800 px-6 text-sm md:text-lg h-12 md:h-14 placeholder:text-gray-400"
               />
               <button 
                 onClick={onExplore}
-                className="bg-green-700 text-white px-8 md:px-10 h-12 md:h-14 rounded-full hover:bg-green-600 active:scale-95 transition-all font-bold text-sm uppercase tracking-widest flex items-center gap-2 shadow-lg"
+                className="bg-green-700 text-white px-8 md:px-10 h-12 md:h-14 rounded-full hover:bg-green-600 active:scale-95 transition-all font-bold text-xs uppercase tracking-widest flex items-center gap-2 shadow-lg"
               >
                 Explore <ArrowRight className="w-4 h-4" />
               </button>
