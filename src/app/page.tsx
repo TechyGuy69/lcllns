@@ -140,7 +140,7 @@ export default function LocalLensApp() {
               See India <span className="italic font-normal">differently.</span>
             </h1>
             {!isExploring && (
-              <p className="text-sm md:text-lg text-white/90 font-medium max-w-xl mx-auto leading-relaxed text-shadow-soft animate-in fade-in duration-1000 delay-300">
+              <p className="text-sm md:text-lg text-white font-medium max-w-xl mx-auto leading-relaxed text-shadow-soft animate-in fade-in duration-1000 delay-300">
                 Skip the crowds. Discover the quiet sanctuaries and local haunts where India truly lives.
               </p>
             )}
@@ -238,7 +238,7 @@ export default function LocalLensApp() {
         />
       </section>
 
-      {/* Full Screen Place Detail View */}
+      {/* Full Screen Place Detail View (Slides from right) */}
       <PlaceDetailView 
         place={selectedPlace} 
         onClose={closePlaceDetail} 
