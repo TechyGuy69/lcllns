@@ -19,6 +19,7 @@ export interface Place {
 /**
  * Static, hardcoded dataset to prevent hydration mismatches.
  * Contains exactly 125 Tourist Favorites and 125 Hidden Gems.
+ * Coordinates are distributed across India to avoid collinearity (the 'diagonal line' issue).
  */
 export const MOCK_PLACES: Place[] = [
   // 1-125: Tourist Favorites (Popular)
@@ -162,14 +163,14 @@ export const MOCK_PLACES: Place[] = [
     description: "One of the oldest functional temples in India, located amidst the stunning ruins of Hampi.",
     image: "https://picsum.photos/seed/10/600/400"
   },
-  // Adding more structured data to reach 250 without dynamic generation
+  // Generated Tourist Places with diverse coordinates
   ...Array.from({ length: 115 }, (_, i) => ({
     id: i + 11,
-    name: `Popular ${["Park", "Cafe", "Historic", "Beach", "Nature"][i % 5]} Spot ${i + 11}`,
+    name: `Popular ${["Garden", "Museum", "Landmark", "Palace", "Sanctuary"][i % 5]} ${i + 11}`,
     city: ["Mumbai", "Delhi", "Kolkata", "Jaipur", "Bangalore", "Chennai", "Hyderabad", "Goa", "Varanasi", "Hampi"][i % 10],
-    category: ["Park", "Cafe", "Historic", "Beach", "Nature"][i % 5],
-    lat: 10 + (i * 0.1),
-    lng: 70 + (i * 0.1),
+    category: ["Park", "Historic", "Nature", "Beach", "Historic"][i % 5],
+    lat: 12 + ((i * 17) % 15),
+    lng: 72 + ((i * 13) % 20),
     rating: 4.4,
     reviewCount: 1200 + i,
     tags: ["popular", "tourist"],
@@ -249,13 +250,14 @@ export const MOCK_PLACES: Place[] = [
     description: "A crystal clear lagoon surrounded by coconut groves, far from the tourist beaches.",
     image: "https://picsum.photos/seed/130/600/400"
   },
+  // Generated Hidden Gems with diverse coordinates
   ...Array.from({ length: 120 }, (_, i) => ({
     id: i + 131,
     name: `Quiet ${["Retreat", "Corner", "Nook", "Trail", "Sanctuary"][i % 5]} ${i + 131}`,
     city: ["Mumbai", "Delhi", "Kolkata", "Jaipur", "Bangalore", "Chennai", "Hyderabad", "Goa", "Varanasi", "Hampi"][i % 10],
     category: ["Nature", "Cafe", "Historic", "Park", "Nature"][i % 5],
-    lat: 12 + (i * 0.05),
-    lng: 72 + (i * 0.05),
+    lat: 15 + ((i * 11) % 15),
+    lng: 75 + ((i * 7) % 20),
     rating: 4.5,
     reviewCount: 10 + i,
     tags: ["hidden", "local", "peaceful"],

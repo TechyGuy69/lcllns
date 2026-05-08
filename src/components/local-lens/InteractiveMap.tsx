@@ -64,15 +64,16 @@ export function InteractiveMap({ places, selectedPlace, onPlaceSelect, mode }: I
   });
 
   const [map, setMap] = useState<google.maps.Map | null>(null);
-  const placesRef = useRef<Place[]>(places);
 
   useEffect(() => {
-    placesRef.current = places;
     if (map && places.length > 0) {
       const bounds = new google.maps.LatLngBounds();
       places.forEach(place => {
-        bounds.extend({ lat: place.lat, lng: place.lng });
+        if (typeof place.lat === 'number' && typeof place.lng === 'number') {
+          bounds.extend({ lat: place.lat, lng: place.lng });
+        }
       });
+      // Adjust map view to show all markers
       map.fitBounds(bounds);
     }
   }, [map, places]);
@@ -101,15 +102,16 @@ export function InteractiveMap({ places, selectedPlace, onPlaceSelect, mode }: I
         onUnmount={onUnmount}
         options={mapOptions}
       >
+        {/* Strictly rendering independent markers with no connecting lines/polylines */}
         {places.map((place) => (
           <Marker
             key={place.id || `${place.lat}-${place.lng}`}
-            position={{ lat: place.lat, lng: place.lng }}
+            position={{ lat: Number(place.lat), lng: Number(place.lng) }}
             onClick={() => onPlaceSelect(place)}
             icon={{
-              path: google.maps.SymbolPath.CIRCLE,
+              path: typeof google !== 'undefined' ? google.maps.SymbolPath.CIRCLE : 0,
               scale: selectedPlace?.id === place.id ? 10 : 7,
-              fillColor: mode === 'hidden' ? '#1a2e1a' : '#ea580c', // Green for hidden, Warm orange for tourist
+              fillColor: mode === 'hidden' ? '#1a2e1a' : '#ea580c',
               fillOpacity: 1,
               strokeWeight: 2,
               strokeColor: '#ffffff',
