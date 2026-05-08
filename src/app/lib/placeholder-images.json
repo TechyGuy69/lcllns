@@ -2,34 +2,16 @@
 {
   "placeholderImages": [
     {
+      "id": "hero-static",
+      "description": "Premium Static Hero Background of India",
+      "imageUrl": "https://i.ibb.co/yB718YNK/dicson-s-Pw8-Rq-YTdn0-unsplash.jpg",
+      "imageHint": "india landscape cinematic"
+    },
+    {
       "id": "brand-logo",
       "description": "LocalLens Brand Logo",
       "imageUrl": "https://i.ibb.co/0R7ZNVm2/Chat-GPT-Image-May-8-2026-03-13-22-PM.png",
       "imageHint": "locallens logo branding"
-    },
-    {
-      "id": "hero-taj",
-      "description": "Taj Mahal at sunrise",
-      "imageUrl": "https://images.unsplash.com/photo-1564507592333-c60657451dd7?q=80&w=2000&auto=format&fit=crop",
-      "imageHint": "taj mahal"
-    },
-    {
-      "id": "hero-varanasi",
-      "description": "Varanasi ghats at dusk",
-      "imageUrl": "https://images.unsplash.com/photo-1561361513-2d000a50f0dc?q=80&w=2000&auto=format&fit=crop",
-      "imageHint": "varanasi india"
-    },
-    {
-      "id": "hero-hawa-mahal",
-      "description": "Hawa Mahal Jaipur",
-      "imageUrl": "https://images.unsplash.com/photo-1599661046289-e31887846eac?q=80&w=2000&auto=format&fit=crop",
-      "imageHint": "hawa mahal jaipur"
-    },
-    {
-      "id": "hero-kerala",
-      "description": "Backwaters of Kerala",
-      "imageUrl": "https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?q=80&w=2000&auto=format&fit=crop",
-      "imageHint": "kerala boat"
     }
   ]
 }
