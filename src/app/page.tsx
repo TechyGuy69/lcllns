@@ -73,6 +73,7 @@ export default function LocalLensApp() {
 
   const handlePlaceSelect = (place: Place) => {
     setSelectedPlace(place);
+    setIsPanelExpanded(false); // Collapse panel to see map if on mobile
   };
 
   const closePlaceDetail = () => {
@@ -219,6 +220,7 @@ export default function LocalLensApp() {
           
           <ResultsPanel 
             places={filteredPlaces}
+            mode={mode}
             isExpanded={isPanelExpanded}
             setIsExpanded={setIsPanelExpanded}
             onPlaceClick={handlePlaceSelect}
