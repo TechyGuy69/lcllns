@@ -1,4 +1,3 @@
-
 "use client"
 
 import React, { useState, useEffect } from 'react';
@@ -163,7 +162,7 @@ export function PlaceDetailView({ place, onClose }: PlaceDetailViewProps) {
                       
                       <div className="bg-white/50 backdrop-blur-sm p-6 rounded-2xl border border-white">
                         <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2 mb-4">
-                          <Info className="w-4 h-4 text-accent" /> Why we recommend this
+                          <span className="bg-accent/10 p-1 rounded-md mr-1"><Info className="w-3 h-3 text-accent inline" /></span> Why we recommend this
                         </span>
                         <p className="text-base md:text-lg text-primary/70 font-medium leading-relaxed italic">
                           "{aiAnalysis.reasoning}"

@@ -1,4 +1,3 @@
-
 "use client"
 
 import React, { useState, useMemo, useEffect } from 'react';
@@ -91,12 +90,12 @@ export default function LocalLensApp() {
   return (
     <main className="relative h-screen w-full bg-background flex flex-col overflow-hidden">
       
-      {/* Unified Hero Section */}
+      {/* Hero Section */}
       <section className={cn(
         "relative w-full transition-all duration-700 ease-in-out shrink-0",
         isExploring ? "h-[35vh] md:h-[40vh]" : "h-screen"
       )}>
-        {/* Background Images */}
+        {/* Carousel Images */}
         {HERO_IMAGES.map((img, idx) => (
           <div 
             key={img.url}
@@ -187,32 +186,28 @@ export default function LocalLensApp() {
         </div>
       </section>
 
-      {/* Discovery Section */}
+      {/* Discovery Content */}
       <section className={cn(
         "relative w-full flex-1 bg-background flex flex-col overflow-hidden transition-all duration-700",
         isExploring ? "opacity-100" : "opacity-0 pointer-events-none"
       )}>
-        {/* Mode Toggle */}
+        {/* Map and Controls */}
         <div className="absolute top-6 left-1/2 -translate-x-1/2 z-30 w-full max-w-[90vw] md:max-w-sm">
           <div className="bg-white/90 backdrop-blur-xl p-1 rounded-full flex gap-1 shadow-lg border border-border/40">
             <button
-              onClick={() => { setMode('tourist'); setSelectedPlace(null); }}
+              onClick={() => setMode('tourist')}
               className={cn(
                 "flex-1 flex items-center justify-center gap-2 py-2 rounded-full text-[9px] font-bold uppercase tracking-[0.15em] transition-all",
-                mode === 'tourist' 
-                  ? "bg-primary text-white shadow-sm" 
-                  : "text-muted-foreground hover:text-foreground"
+                mode === 'tourist' ? "bg-primary text-white" : "text-muted-foreground"
               )}
             >
               <Compass className="w-3.5 h-3.5" /> Tourist
             </button>
             <button
-              onClick={() => { setMode('hidden'); setSelectedPlace(null); }}
+              onClick={() => setMode('hidden')}
               className={cn(
                 "flex-1 flex items-center justify-center gap-2 py-2 rounded-full text-[9px] font-bold uppercase tracking-[0.15em] transition-all",
-                mode === 'hidden' 
-                  ? "bg-accent text-white shadow-sm" 
-                  : "text-muted-foreground hover:text-foreground"
+                mode === 'hidden' ? "bg-accent text-white" : "text-muted-foreground"
               )}
             >
               <Sparkles className="w-3.5 h-3.5" /> Hidden Gems
@@ -220,25 +215,23 @@ export default function LocalLensApp() {
           </div>
         </div>
 
-        {/* Map Container */}
-        <div className="w-full h-full relative">
+        <div className="flex-1 relative">
           <InteractiveMap 
             places={filteredPlaces} 
             selectedPlace={selectedPlace}
             onPlaceSelect={handlePlaceSelect}
           />
+          
+          <ResultsPanel 
+            places={filteredPlaces}
+            isExpanded={isPanelExpanded}
+            setIsExpanded={setIsPanelExpanded}
+            onPlaceClick={handlePlaceSelect}
+          />
         </div>
-
-        {/* Results Panel */}
-        <ResultsPanel 
-          places={filteredPlaces}
-          isExpanded={isPanelExpanded}
-          setIsExpanded={setIsPanelExpanded}
-          onPlaceClick={handlePlaceSelect}
-        />
       </section>
 
-      {/* Full Screen Place Detail View (Slides from right) */}
+      {/* Full-Screen Page Detail (Slides from right) */}
       <PlaceDetailView 
         place={selectedPlace} 
         onClose={closePlaceDetail} 
