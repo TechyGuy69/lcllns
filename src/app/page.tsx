@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useFirestore, useCollection } from '@/firebase';
 import { collection, query, limit, getDocs, addDoc } from 'firebase/firestore';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 const HERO_IMAGES = [
   {
@@ -54,7 +55,8 @@ export default function LocalLensApp() {
   const [isExploring, setIsExploring] = useState(false);
   const [heroIndex, setHeroIndex] = useState(0);
 
-  // Seed function to populate Firestore with mock data if it's empty
+  const brandLogo = PlaceHolderImages.find(img => img.id === 'brand-logo');
+
   useEffect(() => {
     async function seedData() {
       if (!db) return;
@@ -121,6 +123,11 @@ export default function LocalLensApp() {
     setIsPanelExpanded(false);
   };
 
+  const handleShortcutClick = (city: string) => {
+    setSearchQuery(city);
+    onExplore();
+  };
+
   return (
     <main className="relative h-screen w-full bg-background overflow-hidden">
       
@@ -130,8 +137,18 @@ export default function LocalLensApp() {
         isExploring ? "-translate-x-full" : "translate-x-0"
       )}>
         {/* Branding Overlay */}
-        <div className="absolute top-12 left-12 z-[20] animate-in fade-in slide-in-from-top-4 duration-1000">
-          <span className="text-white font-headline font-bold text-3xl md:text-4xl tracking-tight text-shadow-strong select-none">
+        <div className="absolute top-10 left-10 z-[20] animate-in fade-in slide-in-from-top-4 duration-1000 flex items-center gap-4">
+          {brandLogo && (
+            <div className="relative w-12 h-12 md:w-14 md:h-14">
+              <Image 
+                src={brandLogo.imageUrl} 
+                alt="LocalLens Logo"
+                fill
+                className="object-contain drop-shadow-lg"
+              />
+            </div>
+          )}
+          <span className="text-white font-headline font-bold text-3xl md:text-5xl tracking-tight text-shadow-strong select-none">
             LocalLens
           </span>
         </div>
@@ -159,9 +176,9 @@ export default function LocalLensApp() {
         <div className="absolute inset-0 hero-overlay z-[1]" />
 
         {/* Home Screen Content */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center px-4 md:px-8 text-center z-10 pt-20">
-          <div className="mb-10 md:mb-16 max-w-4xl transform animate-in fade-in slide-in-from-bottom-8 duration-1000">
-            <h1 className="font-headline font-bold text-white tracking-tight leading-tight text-5xl md:text-8xl mb-6 md:mb-8 text-shadow-strong">
+        <div className="absolute inset-0 flex flex-col items-center justify-center px-4 md:px-8 text-center z-10 pt-24">
+          <div className="mb-12 md:mb-20 max-w-4xl transform animate-in fade-in slide-in-from-bottom-8 duration-1000">
+            <h1 className="font-headline font-bold text-white tracking-tight leading-tight text-5xl md:text-8xl mb-6 md:mb-10 text-shadow-strong">
               See India <span className="text-white">differently.</span>
             </h1>
             <p className="text-sm md:text-xl text-white font-medium max-w-2xl mx-auto leading-relaxed text-shadow-soft opacity-90 px-6">
@@ -189,14 +206,11 @@ export default function LocalLensApp() {
               </Button>
             </div>
             
-            <div className="mt-10 flex flex-wrap justify-center gap-2 md:gap-4 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500">
+            <div className="mt-12 flex flex-wrap justify-center gap-2 md:gap-4 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500">
               {SHORTCUTS.map((city) => (
                 <button 
                   key={city}
-                  onClick={() => { 
-                    setSearchQuery(city); 
-                    onExplore(); 
-                  }}
+                  onClick={() => handleShortcutClick(city)}
                   className="px-8 py-3 rounded-full bg-white/10 backdrop-blur-md border border-white/30 text-white text-[10px] md:text-[12px] font-bold hover:bg-white/30 transition-all shadow-sm uppercase tracking-widest"
                 >
                   {city}
@@ -212,7 +226,7 @@ export default function LocalLensApp() {
         "absolute inset-0 z-20 bg-background transition-transform duration-1000 ease-in-out flex flex-col overflow-hidden",
         isExploring ? "translate-x-0" : "translate-x-full"
       )}>
-        <header className="relative z-30 flex items-center justify-between px-6 py-4 md:px-12 md:pt-6 md:pb-4">
+        <header className="relative z-30 flex items-center justify-between px-6 py-4 md:px-12">
           <button 
             onClick={goHome}
             className="flex items-center gap-2 text-primary/60 hover:text-primary font-bold text-[10px] uppercase tracking-[0.2em] transition-all bg-white/50 backdrop-blur-md px-4 py-2 rounded-full border border-white/40 shadow-sm"
