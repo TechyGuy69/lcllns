@@ -147,47 +147,49 @@ export default function LocalLensApp() {
 
         {/* Main Content Layer */}
         <div className="relative z-10 min-h-screen w-full flex items-center justify-center px-6">
-          <div className="max-w-3xl w-full text-center flex flex-col items-center space-y-8 md:space-y-10">
+          <div className="max-w-5xl w-full text-center flex flex-col items-center space-y-10 md:space-y-14">
             
-            {/* Heading */}
-            <h1 className="text-white text-4xl md:text-7xl font-headline leading-tight drop-shadow-2xl">
+            {/* Heading - Refined Typography for Luxury Impact */}
+            <h1 className="text-white text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-headline leading-[1.05] tracking-tight drop-shadow-2xl">
               See India <br />
               <span className="italic font-normal">differently.</span>
             </h1>
 
-            {/* Subtext */}
-            <p className="text-white/80 text-sm md:text-lg max-w-lg leading-relaxed text-shadow-soft">
-              Skip the crowds. Discover the quiet sanctuaries and local haunts where India truly lives.
-            </p>
+            {/* Subtext and Search in a secondary group */}
+            <div className="flex flex-col items-center space-y-8 w-full">
+              <p className="text-white/80 text-base md:text-xl max-w-xl leading-relaxed text-shadow-soft">
+                Skip the crowds. Discover the quiet sanctuaries and local haunts where India truly lives.
+              </p>
 
-            {/* Search Bar */}
-            <div className="w-full flex items-center bg-white/95 backdrop-blur-md rounded-full px-2 py-2 shadow-2xl max-w-xl transition-all border border-white/20">
-              <input 
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && onExplore()}
-                placeholder="Find a hidden café or quiet trail..."
-                className="flex-1 bg-transparent outline-none text-gray-700 px-4 text-sm md:text-base h-10 md:h-12"
-              />
-              <button 
-                onClick={onExplore}
-                className="bg-green-700 text-white px-6 md:px-8 h-10 md:h-12 rounded-full hover:bg-green-800 transition-all font-bold text-xs uppercase tracking-widest flex items-center gap-2"
-              >
-                Explore <ArrowRight className="w-4 h-4" />
-              </button>
-            </div>
-
-            {/* Pills */}
-            <div className="flex flex-wrap justify-center gap-2 mt-4">
-              {SHORTCUTS.map((shortcut) => (
+              {/* Search Bar - Maintained Structure with Glass Look */}
+              <div className="w-full flex items-center bg-white/95 backdrop-blur-md rounded-full px-2 py-2 shadow-2xl max-w-xl transition-all border border-white/20">
+                <input 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && onExplore()}
+                  placeholder="Find a hidden café or quiet trail..."
+                  className="flex-1 bg-transparent outline-none text-gray-700 px-4 text-sm md:text-base h-10 md:h-12"
+                />
                 <button 
-                  key={shortcut.label}
-                  onClick={() => handleShortcutClick(shortcut.query)}
-                  className="px-4 py-1.5 text-[10px] md:text-xs font-bold uppercase tracking-widest bg-white/10 text-white rounded-full backdrop-blur-sm border border-white/10 hover:bg-white/20 transition-all"
+                  onClick={onExplore}
+                  className="bg-green-700 text-white px-6 md:px-8 h-10 md:h-12 rounded-full hover:bg-green-800 transition-all font-bold text-xs uppercase tracking-widest flex items-center gap-2"
                 >
-                  {shortcut.label}
+                  Explore <ArrowRight className="w-4 h-4" />
                 </button>
-              ))}
+              </div>
+
+              {/* Pills */}
+              <div className="flex flex-wrap justify-center gap-3">
+                {SHORTCUTS.map((shortcut) => (
+                  <button 
+                    key={shortcut.label}
+                    onClick={() => handleShortcutClick(shortcut.query)}
+                    className="px-5 py-2 text-[10px] md:text-xs font-bold uppercase tracking-widest bg-white/10 text-white rounded-full backdrop-blur-sm border border-white/10 hover:bg-white/20 transition-all"
+                  >
+                    {shortcut.label}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </div>
