@@ -27,12 +27,12 @@ export function PlaceCard({ place, onClick, className }: PlaceCardProps) {
   return (
     <Card 
       className={cn(
-        "group relative overflow-hidden glass-card cursor-pointer border-0 shadow-lg",
+        "group relative overflow-hidden glass-card cursor-pointer border-0 shadow-lg flex flex-col",
         className
       )}
       onClick={onClick}
     >
-      <div className="relative h-56 w-full overflow-hidden">
+      <div className="relative h-48 md:h-56 w-full overflow-hidden shrink-0">
         <Image 
           src={place.imageUrl} 
           alt={place.name}
@@ -41,42 +41,44 @@ export function PlaceCard({ place, onClick, className }: PlaceCardProps) {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-60" />
         
-        <div className="absolute top-4 right-4">
-          <Badge className="bg-white/90 backdrop-blur-md text-primary border-0 font-bold uppercase tracking-wider text-[10px]">
+        <div className="absolute top-3 right-3 md:top-4 md:right-4">
+          <Badge className="bg-white/90 backdrop-blur-md text-primary border-0 font-bold uppercase tracking-wider text-[8px] md:text-[10px]">
             {place.category}
           </Badge>
         </div>
       </div>
 
-      <div className="p-6 space-y-4">
-        <div className="flex justify-between items-start gap-2">
-          <h3 className="text-2xl font-headline font-bold text-primary leading-tight group-hover:text-accent transition-colors">
-            {place.name}
-          </h3>
-          <div className="flex items-center gap-1 text-sm font-bold text-amber-600">
-            <Star className="w-4 h-4 fill-current" />
-            {place.rating}
+      <div className="p-4 md:p-6 flex-1 flex flex-col justify-between space-y-3 md:space-y-4">
+        <div>
+          <div className="flex justify-between items-start gap-2 mb-1">
+            <h3 className="text-xl md:text-2xl font-headline font-bold text-primary leading-tight group-hover:text-accent transition-colors">
+              {place.name}
+            </h3>
+            <div className="flex items-center gap-1 text-xs md:text-sm font-bold text-amber-600 shrink-0">
+              <Star className="w-3 h-3 md:w-4 md:h-4 fill-current" />
+              {place.rating}
+            </div>
           </div>
+
+          <div className="flex items-center gap-1.5 text-muted-foreground text-[10px] md:text-xs font-bold uppercase tracking-widest mb-2 md:mb-3">
+            <MapPin className="w-3 h-3 md:w-3.5 md:h-3.5" />
+            <span>{place.city}</span>
+          </div>
+
+          <p className="text-xs md:text-sm text-muted-foreground font-light line-clamp-2 leading-relaxed">
+            {place.description}
+          </p>
         </div>
 
-        <div className="flex items-center gap-1.5 text-muted-foreground text-xs font-bold uppercase tracking-widest">
-          <MapPin className="w-3.5 h-3.5" />
-          <span>{place.city}</span>
-        </div>
-
-        <p className="text-sm text-muted-foreground font-light line-clamp-2 leading-relaxed">
-          {place.description}
-        </p>
-
-        <div className="flex items-center justify-between pt-2 border-t border-border/50">
-          <div className={cn("flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider", getCrowdColor(place.crowdLevel))}>
-            <Users className="w-3.5 h-3.5" />
+        <div className="flex items-center justify-between pt-3 md:pt-4 border-t border-border/50">
+          <div className={cn("flex items-center gap-1 px-2 py-0.5 md:px-3 md:py-1 rounded-full text-[8px] md:text-[10px] font-bold uppercase tracking-wider", getCrowdColor(place.crowdLevel))}>
+            <Users className="w-3 h-3 md:w-3.5 md:h-3.5" />
             {place.crowdLevel}
           </div>
           
-          <div className="flex items-center gap-1.5 text-accent text-[10px] font-bold uppercase tracking-wider">
-            <Sparkles className="w-3.5 h-3.5" />
-            Authenticity: {place.authenticityScore}
+          <div className="flex items-center gap-1 text-accent text-[8px] md:text-[10px] font-bold uppercase tracking-wider">
+            <Sparkles className="w-3 h-3 md:w-3.5 md:h-3.5" />
+            Auth: {place.authenticityScore}
           </div>
         </div>
       </div>
