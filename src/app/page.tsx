@@ -129,13 +129,13 @@ export default function LocalLensApp() {
             isExploring ? "mb-2 md:mb-4 scale-90" : "mb-8 md:mb-12"
           )}>
             <h1 className={cn(
-              "font-headline font-bold text-white tracking-tight leading-tight text-shadow-strong transition-all duration-700",
+              "font-headline font-bold text-white tracking-tight leading-tight transition-all duration-700 drop-shadow-2xl",
               isExploring ? "text-2xl md:text-4xl" : "text-4xl md:text-7xl mb-4 md:mb-6"
             )}>
               See India <span className="italic font-normal">differently.</span>
             </h1>
             {!isExploring && (
-              <p className="text-sm md:text-lg text-white/90 font-medium max-w-xl mx-auto leading-relaxed text-shadow-soft animate-in fade-in duration-1000 delay-300">
+              <p className="text-sm md:text-lg text-white font-medium max-w-xl mx-auto leading-relaxed drop-shadow-lg animate-in fade-in duration-1000 delay-300">
                 Skip the crowds. Discover the quiet sanctuaries and local haunts where India truly lives.
               </p>
             )}
@@ -146,7 +146,7 @@ export default function LocalLensApp() {
             "w-full max-w-3xl px-4 transition-all duration-700",
             isExploring ? "translate-y-0" : "animate-in zoom-in-95"
           )}>
-            <div className="glass rounded-full p-1 md:p-1.5 flex items-center shadow-xl">
+            <div className="glass rounded-full p-1 md:p-1.5 flex items-center shadow-2xl">
               <div className="pl-4 md:pl-5 text-primary/60">
                 <Search className="w-5 h-5 md:w-6 md:h-6" />
               </div>
