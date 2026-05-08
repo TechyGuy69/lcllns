@@ -4,26 +4,26 @@
 
 @layer base {
   :root {
-    --background: 35 30% 96%;
-    --foreground: 25 30% 15%;
+    --background: 35 35% 98%;
+    --foreground: 25 40% 12%;
     --card: 0 0% 100%;
-    --card-foreground: 25 30% 15%;
+    --card-foreground: 25 40% 12%;
     --popover: 0 0% 100%;
-    --popover-foreground: 25 30% 15%;
-    --primary: 25 40% 25%;
+    --popover-foreground: 25 40% 12%;
+    --primary: 25 40% 20%;
     --primary-foreground: 30 20% 98%;
-    --secondary: 35 30% 90%;
-    --secondary-foreground: 25 40% 25%;
-    --muted: 35 20% 88%;
+    --secondary: 35 30% 92%;
+    --secondary-foreground: 25 40% 20%;
+    --muted: 35 20% 90%;
     --muted-foreground: 25 15% 45%;
-    --accent: 142 25% 35%;
+    --accent: 142 20% 28%;
     --accent-foreground: 30 20% 98%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-    --border: 35 20% 85%;
-    --input: 35 20% 85%;
-    --ring: 142 25% 35%;
-    --radius: 1rem;
+    --border: 35 25% 88%;
+    --input: 35 25% 88%;
+    --ring: 142 20% 28%;
+    --radius: 1.5rem;
   }
 }
 
@@ -32,7 +32,7 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground font-body;
+    @apply bg-background text-foreground font-body antialiased;
   }
   h1, h2, h3, h4 {
     @apply font-headline;
@@ -40,11 +40,15 @@
 }
 
 .glass {
-  @apply bg-white/60 backdrop-blur-xl border border-white/40 shadow-[0_8px_32px_0_rgba(0,0,0,0.05)];
+  @apply bg-white/40 backdrop-blur-2xl border border-white/40 shadow-[0_8px_32px_0_rgba(0,0,0,0.03)];
+}
+
+.glass-dark {
+  @apply bg-black/20 backdrop-blur-md border border-white/10;
 }
 
 .glass-card {
-  @apply bg-white/80 backdrop-blur-md border border-white/60 hover:shadow-xl transition-all duration-500;
+  @apply bg-white/70 backdrop-blur-lg border border-white/50 hover:shadow-2xl hover:-translate-y-1 transition-all duration-500;
 }
 
 .no-scrollbar::-webkit-scrollbar {
@@ -55,21 +59,18 @@
   scrollbar-width: none;
 }
 
-.hero-gradient {
-  background: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.1) 40%, rgba(0,0,0,0.5) 100%);
+.hero-overlay {
+  background: linear-gradient(to bottom, 
+    rgba(255,255,255,0) 0%, 
+    rgba(0,0,0,0.2) 40%, 
+    rgba(0,0,0,0.6) 100%
+  );
 }
 
-.carousel-fade-enter {
-  opacity: 0;
+.text-shadow-sm {
+  text-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }
-.carousel-fade-enter-active {
-  opacity: 1;
-  transition: opacity 1500ms ease-in-out;
-}
-.carousel-fade-exit {
-  opacity: 1;
-}
-.carousel-fade-exit-active {
-  opacity: 0;
-  transition: opacity 1500ms ease-in-out;
+
+.text-shadow-md {
+  text-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
