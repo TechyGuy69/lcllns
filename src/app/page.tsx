@@ -112,12 +112,15 @@ export default function LocalLensApp() {
 
   const onExplore = () => {
     setIsExploring(true);
+    // Automatically expand the panel to show results when exploration starts
+    setIsPanelExpanded(true);
   };
 
   const goHome = () => {
     setIsExploring(false);
     setSearchQuery('');
     setSelectedPlace(null);
+    setIsPanelExpanded(false);
   };
 
   return (
@@ -128,6 +131,19 @@ export default function LocalLensApp() {
         "absolute inset-0 z-10 transition-transform duration-1000 ease-in-out bg-black",
         isExploring ? "-translate-x-full" : "translate-x-0"
       )}>
+        {/* Logo Overlay */}
+        <div className="absolute top-8 left-8 z-[20] flex items-center gap-3">
+          <div className="relative w-12 h-12 md:w-14 md:h-14 overflow-hidden rounded-xl shadow-2xl">
+            <Image 
+              src="https://i.ibb.co/BKS4t65d/Chat-GPT-Image-May-8-2026-02-54-35-PM.png" 
+              alt="LocalLens Logo"
+              fill
+              className="object-contain bg-white/10 backdrop-blur-sm"
+            />
+          </div>
+          <span className="text-white font-headline font-bold text-xl md:text-2xl tracking-tight text-shadow-strong">LocalLens</span>
+        </div>
+
         {/* Carousel Images */}
         {HERO_IMAGES.map((img, idx) => (
           <div 
@@ -187,7 +203,7 @@ export default function LocalLensApp() {
                   key={s}
                   onClick={() => { 
                     setSearchQuery(s); 
-                    setIsExploring(true); 
+                    onExplore(); 
                   }}
                   className="px-6 py-2.5 rounded-full bg-white/10 backdrop-blur-md border border-white/30 text-white text-[10px] md:text-[11px] font-bold hover:bg-white/30 transition-all shadow-sm uppercase tracking-widest"
                 >
@@ -204,10 +220,10 @@ export default function LocalLensApp() {
         "absolute inset-0 z-20 bg-background transition-transform duration-1000 ease-in-out flex flex-col overflow-hidden",
         isExploring ? "translate-x-0" : "translate-x-full"
       )}>
-        <header className="relative z-30 flex items-center justify-between px-6 py-4 md:px-12 md:py-8">
+        <header className="relative z-30 flex items-center justify-between px-6 py-4 md:px-12 md:pt-6 md:pb-4">
           <button 
             onClick={goHome}
-            className="flex items-center gap-2 text-primary/60 hover:text-primary font-bold text-[10px] uppercase tracking-[0.2em] transition-all"
+            className="flex items-center gap-2 text-primary/60 hover:text-primary font-bold text-[10px] uppercase tracking-[0.2em] transition-all bg-white/50 backdrop-blur-md px-4 py-2 rounded-full border border-white/40 shadow-sm"
           >
             <ChevronLeft className="w-4 h-4" /> Back Home
           </button>

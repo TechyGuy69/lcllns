@@ -1,3 +1,4 @@
+
 "use client"
 
 import React, { useRef, useEffect } from 'react';
@@ -26,7 +27,7 @@ export function ResultsPanel({ places, isExpanded, setIsExpanded, onPlaceClick }
     <div 
       className={cn(
         "absolute left-0 right-0 bottom-0 z-40 transition-all duration-700 cubic-bezier(0.4, 0, 0.2, 1)",
-        isExpanded ? "h-[85%]" : "h-[140px] md:h-[180px]"
+        isExpanded ? "h-[85%]" : "h-[100px] md:h-[120px]"
       )}
     >
       <div className="bg-white/95 backdrop-blur-3xl rounded-t-[3rem] border-t border-white/60 h-full flex flex-col shadow-[0_-20px_100px_-20px_rgba(0,0,0,0.1)]">
@@ -46,7 +47,10 @@ export function ResultsPanel({ places, isExpanded, setIsExpanded, onPlaceClick }
         {/* Results Grid */}
         <div 
           ref={panelRef}
-          className="flex-1 overflow-y-auto no-scrollbar px-6 md:px-12 pb-16"
+          className={cn(
+            "flex-1 overflow-y-auto no-scrollbar px-6 md:px-12 pb-16 transition-opacity duration-300",
+            isExpanded ? "opacity-100" : "opacity-0 pointer-events-none"
+          )}
         >
           {places.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center py-10 opacity-60">
