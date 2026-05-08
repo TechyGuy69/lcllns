@@ -55,9 +55,7 @@ export default function LocalLensApp() {
   }, [db]);
 
   const allPlaces = useMemo(() => {
-    // If we have firestore data, use it. Otherwise use MOCK_PLACES.
     if (firestorePlaces && firestorePlaces.length > 0) {
-      // Ensure we have lat/lng for mapping
       return firestorePlaces.filter((p: any) => p.lat != null && p.lng != null) as Place[];
     }
     return MOCK_PLACES;
@@ -66,7 +64,6 @@ export default function LocalLensApp() {
   const filteredPlaces = useMemo(() => {
     const queryWords = searchQuery.toLowerCase().split(/\s+/).filter(Boolean);
     
-    // Default mode-specific filtering when NO search query is present
     if (queryWords.length === 0) {
       return allPlaces.filter((place) => {
         if (mode === 'tourist') {
@@ -77,7 +74,6 @@ export default function LocalLensApp() {
       });
     }
 
-    // Intelligent weighted search across ALL places when a query IS present
     const scored = allPlaces.map(place => {
       let score = 0;
       const name = (place.name || '').toLowerCase();
@@ -87,15 +83,11 @@ export default function LocalLensApp() {
       const tags = (place.tags || []).map(t => t.toLowerCase());
 
       queryWords.forEach(word => {
-        // High priority matches
         if (cat.includes(word)) score += 4;
         if (city.includes(word)) score += 3;
-        
-        // Tag and description matches
         if (tags.some(t => t.includes(word))) score += 2;
         if (name.includes(word) || desc.includes(word)) score += 1;
         
-        // Mode alignment boost: Prioritize results that match the current toggle
         if (mode === 'hidden') {
           const isHidden = tags.includes('hidden') || tags.includes('local') || (place.reviewCount || 0) < 300;
           if (isHidden) score += 5;
@@ -104,7 +96,6 @@ export default function LocalLensApp() {
           if (isTourist) score += 5;
         }
 
-        // Specific intent boost
         const isHiddenIntent = ['hidden', 'quiet', 'peaceful', 'local', 'gem'].includes(word);
         const isPopularIntent = ['popular', 'tourist', 'famous', 'trending'].includes(word);
         
@@ -119,7 +110,6 @@ export default function LocalLensApp() {
       return { ...place, searchScore: score };
     });
 
-    // Return all items with a positive relevance score, sorted by best match
     return scored
       .filter(p => (p as any).searchScore > 0)
       .sort((a, b) => (b as any).searchScore - (a as any).searchScore)
@@ -160,7 +150,6 @@ export default function LocalLensApp() {
         isExploring ? "-translate-y-full" : "translate-y-0"
       )}>
         
-        {/* Static Background Layer */}
         <div className="absolute inset-0 z-0 bg-neutral-950">
           <Image
             src={STATIC_HERO_IMAGE}
@@ -173,12 +162,10 @@ export default function LocalLensApp() {
           <div className="absolute inset-0 bg-black/45 z-10" />
         </div>
 
-        {/* Branding */}
         <div className="absolute top-6 left-6 text-white text-xl font-bold tracking-tight z-30 animate-in fade-in duration-1000">
           LocalLens
         </div>
 
-        {/* Content */}
         <div className="relative z-30 w-full max-w-5xl px-6 flex flex-col items-center text-center space-y-12">
           
           <div className="space-y-6">
@@ -193,7 +180,7 @@ export default function LocalLensApp() {
           </div>
 
           <div className="flex flex-col items-center space-y-10 w-full animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-400">
-            {/* Search Bar with Glass Transition */}
+            {/* Search Bar with Refined Glass Transition */}
             <div className="w-full flex items-center bg-white rounded-full p-1.5 border border-white/20 shadow-2xl max-w-2xl transition-all duration-700 ease-in-out group focus-within:bg-white/10 focus-within:backdrop-blur-2xl focus-within:ring-2 focus-within:ring-white/30">
               <input 
                 value={searchQuery}
@@ -204,7 +191,7 @@ export default function LocalLensApp() {
               />
               <button 
                 onClick={onExplore}
-                className="bg-green-700 text-white px-8 md:px-10 h-12 md:h-14 rounded-full hover:bg-green-600 active:scale-95 transition-all font-bold text-xs uppercase tracking-widest flex items-center gap-2 shadow-lg mr-2"
+                className="bg-green-700 text-white px-8 md:px-10 h-12 md:h-14 rounded-full hover:bg-green-600 active:scale-95 transition-all font-bold text-xs uppercase tracking-widest flex items-center gap-2 shadow-lg mr-4"
               >
                 Explore <ArrowRight className="w-4 h-4" />
               </button>
@@ -287,7 +274,6 @@ export default function LocalLensApp() {
         </div>
       </section>
 
-      {/* Place Detail Overlay */}
       <PlaceDetailView 
         place={selectedPlace} 
         onClose={closePlaceDetail} 
