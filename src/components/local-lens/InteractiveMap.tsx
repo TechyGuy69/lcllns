@@ -1,9 +1,10 @@
 
 "use client"
 
-import React, { useCallback, useState, useEffect, useRef } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 import { Place } from '@/lib/mock-data';
+import { AlertCircle } from 'lucide-react';
 
 interface InteractiveMapProps {
   places: Place[];
@@ -58,9 +59,11 @@ const mapOptions = {
 };
 
 export function InteractiveMap({ places, selectedPlace, onPlaceSelect, mode }: InteractiveMapProps) {
-  const { isLoaded } = useJsApiLoader({
+  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+
+  const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''
+    googleMapsApiKey: apiKey || ''
   });
 
   const [map, setMap] = useState<google.maps.Map | null>(null);
@@ -73,7 +76,6 @@ export function InteractiveMap({ places, selectedPlace, onPlaceSelect, mode }: I
           bounds.extend({ lat: place.lat, lng: place.lng });
         }
       });
-      // Adjust map view to show all markers
       map.fitBounds(bounds);
     }
   }, [map, places]);
@@ -85,6 +87,30 @@ export function InteractiveMap({ places, selectedPlace, onPlaceSelect, mode }: I
   const onUnmount = useCallback(function callback() {
     setMap(null);
   }, []);
+
+  if (!apiKey) {
+    return (
+      <div className="w-full h-full bg-secondary/20 flex flex-col items-center justify-center p-8 text-center gap-4">
+        <AlertCircle className="w-8 h-8 text-amber-600 opacity-50" />
+        <div className="max-w-xs">
+          <p className="text-[10px] font-bold tracking-widest uppercase opacity-60 mb-2">Map API Key Required</p>
+          <p className="text-xs text-muted-foreground">Please add NEXT_PUBLIC_GOOGLE_MAPS_API_KEY to your environment variables to enable the interactive map.</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <div className="w-full h-full bg-secondary/20 flex flex-col items-center justify-center p-8 text-center gap-4">
+        <AlertCircle className="w-8 h-8 text-destructive opacity-50" />
+        <div className="max-w-xs">
+          <p className="text-[10px] font-bold tracking-widest uppercase text-destructive opacity-60 mb-2">Map Load Error</p>
+          <p className="text-xs text-muted-foreground">There was an issue loading Google Maps. Please verify your API key and billing settings.</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!isLoaded) return (
     <div className="w-full h-full bg-secondary/20 flex items-center justify-center animate-pulse">
@@ -102,7 +128,6 @@ export function InteractiveMap({ places, selectedPlace, onPlaceSelect, mode }: I
         onUnmount={onUnmount}
         options={mapOptions}
       >
-        {/* Strictly rendering independent markers with no connecting lines/polylines */}
         {places.map((place) => (
           <Marker
             key={place.id || `${place.lat}-${place.lng}`}
@@ -120,7 +145,6 @@ export function InteractiveMap({ places, selectedPlace, onPlaceSelect, mode }: I
         ))}
       </GoogleMap>
 
-      {/* Legend */}
       <div className="absolute bottom-48 left-8 pointer-events-none hidden lg:block z-20">
         <div className="bg-white/80 backdrop-blur-md px-6 py-4 rounded-[2rem] shadow-xl border border-white/40 flex flex-col gap-3">
           <div className="flex items-center gap-3">
