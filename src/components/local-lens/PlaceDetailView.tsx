@@ -1,22 +1,19 @@
 
 "use client"
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Image from 'next/image';
 import { Place } from '@/lib/mock-data';
-import { analyzePlaceForHiddenGem, AnalyzePlaceForHiddenGemOutput } from '@/ai/flows/intelligent-hidden-gem-discovery';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { 
-  X, 
+  ArrowLeft, 
   MapPin, 
   Star, 
   Users, 
   Sparkles, 
-  ArrowLeft, 
   ShieldCheck, 
-  Info,
-  Loader2
+  Info
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -26,29 +23,35 @@ interface PlaceDetailViewProps {
 }
 
 export function PlaceDetailView({ place, onClose }: PlaceDetailViewProps) {
-  const [aiAnalysis, setAiAnalysis] = useState<AnalyzePlaceForHiddenGemOutput | null>(null);
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  // Use local logic instead of external AI to provide insights
+  const insights = useMemo(() => {
+    if (!place) return null;
 
-  useEffect(() => {
-    if (!place) {
-      setAiAnalysis(null);
-      setIsAnalyzing(false);
-      return;
+    // Calculate a local authenticity score based on existing data
+    // Hidden gems with low review counts and specific tags get higher scores
+    let score = 50;
+    if (place.reviewCount < 100) score += 30;
+    if (place.reviewCount < 300) score += 10;
+    if (place.tags.includes('hidden')) score += 5;
+    if (place.tags.includes('local')) score += 5;
+    if (place.crowdLevel === 'Low') score += 10;
+
+    score = Math.min(score, 100);
+
+    const isHiddenGem = place.tags.includes('hidden') || place.reviewCount < 300;
+    
+    let reasoning = "This spot is highly rated and popular among travelers.";
+    if (isHiddenGem) {
+      reasoning = `With only ${place.reviewCount} reviews and a ${place.crowdLevel.toLowerCase()} crowd level, this is a true local sanctuary offering an authentic experience away from typical tourist routes.`;
+    } else if (place.rating >= 4.7) {
+      reasoning = "A gold-standard destination known for its exceptional quality and iconic status in the city.";
     }
 
-    const runAnalysis = async () => {
-      setIsAnalyzing(true);
-      try {
-        const result = await analyzePlaceForHiddenGem({ description: place.description });
-        setAiAnalysis(result);
-      } catch (error) {
-        // AI Analysis failed silently
-      } finally {
-        setIsAnalyzing(false);
-      }
+    return {
+      authenticityScore: score,
+      isHiddenGem,
+      reasoning
     };
-
-    runAnalysis();
   }, [place]);
 
   return (
@@ -128,32 +131,24 @@ export function PlaceDetailView({ place, onClose }: PlaceDetailViewProps) {
                     <div className="bg-accent text-white p-2 md:p-2.5 rounded-full shadow-lg shadow-accent/20">
                       <ShieldCheck className="w-4 h-4 md:w-5 md:h-5" />
                     </div>
-                    <h3 className="text-[9px] md:text-xs font-bold uppercase tracking-[0.15em] md:tracking-[0.2em] text-primary">Expert AI Intelligence</h3>
+                    <h3 className="text-[9px] md:text-xs font-bold uppercase tracking-[0.15em] md:tracking-[0.2em] text-primary">Gem Insights</h3>
                   </div>
 
-                  {isAnalyzing ? (
-                    <div className="flex flex-col gap-4 md:gap-6">
-                      <div className="h-5 w-32 md:h-6 md:w-48 bg-accent/10 rounded-full animate-pulse" />
-                      <div className="space-y-2 md:space-y-3">
-                        <div className="h-3 w-full bg-accent/5 rounded-full animate-pulse" />
-                        <div className="h-3 w-5/6 bg-accent/5 rounded-full animate-pulse" />
-                      </div>
-                    </div>
-                  ) : aiAnalysis ? (
+                  {insights && (
                     <div className="space-y-6 md:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-1000">
                       <div className="flex flex-col sm:flex-row sm:items-center gap-6 md:gap-12">
                         <div>
                           <span className="text-[8px] md:text-[10px] font-bold uppercase tracking-widest text-accent mb-1 md:mb-2 block">Authenticity</span>
-                          <span className="text-3xl md:text-5xl font-headline font-bold text-accent">{aiAnalysis.authenticityScore}<span className="text-base md:text-xl">/100</span></span>
+                          <span className="text-3xl md:text-5xl font-headline font-bold text-accent">{insights.authenticityScore}<span className="text-base md:text-xl">/100</span></span>
                         </div>
                         <div className="hidden sm:block h-10 md:h-16 w-px bg-accent/20" />
                         <div>
                           <span className="text-[8px] md:text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1 md:mb-2 block">Classification</span>
                           <Badge className={cn(
                             "uppercase tracking-[0.05em] md:tracking-[0.1em] text-[7px] md:text-[10px] px-3 py-1 md:px-5 md:py-2 rounded-full border-0",
-                            aiAnalysis.isHiddenGem ? "bg-accent text-white shadow-lg shadow-accent/20" : "bg-muted text-muted-foreground"
+                            insights.isHiddenGem ? "bg-accent text-white shadow-lg shadow-accent/20" : "bg-muted text-muted-foreground"
                           )}>
-                            {aiAnalysis.isHiddenGem ? 'Hidden Gem' : 'Popular Spot'}
+                            {insights.isHiddenGem ? 'Hidden Gem' : 'Popular Spot'}
                           </Badge>
                         </div>
                       </div>
@@ -163,17 +158,10 @@ export function PlaceDetailView({ place, onClose }: PlaceDetailViewProps) {
                           <span className="bg-accent/10 p-1 rounded-md"><Info className="w-2.5 h-2.5 md:w-3 md:h-3 text-accent" /></span> Why we recommend this
                         </span>
                         <p className="text-xs md:text-base lg:text-lg text-primary/70 font-medium leading-relaxed italic">
-                          "{aiAnalysis.reasoning}"
+                          "{insights.reasoning}"
                         </p>
                       </div>
                     </div>
-                  ) : (
-                    <Button 
-                      onClick={() => setIsAnalyzing(true)}
-                      className="rounded-full bg-accent text-white hover:bg-accent/90 font-bold uppercase tracking-widest text-[8px] md:text-[10px] px-8 py-4 md:px-10 md:py-6"
-                    >
-                      Run Fresh Analysis
-                    </Button>
                   )}
                 </div>
               </div>

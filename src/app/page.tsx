@@ -64,7 +64,7 @@ export default function LocalLensApp() {
   const filteredPlaces = useMemo(() => {
     const queryWords = searchQuery.toLowerCase().split(/\s+/).filter(Boolean);
     
-    // 1. Initial filter based on mode
+    // 1. Initial filter based on mode to provide a baseline set
     const modeMatches = allPlaces.filter((place) => {
       if (mode === 'tourist') {
         return (place.rating >= 4.2 && place.reviewCount > 800);
@@ -76,7 +76,7 @@ export default function LocalLensApp() {
     // 2. If no search query, return mode-matched places
     if (queryWords.length === 0) return modeMatches;
 
-    // 3. Scoring System for Intelligent Search
+    // 3. Scoring System for Intelligent Local Search
     const scored = modeMatches.map(place => {
       let score = 0;
       const name = place.name.toLowerCase();
@@ -112,8 +112,8 @@ export default function LocalLensApp() {
 
     // 4. Filter by score > 0, sort by score, and limit to top 20
     return scored
-      .filter(p => p.searchScore > 0)
-      .sort((a, b) => b.searchScore - a.searchScore)
+      .filter(p => (p as any).searchScore > 0)
+      .sort((a, b) => (b as any).searchScore - (a as any).searchScore)
       .slice(0, 20);
   }, [searchQuery, mode, allPlaces]);
 
@@ -184,7 +184,7 @@ export default function LocalLensApp() {
           </div>
 
           <div className="flex flex-col items-center space-y-10 w-full animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-400">
-            {/* Fancy Search Bar with Clear Glass Transition */}
+            {/* Search Bar with Glass Transition */}
             <div className="w-full flex items-center bg-white rounded-full p-1.5 border border-white/20 shadow-2xl max-w-2xl transition-all duration-700 ease-in-out group focus-within:bg-white/10 focus-within:backdrop-blur-2xl focus-within:ring-2 focus-within:ring-white/30">
               <input 
                 value={searchQuery}
