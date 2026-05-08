@@ -74,7 +74,7 @@ export function PlaceDetailView({ place, onClose }: PlaceDetailViewProps) {
               src={place.image} 
               alt={place.name}
               fill
-              sizes="100vw"
+              sizes="(max-width: 768px) 100vw, 50vw"
               className="object-cover"
               priority
             />
@@ -96,16 +96,16 @@ export function PlaceDetailView({ place, onClose }: PlaceDetailViewProps) {
 
           {/* Content Column */}
           <div className="flex-1 bg-background h-[55vh] md:h-full overflow-y-auto no-scrollbar p-6 md:p-12 lg:p-20 flex flex-col gap-8 md:gap-12">
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-12">
               {[
-                { label: 'Rating', val: place.rating, icon: <Star className="w-3.5 h-3.5 md:w-4 md:h-4 fill-current text-amber-500" /> },
+                { label: 'Rating', val: typeof place.rating === 'number' ? place.rating.toFixed(1) : place.rating, icon: <Star className="w-3.5 h-3.5 md:w-4 md:h-4 fill-current text-amber-500" /> },
                 { label: 'Reviews', val: (place.reviewCount || 0).toLocaleString(), icon: <Users className="w-3.5 h-3.5 md:w-4 md:h-4 text-muted-foreground" /> },
                 { label: 'Crowd', val: place.crowdLevel, icon: <div className="w-3.5 h-3.5 md:w-4 md:h-4 rounded-full bg-primary/20 flex items-center justify-center text-[8px] md:text-[10px] font-bold">!</div> },
                 { label: 'Experience', val: place.tags.includes('hidden') ? 'Authentic' : 'Trending', icon: <Sparkles className="w-3.5 h-3.5 md:w-4 md:h-4 text-accent" /> },
               ].map((stat, i) => (
-                <div key={i} className="flex flex-col gap-1 md:gap-2">
-                  <span className="text-[8px] md:text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{stat.label}</span>
-                  <div className="flex items-center gap-1.5 md:gap-2 text-base md:text-xl font-bold text-primary">
+                <div key={i} className="flex flex-col gap-1 md:gap-2 min-w-0">
+                  <span className="text-[8px] md:text-[10px] font-bold uppercase tracking-widest text-muted-foreground truncate">{stat.label}</span>
+                  <div className="flex items-center gap-1.5 md:gap-2 text-base md:text-xl font-bold text-primary truncate">
                     {stat.icon}
                     {stat.val}
                   </div>
@@ -145,12 +145,12 @@ export function PlaceDetailView({ place, onClose }: PlaceDetailViewProps) {
                     </div>
                   ) : aiAnalysis ? (
                     <div className="space-y-6 md:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-                      <div className="flex items-center gap-4 md:gap-8">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-6 md:gap-12">
                         <div>
                           <span className="text-[8px] md:text-[10px] font-bold uppercase tracking-widest text-accent mb-1 md:mb-2 block">Authenticity</span>
                           <span className="text-3xl md:text-5xl font-headline font-bold text-accent">{aiAnalysis.authenticityScore}<span className="text-base md:text-xl">/100</span></span>
                         </div>
-                        <div className="h-10 md:h-16 w-px bg-accent/20" />
+                        <div className="hidden sm:block h-10 md:h-16 w-px bg-accent/20" />
                         <div>
                           <span className="text-[8px] md:text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1 md:mb-2 block">Classification</span>
                           <Badge className={cn(
