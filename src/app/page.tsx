@@ -36,6 +36,7 @@ const HERO_IMAGES = [
 
 const SUGGESTIONS = [
   "Mumbai cafes",
+  "Kolkata cafes",
   "Hidden Hampi",
   "Varanasi ghats",
   "Jaipur gems",
