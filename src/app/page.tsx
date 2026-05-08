@@ -63,22 +63,17 @@ export default function LocalLensApp() {
     const queryWords = searchQuery.toLowerCase().split(/\s+/).filter(Boolean);
     
     return allPlaces.filter((place) => {
-      // 1. Intelligence Logic for Modes
+      // Logic for Mode Filtering based on Tags and intention
       let matchesMode = false;
-      const desc = place.description.toLowerCase();
-      const hasHiddenKeywords = ["quiet", "local", "peaceful", "hidden", "authentic", "tucked"].some(kw => desc.includes(kw));
-      
       if (mode === 'tourist') {
-        // Tourist Mode: High rating and high reviews or explicit flag
-        matchesMode = place.isTouristFavorite || (place.rating >= 4.2 && place.reviews > 100);
+        matchesMode = place.tags.includes('tourist');
       } else {
-        // Hidden Gems Mode: Low review count, explicit flag, or specific keywords
-        matchesMode = place.isHiddenGem || (place.reviews < 80 || hasHiddenKeywords);
+        matchesMode = place.tags.includes('hidden');
       }
 
       if (!matchesMode) return false;
 
-      // 2. Search filtering
+      // Search filtering
       if (queryWords.length === 0) return true;
       const searchableText = `${place.name} ${place.city} ${place.category} ${place.description}`.toLowerCase();
       return queryWords.every(word => searchableText.includes(word));

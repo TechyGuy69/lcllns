@@ -17,7 +17,6 @@ interface PlaceCardProps {
 }
 
 export function PlaceCard({ place, onClick, className, mode = 'tourist' }: PlaceCardProps) {
-  // Description-based logic for "Why this place?"
   const getRecommendationReason = () => {
     if (mode === 'hidden') {
       return "Loved by locals, low crowd";
@@ -35,7 +34,7 @@ export function PlaceCard({ place, onClick, className, mode = 'tourist' }: Place
     >
       <div className="relative aspect-[4/3] w-full overflow-hidden shrink-0">
         <Image 
-          src={place.imageUrl} 
+          src={place.image} 
           alt={place.name}
           fill
           sizes="(max-width: 768px) 100vw, 400px"
@@ -77,9 +76,7 @@ export function PlaceCard({ place, onClick, className, mode = 'tourist' }: Place
           {place.description}
         </p>
 
-        {/* Intelligence Feature */}
         <div className="bg-secondary/30 rounded-2xl p-4 mb-6 flex items-start gap-3 border border-secondary/50">
-          <Info className="w-4 h-4 text-accent mt-0.5 shrink-0" />
           <span className="text-[10px] font-bold text-primary/70 leading-tight">
             {getRecommendationReason()}
           </span>
@@ -93,7 +90,7 @@ export function PlaceCard({ place, onClick, className, mode = 'tourist' }: Place
           
           <div className="flex items-center gap-1.5 text-accent text-[9px] font-bold uppercase tracking-tighter">
             <Sparkles className="w-3.5 h-3.5" />
-            {place.authenticityScore}% Local
+            {place.reviewCount} Reviews
           </div>
         </div>
       </div>

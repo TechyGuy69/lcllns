@@ -2,220 +2,84 @@
 export type CrowdLevel = 'Low' | 'Medium' | 'High';
 
 export interface Place {
-  id: string;
+  id: number;
   name: string;
   city: string;
-  category: 'Cafe' | 'Park' | 'Historic' | 'Beach' | 'Nature';
-  description: string;
-  imageUrl: string;
-  crowdLevel: CrowdLevel;
-  authenticityScore: number;
-  rating: number;
-  reviews: number;
+  category: string;
   lat: number;
   lng: number;
-  isTouristFavorite: boolean;
-  isHiddenGem: boolean;
+  rating: number;
+  reviewCount: number;
+  tags: string[];
+  crowdLevel: CrowdLevel;
+  description: string;
+  image: string;
 }
 
-export const MOCK_PLACES: Place[] = [
-  // MUMBAI
-  {
-    id: 'm1',
-    name: 'Kyani & Co.',
-    city: 'Mumbai',
-    category: 'Cafe',
-    description: 'A legendary Irani cafe established in 1904. Famous for its cherry custard, mawa cake, and the timeless atmosphere of old Bombay.',
-    imageUrl: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=1200&auto=format&fit=crop',
-    crowdLevel: 'High',
-    authenticityScore: 96,
-    rating: 4.6,
-    reviews: 8200,
-    lat: 18.9433,
-    lng: 72.8258,
-    isTouristFavorite: true,
-    isHiddenGem: false,
-  },
-  {
-    id: 'm2',
-    name: 'Subko Specialty Coffee',
-    city: 'Mumbai',
-    category: 'Cafe',
-    description: 'Tucked away in a restored bungalow in Bandra, this roastery represents modern Indian coffee culture at its most authentic.',
-    imageUrl: 'https://images.unsplash.com/photo-1570160897040-30430122112e?q=80&w=1200&auto=format&fit=crop',
-    crowdLevel: 'Medium',
-    authenticityScore: 92,
-    rating: 4.8,
-    reviews: 1200,
-    lat: 19.0544,
-    lng: 72.8255,
-    isTouristFavorite: false,
-    isHiddenGem: true,
-  },
-  {
-    id: 'm3',
-    name: 'Banganga Tank',
-    city: 'Mumbai',
-    category: 'Historic',
-    description: 'An ancient water tank surrounded by temples. A remarkably calm spiritual pocket that feels worlds away from the city chaos.',
-    imageUrl: 'https://images.unsplash.com/photo-1514222139-b776f2acf2ed?q=80&w=1200&auto=format&fit=crop',
-    crowdLevel: 'Low',
-    authenticityScore: 98,
-    rating: 4.5,
-    reviews: 2100,
-    lat: 18.9454,
-    lng: 72.7932,
-    isTouristFavorite: false,
-    isHiddenGem: true,
-  },
-  {
-    id: 'm4',
-    name: 'Marine Drive',
-    city: 'Mumbai',
-    category: 'Beach',
-    description: 'The iconic Queen\'s Necklace. A 3.6km long promenade that is the most famous spot to watch the Mumbai sunset.',
-    imageUrl: 'https://images.unsplash.com/photo-1566552881560-0be862a7c445?q=80&w=1200&auto=format&fit=crop',
-    crowdLevel: 'High',
-    authenticityScore: 70,
-    rating: 4.7,
-    reviews: 150000,
-    lat: 18.9431,
-    lng: 72.8230,
-    isTouristFavorite: true,
-    isHiddenGem: false,
-  },
+const CITIES = ["Mumbai", "Delhi", "Kolkata", "Jaipur", "Bangalore", "Chennai", "Hyderabad", "Goa", "Varanasi", "Hampi"];
+const CATEGORIES = ["Cafe", "Park", "Historic", "Beach", "Nature"];
 
-  // KOLKATA
-  {
-    id: 'k1',
-    name: "8th Day Café & Bakery",
-    city: "Kolkata",
-    category: "Cafe",
-    lat: 22.5186,
-    lng: 88.3654,
-    rating: 4.6,
-    reviews: 420,
-    description: "Popular modern café with great coffee and a lively atmosphere. Often crowded but loved by tourists.",
-    imageUrl: "https://images.unsplash.com/photo-1445116572660-236099ec97a0?q=80&w=1200&auto=format&fit=crop",
-    crowdLevel: 'High',
-    authenticityScore: 85,
-    isTouristFavorite: true,
-    isHiddenGem: false,
-  },
-  {
-    id: 'k2',
-    name: "Indian Coffee House, College Street",
-    city: "Kolkata",
-    category: "Cafe",
-    lat: 22.5769,
-    lng: 88.3639,
-    rating: 4.3,
-    reviews: 1200,
-    description: "Historic and iconic café, very popular among locals and tourists. Crowded but culturally rich.",
-    imageUrl: "https://images.unsplash.com/photo-1521017432531-fbd92d768814?q=80&w=1200&auto=format&fit=crop",
-    crowdLevel: 'High',
-    authenticityScore: 95,
-    isTouristFavorite: true,
-    isHiddenGem: false,
-  },
-  {
-    id: 'k3',
-    name: "Rabindra Sarobar Lake",
-    city: "Kolkata",
-    category: "Park",
-    lat: 22.5129,
-    lng: 88.3515,
-    rating: 4.5,
-    reviews: 300,
-    description: "Peaceful lake area ideal for walks and quiet mornings. A local favorite away from heavy crowds.",
-    imageUrl: "https://images.unsplash.com/photo-1543716091-a840c05249ec?q=80&w=1200&auto=format&fit=crop",
-    crowdLevel: 'Low',
-    authenticityScore: 92,
-    isTouristFavorite: false,
-    isHiddenGem: true,
-  },
-  {
-    id: 'k5',
-    name: "Kumartuli",
-    city: "Kolkata",
-    category: "Historic",
-    lat: 22.6026,
-    lng: 88.3624,
-    rating: 4.6,
-    reviews: 180,
-    description: "Hidden artisan district where idols are crafted. Quiet, authentic and deeply local experience.",
-    imageUrl: "https://images.unsplash.com/photo-1620614059942-e1d51a61217e?q=80&w=1200&auto=format&fit=crop",
-    crowdLevel: 'Low',
-    authenticityScore: 100,
-    isTouristFavorite: false,
-    isHiddenGem: true,
-  },
+const CITY_COORDS: Record<string, { lat: number, lng: number }> = {
+  "Mumbai": { lat: 19.0760, lng: 72.8777 },
+  "Delhi": { lat: 28.6139, lng: 77.2090 },
+  "Kolkata": { lat: 22.5726, lng: 88.3639 },
+  "Jaipur": { lat: 26.9124, lng: 75.7873 },
+  "Bangalore": { lat: 12.9716, lng: 77.5946 },
+  "Chennai": { lat: 13.0827, lng: 80.2707 },
+  "Hyderabad": { lat: 17.3850, lng: 78.4867 },
+  "Goa": { lat: 15.2993, lng: 74.1240 },
+  "Varanasi": { lat: 25.3176, lng: 82.9739 },
+  "Hampi": { lat: 15.3350, lng: 76.4600 }
+};
 
-  // HAMPI
-  {
-    id: 'h1',
-    name: 'Virupaksha Temple',
-    city: 'Hampi',
-    category: 'Historic',
-    description: 'The oldest functional temple in India, a majestic marvel of Vijayanagara architecture and the spiritual heart of the ruins.',
-    imageUrl: 'https://images.unsplash.com/photo-1621259253488-8422453c0615?q=80&w=1200&auto=format&fit=crop',
-    crowdLevel: 'High',
-    authenticityScore: 88,
-    rating: 4.9,
-    reviews: 45000,
-    lat: 15.3350,
-    lng: 76.4600,
-    isTouristFavorite: true,
-    isHiddenGem: false,
-  },
-  {
-    id: 'h2',
-    name: 'Sanapur Reservoir',
-    city: 'Hampi',
-    category: 'Nature',
-    description: 'Across the Tungabhadra river, this quiet reservoir offers stunning boulder-strewn landscapes and cliff jumping in deep blue waters.',
-    imageUrl: 'https://images.unsplash.com/photo-1589394815804-964ed7be2eb5?q=80&w=1200&auto=format&fit=crop',
-    crowdLevel: 'Low',
-    authenticityScore: 94,
-    rating: 4.7,
-    reviews: 1800,
-    lat: 15.3500,
-    lng: 76.4400,
-    isTouristFavorite: false,
-    isHiddenGem: true,
-  },
-
-  // JAIPUR
-  {
-    id: 'j1',
-    name: 'Hawa Mahal',
-    city: 'Jaipur',
-    category: 'Historic',
-    description: 'The Palace of Winds. An iconic pink sandstone structure with 953 small windows designed for royal ladies to observe street life.',
-    imageUrl: 'https://images.unsplash.com/photo-1599661046289-e31887846eac?q=80&w=1200&auto=format&fit=crop',
-    crowdLevel: 'High',
-    authenticityScore: 78,
-    rating: 4.7,
-    reviews: 120000,
-    lat: 26.9239,
-    lng: 75.8267,
-    isTouristFavorite: true,
-    isHiddenGem: false,
-  },
-  {
-    id: 'j2',
-    name: 'Panna Meena ka Kund',
-    city: 'Jaipur',
-    category: 'Historic',
-    description: 'An 18th-century stepwell with stunning symmetrical stairs. A photographer\'s paradise that is much quieter than Amer Fort.',
-    imageUrl: 'https://images.unsplash.com/photo-1477587458883-47145ed94245?q=80&w=1200&auto=format&fit=crop',
-    crowdLevel: 'Low',
-    authenticityScore: 95,
-    rating: 4.6,
-    reviews: 3200,
-    lat: 26.9900,
-    lng: 75.8500,
-    isTouristFavorite: false,
-    isHiddenGem: true,
+const generatePlaces = (): Place[] => {
+  const places: Place[] = [];
+  
+  // Generate 125 Tourist Places
+  for (let i = 1; i <= 125; i++) {
+    const city = CITIES[i % CITIES.length];
+    const category = CATEGORIES[i % CATEGORIES.length];
+    const coords = CITY_COORDS[city];
+    
+    places.push({
+      id: i,
+      name: `${city} ${category} Hub`,
+      city: city,
+      category: category,
+      lat: coords.lat + (Math.random() - 0.5) * 0.1,
+      lng: coords.lng + (Math.random() - 0.5) * 0.1,
+      rating: parseFloat((4.2 + Math.random() * 0.8).toFixed(1)),
+      reviewCount: 800 + Math.floor(Math.random() * 5000),
+      tags: ["popular", "tourist"],
+      crowdLevel: "High",
+      description: `A highly-rated ${category.toLowerCase()} in the heart of ${city}, famous among tourists for its vibrant energy and world-class heritage.`,
+      image: `https://picsum.photos/seed/${i}/600/400`
+    });
   }
-];
+  
+  // Generate 125 Hidden Gems
+  for (let i = 126; i <= 250; i++) {
+    const city = CITIES[i % CITIES.length];
+    const category = CATEGORIES[i % CATEGORIES.length];
+    const coords = CITY_COORDS[city];
+    
+    places.push({
+      id: i,
+      name: `Quiet ${city} ${category} Corner`,
+      city: city,
+      category: category,
+      lat: coords.lat + (Math.random() - 0.5) * 0.1,
+      lng: coords.lng + (Math.random() - 0.5) * 0.1,
+      rating: parseFloat((4.0 + Math.random() * 1.0).toFixed(1)),
+      reviewCount: Math.floor(Math.random() * 299),
+      tags: ["hidden", "local", "peaceful"],
+      crowdLevel: "Low",
+      description: `A peaceful and quiet ${category.toLowerCase()} tucked away in ${city}. This local gem offers a serene escape from the crowds.`,
+      image: `https://picsum.photos/seed/${i}/600/400`
+    });
+  }
+  
+  return places;
+};
+
+export const MOCK_PLACES: Place[] = generatePlaces();

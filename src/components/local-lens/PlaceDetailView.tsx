@@ -71,7 +71,7 @@ export function PlaceDetailView({ place, onClose }: PlaceDetailViewProps) {
           {/* Image Column */}
           <div className="relative w-full md:w-1/2 h-[45vh] md:h-full shrink-0">
             <Image 
-              src={place.imageUrl} 
+              src={place.image} 
               alt={place.name}
               fill
               sizes="100vw"
@@ -99,9 +99,9 @@ export function PlaceDetailView({ place, onClose }: PlaceDetailViewProps) {
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
               {[
                 { label: 'Rating', val: place.rating, icon: <Star className="w-3.5 h-3.5 md:w-4 md:h-4 fill-current text-amber-500" /> },
-                { label: 'Reviews', val: (place.reviews || 0).toLocaleString(), icon: <Users className="w-3.5 h-3.5 md:w-4 md:h-4 text-muted-foreground" /> },
+                { label: 'Reviews', val: (place.reviewCount || 0).toLocaleString(), icon: <Users className="w-3.5 h-3.5 md:w-4 md:h-4 text-muted-foreground" /> },
                 { label: 'Crowd', val: place.crowdLevel, icon: <div className="w-3.5 h-3.5 md:w-4 md:h-4 rounded-full bg-primary/20 flex items-center justify-center text-[8px] md:text-[10px] font-bold">!</div> },
-                { label: 'Local Vibe', val: `${place.authenticityScore}%`, icon: <Sparkles className="w-3.5 h-3.5 md:w-4 md:h-4 text-accent" /> },
+                { label: 'Experience', val: place.tags.includes('hidden') ? 'Authentic' : 'Trending', icon: <Sparkles className="w-3.5 h-3.5 md:w-4 md:h-4 text-accent" /> },
               ].map((stat, i) => (
                 <div key={i} className="flex flex-col gap-1 md:gap-2">
                   <span className="text-[8px] md:text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{stat.label}</span>
