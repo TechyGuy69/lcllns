@@ -147,14 +147,14 @@ export default function LocalLensApp() {
           </div>
 
           <div className="flex flex-col items-center space-y-10 w-full animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-400">
-            {/* Fancy Search Bar with Glass Transition */}
-            <div className="w-full flex items-center bg-white rounded-full p-1.5 border border-white/20 shadow-2xl max-w-2xl transition-all duration-500 ease-in-out group focus-within:bg-white/40 focus-within:backdrop-blur-xl focus-within:ring-2 focus-within:ring-white/50">
+            {/* Fancy Search Bar with Clear Glass Transition */}
+            <div className="w-full flex items-center bg-white rounded-full p-1.5 border border-white/20 shadow-2xl max-w-2xl transition-all duration-700 ease-in-out group focus-within:bg-white/10 focus-within:backdrop-blur-2xl focus-within:ring-2 focus-within:ring-white/30">
               <input 
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && onExplore()}
                 placeholder="Find a hidden café or quiet trail..."
-                className="flex-1 bg-transparent outline-none text-gray-800 focus-within:text-white transition-colors duration-500 px-6 text-sm md:text-lg h-12 md:h-14 placeholder:text-gray-400"
+                className="flex-1 bg-transparent outline-none text-gray-800 focus:text-white transition-colors duration-500 px-6 text-sm md:text-lg h-12 md:h-14 placeholder:text-gray-400 focus:placeholder:text-white/50"
               />
               <button 
                 onClick={onExplore}
@@ -189,7 +189,7 @@ export default function LocalLensApp() {
             onClick={goHome}
             className="flex items-center gap-2 text-primary/70 hover:text-primary font-bold text-[10px] uppercase tracking-[0.2em] transition-all bg-white/50 backdrop-blur-sm px-4 py-2.5 rounded-full border border-border/20 shadow-sm"
           >
-            <ChevronLeft className="w-4 h-4" /> <span className="hidden sm:inline">Home</span>
+            <Compass className="w-4 h-4" /> <span className="hidden sm:inline">Home</span>
           </button>
 
           <div className="bg-white/90 backdrop-blur-xl p-1 rounded-full flex gap-1 shadow-md border border-border/40 w-full max-w-[140px] md:max-w-xs">
