@@ -34,7 +34,7 @@ const HERO_IMAGES = [
   }
 ];
 
-const SUGGESTIONS = [
+const SHORTCUTS = [
   "Mumbai",
   "Kolkata",
   "Hampi",
@@ -62,8 +62,7 @@ export default function LocalLensApp() {
         const q = query(collection(db, 'places'), limit(1));
         const snapshot = await getDocs(q);
         if (snapshot.empty) {
-          const validMockPlaces = MOCK_PLACES.filter(p => p.name && p.lat && p.lng);
-          const promises = validMockPlaces.map(place => {
+          const promises = MOCK_PLACES.map(place => {
             const { id, ...data } = place;
             return addDoc(collection(db, 'places'), data);
           });
@@ -112,7 +111,6 @@ export default function LocalLensApp() {
 
   const onExplore = () => {
     setIsExploring(true);
-    // Automatically expand the panel to show results when exploration starts
     setIsPanelExpanded(true);
   };
 
@@ -131,17 +129,11 @@ export default function LocalLensApp() {
         "absolute inset-0 z-10 transition-transform duration-1000 ease-in-out bg-black",
         isExploring ? "-translate-x-full" : "translate-x-0"
       )}>
-        {/* Logo Overlay */}
-        <div className="absolute top-8 left-8 z-[20] flex items-center gap-3">
-          <div className="relative w-12 h-12 md:w-14 md:h-14 overflow-hidden rounded-xl shadow-2xl">
-            <Image 
-              src="https://i.ibb.co/BKS4t65d/Chat-GPT-Image-May-8-2026-02-54-35-PM.png" 
-              alt="LocalLens Logo"
-              fill
-              className="object-contain bg-white/10 backdrop-blur-sm"
-            />
-          </div>
-          <span className="text-white font-headline font-bold text-xl md:text-2xl tracking-tight text-shadow-strong">LocalLens</span>
+        {/* Branding Overlay */}
+        <div className="absolute top-10 left-10 z-[20] animate-in fade-in slide-in-from-top-4 duration-1000">
+          <span className="text-white font-headline font-bold text-2xl md:text-3xl tracking-tight text-shadow-strong select-none">
+            LocalLens
+          </span>
         </div>
 
         {/* Carousel Images */}
@@ -198,16 +190,16 @@ export default function LocalLensApp() {
             </div>
             
             <div className="mt-8 flex flex-wrap justify-center gap-2 md:gap-3 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500">
-              {SUGGESTIONS.map((s) => (
+              {SHORTCUTS.map((city) => (
                 <button 
-                  key={s}
+                  key={city}
                   onClick={() => { 
-                    setSearchQuery(s); 
+                    setSearchQuery(city); 
                     onExplore(); 
                   }}
                   className="px-6 py-2.5 rounded-full bg-white/10 backdrop-blur-md border border-white/30 text-white text-[10px] md:text-[11px] font-bold hover:bg-white/30 transition-all shadow-sm uppercase tracking-widest"
                 >
-                  {s}
+                  {city}
                 </button>
               ))}
             </div>
