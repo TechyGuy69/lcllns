@@ -16,70 +16,251 @@ export interface Place {
   image: string;
 }
 
-const CITIES = ["Mumbai", "Delhi", "Kolkata", "Jaipur", "Bangalore", "Chennai", "Hyderabad", "Goa", "Varanasi", "Hampi"];
-const CATEGORIES = ["Cafe", "Park", "Historic", "Beach", "Nature"];
+/**
+ * Static, hardcoded dataset to prevent hydration mismatches.
+ * Contains exactly 125 Tourist Favorites and 125 Hidden Gems.
+ */
+export const MOCK_PLACES: Place[] = [
+  // 1-125: Tourist Favorites (Popular)
+  {
+    id: 1,
+    name: "Gateway of India Plaza",
+    city: "Mumbai",
+    category: "Historic",
+    lat: 18.9220,
+    lng: 72.8347,
+    rating: 4.8,
+    reviewCount: 4500,
+    tags: ["popular", "tourist"],
+    crowdLevel: "High",
+    description: "The iconic arch monument overlooking the Arabian Sea, a must-visit for every traveler to Mumbai.",
+    image: "https://picsum.photos/seed/1/600/400"
+  },
+  {
+    id: 2,
+    name: "Red Fort Heritage Park",
+    city: "Delhi",
+    category: "Historic",
+    lat: 28.6562,
+    lng: 77.2410,
+    rating: 4.6,
+    reviewCount: 5200,
+    tags: ["popular", "tourist"],
+    crowdLevel: "High",
+    description: "A massive sandstone fort and a UNESCO World Heritage site representing the peak of Mughal architecture.",
+    image: "https://picsum.photos/seed/2/600/400"
+  },
+  {
+    id: 3,
+    name: "Victoria Memorial Grounds",
+    city: "Kolkata",
+    category: "Historic",
+    lat: 22.5448,
+    lng: 88.3426,
+    rating: 4.7,
+    reviewCount: 3800,
+    tags: ["popular", "tourist"],
+    crowdLevel: "High",
+    description: "A large marble building and museum, dedicated to the memory of Queen Victoria.",
+    image: "https://picsum.photos/seed/3/600/400"
+  },
+  {
+    id: 4,
+    name: "Hawa Mahal Viewpoint",
+    city: "Jaipur",
+    category: "Historic",
+    lat: 26.9239,
+    lng: 75.8267,
+    rating: 4.5,
+    reviewCount: 4100,
+    tags: ["popular", "tourist"],
+    crowdLevel: "High",
+    description: "The 'Palace of Winds' with its unique five-story exterior, designed to allow royal ladies to observe street life.",
+    image: "https://picsum.photos/seed/4/600/400"
+  },
+  {
+    id: 5,
+    name: "Cubbon Park Central",
+    city: "Bangalore",
+    category: "Park",
+    lat: 12.9733,
+    lng: 77.5921,
+    rating: 4.4,
+    reviewCount: 2900,
+    tags: ["popular", "tourist"],
+    crowdLevel: "High",
+    description: "The lung of Bangalore, this vast green space is perfect for morning walks and colonial-era architecture.",
+    image: "https://picsum.photos/seed/5/600/400"
+  },
+  {
+    id: 6,
+    name: "Marina Beach Promenade",
+    city: "Chennai",
+    category: "Beach",
+    lat: 13.0418,
+    lng: 80.2824,
+    rating: 4.3,
+    reviewCount: 6000,
+    tags: ["popular", "tourist"],
+    crowdLevel: "High",
+    description: "The longest natural urban beach in India, bustling with local food stalls and evening crowds.",
+    image: "https://picsum.photos/seed/6/600/400"
+  },
+  {
+    id: 7,
+    name: "Charminar Heritage Hub",
+    city: "Hyderabad",
+    category: "Historic",
+    lat: 17.3616,
+    lng: 78.4747,
+    rating: 4.6,
+    reviewCount: 4800,
+    tags: ["popular", "tourist"],
+    crowdLevel: "High",
+    description: "A 16th-century mosque and monument located in the heart of Hyderabad's old city.",
+    image: "https://picsum.photos/seed/7/600/400"
+  },
+  {
+    id: 8,
+    name: "Baga Beach Street",
+    city: "Goa",
+    category: "Beach",
+    lat: 15.5553,
+    lng: 73.7517,
+    rating: 4.2,
+    reviewCount: 5500,
+    tags: ["popular", "tourist"],
+    crowdLevel: "High",
+    description: "Famous for its nightlife, water sports, and beach shacks, Baga is the pulse of North Goa.",
+    image: "https://picsum.photos/seed/8/600/400"
+  },
+  {
+    id: 9,
+    name: "Dashashwamedh Ghat",
+    city: "Varanasi",
+    category: "Historic",
+    lat: 25.3069,
+    lng: 83.0102,
+    rating: 4.9,
+    reviewCount: 7000,
+    tags: ["popular", "tourist"],
+    crowdLevel: "High",
+    description: "The main ghat in Varanasi, famous for the spectacular Ganga Aarti ceremony held every evening.",
+    image: "https://picsum.photos/seed/9/600/400"
+  },
+  {
+    id: 10,
+    name: "Virupaksha Temple Plaza",
+    city: "Hampi",
+    category: "Historic",
+    lat: 15.3350,
+    lng: 76.4590,
+    rating: 4.8,
+    reviewCount: 3200,
+    tags: ["popular", "tourist"],
+    crowdLevel: "High",
+    description: "One of the oldest functional temples in India, located amidst the stunning ruins of Hampi.",
+    image: "https://picsum.photos/seed/10/600/400"
+  },
+  // Adding more structured data to reach 250 without dynamic generation
+  ...Array.from({ length: 115 }, (_, i) => ({
+    id: i + 11,
+    name: `Popular ${["Park", "Cafe", "Historic", "Beach", "Nature"][i % 5]} Spot ${i + 11}`,
+    city: ["Mumbai", "Delhi", "Kolkata", "Jaipur", "Bangalore", "Chennai", "Hyderabad", "Goa", "Varanasi", "Hampi"][i % 10],
+    category: ["Park", "Cafe", "Historic", "Beach", "Nature"][i % 5],
+    lat: 10 + (i * 0.1),
+    lng: 70 + (i * 0.1),
+    rating: 4.4,
+    reviewCount: 1200 + i,
+    tags: ["popular", "tourist"],
+    crowdLevel: "High" as CrowdLevel,
+    description: "A bustling destination that captures the vibrant spirit of modern and traditional India.",
+    image: `https://picsum.photos/seed/${i + 11}/600/400`
+  })),
 
-const CITY_COORDS: Record<string, { lat: number, lng: number }> = {
-  "Mumbai": { lat: 19.0760, lng: 72.8777 },
-  "Delhi": { lat: 28.6139, lng: 77.2090 },
-  "Kolkata": { lat: 22.5726, lng: 88.3639 },
-  "Jaipur": { lat: 26.9124, lng: 75.7873 },
-  "Bangalore": { lat: 12.9716, lng: 77.5946 },
-  "Chennai": { lat: 13.0827, lng: 80.2707 },
-  "Hyderabad": { lat: 17.3850, lng: 78.4867 },
-  "Goa": { lat: 15.2993, lng: 74.1240 },
-  "Varanasi": { lat: 25.3176, lng: 82.9739 },
-  "Hampi": { lat: 15.3350, lng: 76.4600 }
-};
-
-const generatePlaces = (): Place[] => {
-  const places: Place[] = [];
-  
-  // Generate 125 Tourist Places
-  for (let i = 1; i <= 125; i++) {
-    const city = CITIES[i % CITIES.length];
-    const category = CATEGORIES[i % CATEGORIES.length];
-    const coords = CITY_COORDS[city];
-    
-    places.push({
-      id: i,
-      name: `${city} ${category} Hub`,
-      city: city,
-      category: category,
-      lat: coords.lat + (Math.random() - 0.5) * 0.1,
-      lng: coords.lng + (Math.random() - 0.5) * 0.1,
-      rating: parseFloat((4.2 + Math.random() * 0.8).toFixed(1)),
-      reviewCount: 800 + Math.floor(Math.random() * 5000),
-      tags: ["popular", "tourist"],
-      crowdLevel: "High",
-      description: `A highly-rated ${category.toLowerCase()} in the heart of ${city}, famous among tourists for its vibrant energy and world-class heritage.`,
-      image: `https://picsum.photos/seed/${i}/600/400`
-    });
-  }
-  
-  // Generate 125 Hidden Gems
-  for (let i = 126; i <= 250; i++) {
-    const city = CITIES[i % CITIES.length];
-    const category = CATEGORIES[i % CATEGORIES.length];
-    const coords = CITY_COORDS[city];
-    
-    places.push({
-      id: i,
-      name: `Quiet ${city} ${category} Corner`,
-      city: city,
-      category: category,
-      lat: coords.lat + (Math.random() - 0.5) * 0.1,
-      lng: coords.lng + (Math.random() - 0.5) * 0.1,
-      rating: parseFloat((4.0 + Math.random() * 1.0).toFixed(1)),
-      reviewCount: Math.floor(Math.random() * 299),
-      tags: ["hidden", "local", "peaceful"],
-      crowdLevel: "Low",
-      description: `A peaceful and quiet ${category.toLowerCase()} tucked away in ${city}. This local gem offers a serene escape from the crowds.`,
-      image: `https://picsum.photos/seed/${i}/600/400`
-    });
-  }
-  
-  return places;
-};
-
-export const MOCK_PLACES: Place[] = generatePlaces();
+  // 126-250: Hidden Gems
+  {
+    id: 126,
+    name: "The Old City Library",
+    city: "Delhi",
+    category: "Historic",
+    lat: 28.6500,
+    lng: 77.2300,
+    rating: 4.7,
+    reviewCount: 45,
+    tags: ["hidden", "local", "peaceful"],
+    crowdLevel: "Low",
+    description: "A quiet, dusty sanctuary filled with rare colonial-era manuscripts and comfortable armchairs.",
+    image: "https://picsum.photos/seed/126/600/400"
+  },
+  {
+    id: 127,
+    name: "Secret Garden Cafe",
+    city: "Mumbai",
+    category: "Cafe",
+    lat: 19.0600,
+    lng: 72.8500,
+    rating: 4.5,
+    reviewCount: 82,
+    tags: ["hidden", "local", "peaceful"],
+    crowdLevel: "Low",
+    description: "Tucked away in a narrow lane, this cafe offers artisan coffee and a peaceful green courtyard.",
+    image: "https://picsum.photos/seed/127/600/400"
+  },
+  {
+    id: 128,
+    name: "Riverside Bamboo Trail",
+    city: "Hampi",
+    category: "Nature",
+    lat: 15.3400,
+    lng: 76.4700,
+    rating: 4.8,
+    reviewCount: 28,
+    tags: ["hidden", "local", "peaceful"],
+    crowdLevel: "Low",
+    description: "A serene path along the Tungabhadra river away from the main temple complexes.",
+    image: "https://picsum.photos/seed/128/600/400"
+  },
+  {
+    id: 129,
+    name: "Forgotten Spice Lane",
+    city: "Kolkata",
+    category: "Historic",
+    lat: 22.5800,
+    lng: 88.3500,
+    rating: 4.6,
+    reviewCount: 56,
+    tags: ["hidden", "local", "peaceful"],
+    crowdLevel: "Low",
+    description: "An atmospheric alleyway where the smell of cardamom and dry chillies lingers in the air.",
+    image: "https://picsum.photos/seed/129/600/400"
+  },
+  {
+    id: 130,
+    name: "Blue Lagoon Backwaters",
+    city: "Goa",
+    category: "Nature",
+    lat: 15.3500,
+    lng: 74.1500,
+    rating: 4.9,
+    reviewCount: 15,
+    tags: ["hidden", "local", "peaceful"],
+    crowdLevel: "Low",
+    description: "A crystal clear lagoon surrounded by coconut groves, far from the tourist beaches.",
+    image: "https://picsum.photos/seed/130/600/400"
+  },
+  ...Array.from({ length: 120 }, (_, i) => ({
+    id: i + 131,
+    name: `Quiet ${["Retreat", "Corner", "Nook", "Trail", "Sanctuary"][i % 5]} ${i + 131}`,
+    city: ["Mumbai", "Delhi", "Kolkata", "Jaipur", "Bangalore", "Chennai", "Hyderabad", "Goa", "Varanasi", "Hampi"][i % 10],
+    category: ["Nature", "Cafe", "Historic", "Park", "Nature"][i % 5],
+    lat: 12 + (i * 0.05),
+    lng: 72 + (i * 0.05),
+    rating: 4.5,
+    reviewCount: 10 + i,
+    tags: ["hidden", "local", "peaceful"],
+    crowdLevel: "Low" as CrowdLevel,
+    description: "A peaceful sanctuary that offers a quiet escape from the city's hustle and bustle.",
+    image: `https://picsum.photos/seed/${i + 131}/600/400`
+  }))
+];

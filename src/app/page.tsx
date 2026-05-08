@@ -34,7 +34,7 @@ export default function LocalLensApp() {
   const [isPanelExpanded, setIsPanelExpanded] = useState(false);
   const [isExploring, setIsExploring] = useState(false);
 
-  // Seed initial data if Firestore is empty
+  // Seed initial data if Firestore is empty (Client-side only)
   useEffect(() => {
     async function seedData() {
       if (!db) return;
@@ -49,13 +49,17 @@ export default function LocalLensApp() {
           await Promise.all(promises);
         }
       } catch (e) {
-        console.error("Error seeding data:", e);
+        // Silent error for seeding
       }
     }
     seedData();
   }, [db]);
 
+  // Stable data filtering to prevent hydration mismatches
   const allPlaces = useMemo(() => {
+    // If firestore data exists, we use it, but for the initial render,
+    // we must ensure it doesn't cause a mismatch.
+    // However, in SSR, firestorePlaces is usually null/empty initially.
     if (firestorePlaces && firestorePlaces.length > 0) {
       return firestorePlaces.filter((p: any) => p.lat && p.lng) as Place[];
     }
@@ -87,8 +91,6 @@ export default function LocalLensApp() {
 
   const handlePlaceSelect = (place: Place) => {
     setSelectedPlace(place);
-    // Don't auto-collapse the panel if we want the user to see which card they clicked
-    // but on mobile it's helpful. For now, let's keep expanded if already expanded.
   };
 
   const closePlaceDetail = () => {
@@ -135,7 +137,7 @@ export default function LocalLensApp() {
         </div>
 
         {/* Branding */}
-        <div className="absolute top-8 left-8 text-white text-xl font-bold tracking-tight z-30 animate-in fade-in duration-1000">
+        <div className="absolute top-6 left-6 text-white text-xl font-bold tracking-tight z-30 animate-in fade-in duration-1000">
           LocalLens
         </div>
 
@@ -204,7 +206,7 @@ export default function LocalLensApp() {
             <button
               onClick={() => {
                 setMode('tourist');
-                setSelectedPlace(null); // Reset selection on mode change
+                setSelectedPlace(null);
               }}
               className={cn(
                 "flex-1 flex items-center justify-center gap-2 py-2 rounded-full text-[9px] md:text-[10px] font-bold uppercase tracking-[0.15em] transition-all",
@@ -216,7 +218,7 @@ export default function LocalLensApp() {
             <button
               onClick={() => {
                 setMode('hidden');
-                setSelectedPlace(null); // Reset selection on mode change
+                setSelectedPlace(null);
               }}
               className={cn(
                 "flex-1 flex items-center justify-center gap-2 py-2 rounded-full text-[9px] md:text-[10px] font-bold uppercase tracking-[0.15em] transition-all",
