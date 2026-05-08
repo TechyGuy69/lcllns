@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useFirestore, useCollection } from '@/firebase';
 import { collection, query, limit, getDocs, addDoc } from 'firebase/firestore';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 const HERO_IMAGES = [
   {
@@ -53,6 +54,8 @@ export default function LocalLensApp() {
   const [isPanelExpanded, setIsPanelExpanded] = useState(false);
   const [isExploring, setIsExploring] = useState(false);
   const [heroIndex, setHeroIndex] = useState(0);
+
+  const logoImage = useMemo(() => PlaceHolderImages.find(img => img.id === 'logo-main'), []);
 
   // One-time seed function to populate Firestore with mock data if it's empty
   useEffect(() => {
@@ -134,6 +137,20 @@ export default function LocalLensApp() {
         "absolute inset-0 z-10 transition-transform duration-1000 ease-in-out bg-black",
         isExploring ? "-translate-x-full" : "translate-x-0"
       )}>
+        {/* Logo Container */}
+        <div className="absolute top-8 left-8 md:top-12 md:left-12 z-30 animate-in fade-in slide-in-from-top-4 duration-1000">
+          {logoImage && (
+            <Image 
+              src={logoImage.imageUrl}
+              alt="LocalLens Logo"
+              width={160}
+              height={54}
+              className="h-10 md:h-14 w-auto object-contain brightness-0 invert"
+              data-ai-hint={logoImage.imageHint}
+            />
+          )}
+        </div>
+
         {/* Carousel Images */}
         {HERO_IMAGES.map((img, idx) => (
           <div 
@@ -192,7 +209,6 @@ export default function LocalLensApp() {
                   key={s}
                   onClick={() => { 
                     setSearchQuery(s); 
-                    // Automatically transition to the exploration page for the selected area
                     setIsExploring(true); 
                   }}
                   className="px-6 py-2.5 rounded-full bg-white/10 backdrop-blur-md border border-white/30 text-white text-[10px] md:text-[11px] font-bold hover:bg-white/30 transition-all shadow-sm uppercase tracking-widest"

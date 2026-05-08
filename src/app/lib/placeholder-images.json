@@ -2,6 +2,12 @@
 {
   "placeholderImages": [
     {
+      "id": "logo-main",
+      "description": "LocalLens Brand Logo",
+      "imageUrl": "https://picsum.photos/seed/ll-logo/300/100",
+      "imageHint": "locallens logo"
+    },
+    {
       "id": "hero-taj",
       "description": "Taj Mahal at sunrise",
       "imageUrl": "https://picsum.photos/seed/taj-sunrise/1920/1080",
