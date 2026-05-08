@@ -1,7 +1,7 @@
 
 "use client"
 
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect, useMemo } from 'react';
 import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 import { Place } from '@/lib/mock-data';
 import { AlertCircle } from 'lucide-react';
@@ -19,43 +19,16 @@ const containerStyle = {
 };
 
 const defaultCenter = {
-  lat: 20.5937,
+  lat: 22.5937,
   lng: 78.9629
 };
 
-const mapOptions = {
-  disableDefaultUI: true,
-  styles: [
-    {
-      "featureType": "all",
-      "elementType": "geometry.fill",
-      "stylers": [{ "color": "#fdf8f4" }]
-    },
-    {
-      "featureType": "water",
-      "elementType": "geometry",
-      "stylers": [{ "color": "#e0e0e0" }]
-    },
-    {
-      "featureType": "poi",
-      "stylers": [{ "visibility": "off" }]
-    },
-    {
-      "featureType": "administrative",
-      "elementType": "labels.text.fill",
-      "stylers": [{ "color": "#444444" }]
-    },
-    {
-      "featureType": "landscape",
-      "elementType": "all",
-      "stylers": [{ "color": "#fdf8f4" }]
-    },
-    {
-      "featureType": "road",
-      "elementType": "all",
-      "stylers": [{ "visibility": "off" }]
-    }
-  ]
+// India geographic boundaries to restrict the map view
+const INDIA_BOUNDS = {
+  north: 38.0,
+  south: 6.0,
+  west: 68.0,
+  east: 98.0,
 };
 
 export function InteractiveMap({ places, selectedPlace, onPlaceSelect, mode }: InteractiveMapProps) {
@@ -68,6 +41,47 @@ export function InteractiveMap({ places, selectedPlace, onPlaceSelect, mode }: I
 
   const [map, setMap] = useState<google.maps.Map | null>(null);
 
+  const mapOptions = useMemo(() => ({
+    disableDefaultUI: true,
+    minZoom: 4.5, // Prevents zooming out to see the whole world
+    maxZoom: 18,
+    restriction: {
+      latLngBounds: INDIA_BOUNDS,
+      strictBounds: false,
+    },
+    styles: [
+      {
+        "featureType": "all",
+        "elementType": "geometry.fill",
+        "stylers": [{ "color": "#fdf8f4" }]
+      },
+      {
+        "featureType": "water",
+        "elementType": "geometry",
+        "stylers": [{ "color": "#e0e0e0" }]
+      },
+      {
+        "featureType": "poi",
+        "stylers": [{ "visibility": "off" }]
+      },
+      {
+        "featureType": "administrative",
+        "elementType": "labels.text.fill",
+        "stylers": [{ "color": "#444444" }]
+      },
+      {
+        "featureType": "landscape",
+        "elementType": "all",
+        "stylers": [{ "color": "#fdf8f4" }]
+      },
+      {
+        "featureType": "road",
+        "elementType": "all",
+        "stylers": [{ "visibility": "off" }]
+      }
+    ]
+  }), []);
+
   useEffect(() => {
     if (map && places.length > 0) {
       const bounds = new google.maps.LatLngBounds();
@@ -76,7 +90,13 @@ export function InteractiveMap({ places, selectedPlace, onPlaceSelect, mode }: I
           bounds.extend({ lat: place.lat, lng: place.lng });
         }
       });
-      map.fitBounds(bounds);
+      // If we only have one place or a very tight cluster, don't zoom in too much
+      if (places.length === 1) {
+        map.setCenter({ lat: places[0].lat, lng: places[0].lng });
+        map.setZoom(12);
+      } else {
+        map.fitBounds(bounds);
+      }
     }
   }, [map, places]);
 

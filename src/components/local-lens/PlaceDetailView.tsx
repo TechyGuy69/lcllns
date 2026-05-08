@@ -100,9 +100,9 @@ export function PlaceDetailView({ place, onClose }: PlaceDetailViewProps) {
                 { label: 'Crowd', val: place.crowdLevel, icon: <div className="w-3.5 h-3.5 md:w-4 md:h-4 rounded-full bg-primary/20 flex items-center justify-center text-[8px] md:text-[10px] font-bold">!</div> },
                 { label: 'Experience', val: place.tags.includes('hidden') ? 'Authentic' : 'Trending', icon: <Sparkles className="w-3.5 h-3.5 md:w-4 md:h-4 text-accent" /> },
               ].map((stat, i) => (
-                <div key={i} className="flex flex-col gap-1 md:gap-2 min-w-0">
-                  <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground truncate">{stat.label}</span>
-                  <div className="flex items-center gap-1.5 md:gap-2 text-sm md:text-lg lg:text-xl font-bold text-primary">
+                <div key={i} className="flex flex-col gap-1 md:gap-2 min-w-0 overflow-hidden">
+                  <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground truncate block">{stat.label}</span>
+                  <div className="flex items-center gap-1.5 md:gap-2 text-sm md:text-lg lg:text-xl font-bold text-primary truncate">
                     <span className="shrink-0">{stat.icon}</span>
                     <span className="truncate">{stat.val}</span>
                   </div>
