@@ -74,6 +74,7 @@ export function PlaceDetailView({ place, onClose }: PlaceDetailViewProps) {
               src={place.imageUrl} 
               alt={place.name}
               fill
+              sizes="100vw"
               className="object-cover"
               priority
             />

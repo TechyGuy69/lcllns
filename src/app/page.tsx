@@ -2,6 +2,7 @@
 "use client"
 
 import React, { useState, useMemo, useEffect } from 'react';
+import Image from 'next/image';
 import { ArrowRight, Compass, Sparkles, ChevronLeft } from 'lucide-react';
 import { InteractiveMap } from '@/components/local-lens/InteractiveMap';
 import { ResultsPanel } from '@/components/local-lens/ResultsPanel';
@@ -125,16 +126,23 @@ export default function LocalLensApp() {
         {/* Optimized Background Layer */}
         <div className="absolute inset-0 bg-neutral-950 overflow-hidden">
           {HERO_IMAGES.map((url, idx) => (
-            <img
+            <div 
               key={url}
-              src={`${url}?auto=format&fit=crop&q=80&w=1920`}
-              alt="India Landscape"
-              onLoad={() => handleImageLoad(idx)}
               className={cn(
-                "absolute inset-0 w-full h-full object-cover transition-all duration-[1000ms] ease-in-out",
+                "absolute inset-0 w-full h-full transition-all duration-[1000ms] ease-in-out",
                 heroIndex === idx && loadedImages[idx] ? "opacity-100 scale-105" : "opacity-0 scale-100"
               )}
-            />
+            >
+              <Image
+                src={url}
+                alt="India Landscape"
+                fill
+                sizes="100vw"
+                priority={idx === 0}
+                onLoad={() => handleImageLoad(idx)}
+                className="object-cover"
+              />
+            </div>
           ))}
           <div className="absolute inset-0 bg-black/40" />
         </div>
@@ -149,8 +157,8 @@ export default function LocalLensApp() {
 
           <div className="max-w-5xl w-full text-center flex flex-col items-center space-y-12">
             
-            {/* High-End Cinematic Typography */}
-            <h1 className="text-white text-6xl md:text-9xl font-headline leading-[0.95] tracking-tighter drop-shadow-2xl animate-in fade-in slide-in-from-bottom-6 duration-1000">
+            {/* Impactful Luxury Typography */}
+            <h1 className="text-white text-6xl md:text-9xl font-headline leading-[1.1] tracking-tighter drop-shadow-2xl animate-in fade-in slide-in-from-bottom-6 duration-1000">
               See India <br />
               <span className="italic font-normal">differently.</span>
             </h1>
@@ -161,13 +169,13 @@ export default function LocalLensApp() {
               </p>
 
               {/* Refined Glass Search Bar */}
-              <div className="w-full flex items-center bg-white/10 backdrop-blur-2xl rounded-full p-2 border border-white/20 shadow-2xl max-w-2xl transition-all group focus-within:bg-white/15">
+              <div className="w-full flex items-center glass rounded-full p-1.5 shadow-2xl max-w-2xl transition-all group focus-within:bg-white/20">
                 <input 
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && onExplore()}
                   placeholder="Find a hidden café or quiet trail..."
-                  className="flex-1 bg-transparent outline-none text-white px-6 text-sm md:text-lg h-12 md:h-14 placeholder:text-white/50"
+                  className="flex-1 bg-transparent outline-none text-white px-6 text-sm md:text-lg h-12 md:h-14 placeholder:text-white/60"
                 />
                 <button 
                   onClick={onExplore}
