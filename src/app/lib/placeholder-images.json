@@ -1,10 +1,29 @@
+
 {
   "placeholderImages": [
     {
-      "id": "hero-india",
-      "description": "Cinematic archway view of Taj Mahal",
-      "imageUrl": "https://picsum.photos/seed/india-hero/1920/1080",
-      "imageHint": "india travel"
+      "id": "hero-taj",
+      "description": "Taj Mahal at sunrise",
+      "imageUrl": "https://picsum.photos/seed/taj-sunrise/1920/1080",
+      "imageHint": "taj mahal sunrise"
+    },
+    {
+      "id": "hero-varanasi",
+      "description": "Varanasi ghats at dusk",
+      "imageUrl": "https://picsum.photos/seed/varanasi-ghats/1920/1080",
+      "imageHint": "varanasi india"
+    },
+    {
+      "id": "hero-himalayas",
+      "description": "Snowy peaks of the Himalayas",
+      "imageUrl": "https://picsum.photos/seed/himalaya-peaks/1920/1080",
+      "imageHint": "himalayas mountains"
+    },
+    {
+      "id": "hero-kerala",
+      "description": "Backwaters of Kerala",
+      "imageUrl": "https://picsum.photos/seed/kerala-backwaters/1920/1080",
+      "imageHint": "kerala boat"
     },
     {
       "id": "kolkata-cafe",
