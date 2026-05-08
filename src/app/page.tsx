@@ -155,32 +155,32 @@ export default function LocalLensApp() {
         <div className="absolute inset-0 hero-overlay z-[1]" />
 
         {/* Home Screen Content */}
-        <div className="relative z-10 h-full w-full flex flex-col">
+        <div className="relative z-10 h-full w-full flex flex-col justify-between px-6 py-8 md:px-12 md:py-12">
           
-          {/* Branding Header - Pinned to top left */}
-          <header className="absolute top-6 left-6 md:top-12 md:left-12">
-            <span className="text-xl md:text-2xl font-headline font-bold text-white text-shadow-strong tracking-tighter">
+          {/* Top Branding - Locked to Corner */}
+          <div className="w-full flex justify-start">
+            <span className="text-2xl md:text-3xl font-headline font-bold text-white tracking-tighter drop-shadow-lg">
               LocalLens
             </span>
-          </header>
+          </div>
 
-          {/* Hero Content Area - Centered */}
-          <div className="flex-1 flex flex-col items-center justify-center text-center px-6 animate-in fade-in slide-in-from-bottom-8 duration-1000">
-            <h1 className="font-headline font-bold text-white tracking-tight leading-[0.9] text-5xl sm:text-7xl md:text-8xl mb-6 text-shadow-strong">
+          {/* Center Content - IMPACTFUL Headline */}
+          <div className="flex-1 flex flex-col items-center justify-center text-center max-w-5xl mx-auto w-full">
+            <h1 className="font-headline font-bold text-white tracking-tight leading-[0.9] text-5xl sm:text-7xl md:text-9xl mb-8 animate-in fade-in slide-in-from-bottom-8 duration-1000">
               See India <br />
-              <span className="opacity-90 italic">differently.</span>
+              <span className="italic font-normal opacity-90">differently.</span>
             </h1>
             
-            <p className="text-xs md:text-xl text-white/80 font-medium max-w-2xl mx-auto leading-relaxed text-shadow-soft">
+            <p className="text-sm md:text-xl text-white/90 font-medium max-w-2xl mx-auto leading-relaxed text-shadow-soft opacity-80 animate-in fade-in duration-1000 delay-300">
               Skip the tour buses. Find the places locals actually love — from <br className="hidden md:block" />
               hidden cafés to sacred spots tourists never reach.
             </p>
           </div>
 
-          {/* Search Area - Bottom */}
-          <div className="w-full max-w-4xl mx-auto px-6 pb-12 md:pb-20 animate-in zoom-in-95 duration-700 delay-300">
-            <div className="bg-white/10 backdrop-blur-2xl border border-white/20 rounded-full p-1.5 md:p-2 flex items-center shadow-2xl overflow-hidden mb-6 md:mb-8">
-              <div className="pl-4 md:pl-6 text-white/50">
+          {/* Bottom Area - Search & Shortcuts */}
+          <div className="w-full max-w-4xl mx-auto">
+            <div className="bg-white/10 backdrop-blur-2xl border border-white/20 rounded-full p-1.5 md:p-2.5 flex items-center shadow-2xl overflow-hidden mb-8 animate-in zoom-in-95 duration-700 delay-500">
+              <div className="pl-5 md:pl-7 text-white/60">
                 <Search className="w-5 h-5 md:w-6 md:h-6" />
               </div>
               <Input 
@@ -188,22 +188,22 @@ export default function LocalLensApp() {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && onExplore()}
                 placeholder="Quiet trails in Munnar..."
-                className="bg-transparent border-0 ring-0 focus-visible:ring-0 text-sm md:text-xl h-10 md:h-16 placeholder:text-white/40 text-white font-medium"
+                className="bg-transparent border-0 ring-0 focus-visible:ring-0 text-base md:text-2xl h-12 md:h-16 placeholder:text-white/40 text-white font-medium"
               />
               <Button 
                 onClick={onExplore}
-                className="rounded-full bg-[#346b51] hover:bg-[#2a5641] text-white h-10 md:h-14 px-6 md:px-12 font-bold text-[9px] md:text-xs tracking-[0.2em] gap-2 md:gap-3 shadow-lg shrink-0 mr-0.5 transition-all hover:scale-105 active:scale-95"
+                className="rounded-full bg-[#346b51] hover:bg-[#2a5641] text-white h-11 md:h-14 px-8 md:px-14 font-bold text-[10px] md:text-xs tracking-[0.2em] gap-3 shadow-lg shrink-0 mr-0.5 transition-all hover:scale-105 active:scale-95"
               >
                 EXPLORE <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
               </Button>
             </div>
             
-            <div className="flex flex-wrap justify-center gap-2 md:gap-3 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500">
+            <div className="flex flex-wrap justify-center gap-3 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-700">
               {SHORTCUTS.map((shortcut) => (
                 <button 
                   key={shortcut.label}
                   onClick={() => handleShortcutClick(shortcut.query)}
-                  className="px-4 py-2 md:px-6 md:py-2.5 rounded-full bg-black/20 backdrop-blur-md border border-white/10 text-white/80 text-[8px] md:text-[11px] font-bold hover:bg-white/10 transition-all uppercase tracking-[0.15em]"
+                  className="px-5 py-2 md:px-7 md:py-3 rounded-full bg-black/30 backdrop-blur-xl border border-white/10 text-white/80 text-[9px] md:text-[11px] font-bold hover:bg-white/10 transition-all uppercase tracking-[0.2em]"
                 >
                   {shortcut.label}
                 </button>
