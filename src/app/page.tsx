@@ -64,20 +64,57 @@ export default function LocalLensApp() {
   const filteredPlaces = useMemo(() => {
     const queryWords = searchQuery.toLowerCase().split(/\s+/).filter(Boolean);
     
-    return allPlaces.filter((place) => {
-      let matchesMode = false;
+    // 1. Initial filter based on mode
+    const modeMatches = allPlaces.filter((place) => {
       if (mode === 'tourist') {
-        matchesMode = (place.rating >= 4.2 && place.reviewCount > 800);
+        return (place.rating >= 4.2 && place.reviewCount > 800);
       } else {
-        matchesMode = (place.reviewCount < 300 || place.tags.includes('hidden') || place.tags.includes('local'));
+        return (place.reviewCount < 300 || place.tags.includes('hidden') || place.tags.includes('local'));
       }
-
-      if (!matchesMode) return false;
-
-      if (queryWords.length === 0) return true;
-      const searchableText = `${place.name} ${place.city} ${place.category} ${place.description}`.toLowerCase();
-      return queryWords.every(word => searchableText.includes(word));
     });
+
+    // 2. If no search query, return mode-matched places
+    if (queryWords.length === 0) return modeMatches;
+
+    // 3. Scoring System for Intelligent Search
+    const scored = modeMatches.map(place => {
+      let score = 0;
+      const name = place.name.toLowerCase();
+      const city = place.city.toLowerCase();
+      const cat = place.category.toLowerCase();
+      const desc = place.description.toLowerCase();
+      const tags = place.tags.map(t => t.toLowerCase());
+
+      queryWords.forEach(word => {
+        // Category match (+3)
+        if (cat.includes(word)) score += 3;
+        
+        // Tag match (+2)
+        if (tags.some(t => t.includes(word))) score += 2;
+        
+        // Name, City, or Description match (+1)
+        if (name.includes(word) || city.includes(word) || desc.includes(word)) score += 1;
+        
+        // Intent detection boost (+2)
+        const isHiddenIntent = ['hidden', 'quiet', 'peaceful', 'local', 'gem'].includes(word);
+        const isPopularIntent = ['popular', 'tourist', 'famous', 'trending'].includes(word);
+        
+        if (isHiddenIntent && (tags.includes('hidden') || tags.includes('local'))) {
+          score += 2;
+        }
+        if (isPopularIntent && (tags.includes('popular') || tags.includes('tourist'))) {
+          score += 2;
+        }
+      });
+
+      return { ...place, searchScore: score };
+    });
+
+    // 4. Filter by score > 0, sort by score, and limit to top 20
+    return scored
+      .filter(p => p.searchScore > 0)
+      .sort((a, b) => b.searchScore - a.searchScore)
+      .slice(0, 20);
   }, [searchQuery, mode, allPlaces]);
 
   const handlePlaceSelect = (place: Place) => {
