@@ -57,9 +57,6 @@ export default function LocalLensApp() {
 
   // Stable data filtering to prevent hydration mismatches
   const allPlaces = useMemo(() => {
-    // If firestore data exists, we use it, but for the initial render,
-    // we must ensure it doesn't cause a mismatch.
-    // However, in SSR, firestorePlaces is usually null/empty initially.
     if (firestorePlaces && firestorePlaces.length > 0) {
       return firestorePlaces.filter((p: any) => p.lat && p.lng) as Place[];
     }
@@ -73,10 +70,8 @@ export default function LocalLensApp() {
       // Dynamic Mode Filtering Logic
       let matchesMode = false;
       if (mode === 'tourist') {
-        // Tourist Mode: rating >= 4.2 AND reviewCount > 800
         matchesMode = (place.rating >= 4.2 && place.reviewCount > 800);
       } else {
-        // Hidden Gems Mode: reviewCount < 300 OR tags include "hidden" or "local"
         matchesMode = (place.reviewCount < 300 || place.tags.includes('hidden') || place.tags.includes('local'));
       }
 
@@ -167,7 +162,7 @@ export default function LocalLensApp() {
               />
               <button 
                 onClick={onExplore}
-                className="bg-green-700 text-white px-8 md:px-10 h-12 md:h-14 rounded-full hover:bg-green-600 active:scale-95 transition-all font-bold text-xs uppercase tracking-widest flex items-center gap-2 shadow-lg"
+                className="bg-green-700 text-white px-8 md:px-10 h-12 md:h-14 rounded-full hover:bg-green-600 active:scale-95 transition-all font-bold text-xs uppercase tracking-widest flex items-center gap-2 shadow-lg mr-2"
               >
                 Explore <ArrowRight className="w-4 h-4" />
               </button>
