@@ -165,6 +165,7 @@ export function InteractiveMap({ places, selectedPlace, onPlaceSelect, mode }: I
         ))}
       </GoogleMap>
 
+      {/* Legend */}
       <div className="absolute bottom-48 left-8 pointer-events-none hidden lg:block z-20">
         <div className="bg-white/80 backdrop-blur-md px-6 py-4 rounded-[2rem] shadow-xl border border-white/40 flex flex-col gap-3">
           <div className="flex items-center gap-3">

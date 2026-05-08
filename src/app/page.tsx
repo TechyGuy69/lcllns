@@ -108,11 +108,13 @@ export default function LocalLensApp() {
   return (
     <main className="relative min-h-screen w-full bg-black overflow-hidden selection:bg-accent/30 selection:text-white">
       
+      {/* Landing View */}
       <section className={cn(
         "absolute inset-0 z-10 transition-transform duration-1000 ease-in-out min-h-screen flex items-center justify-center",
         isExploring ? "-translate-y-full" : "translate-y-0"
       )}>
         
+        {/* Static Background Layer */}
         <div className="absolute inset-0 z-0 bg-neutral-950">
           <Image
             src={STATIC_HERO_IMAGE}
@@ -125,10 +127,12 @@ export default function LocalLensApp() {
           <div className="absolute inset-0 bg-black/45 z-10" />
         </div>
 
+        {/* Branding */}
         <div className="absolute top-6 left-6 text-white text-xl font-bold tracking-tight z-30 animate-in fade-in duration-1000">
           LocalLens
         </div>
 
+        {/* Content */}
         <div className="relative z-30 w-full max-w-5xl px-6 flex flex-col items-center text-center space-y-12">
           
           <div className="space-y-6">
@@ -143,6 +147,7 @@ export default function LocalLensApp() {
           </div>
 
           <div className="flex flex-col items-center space-y-10 w-full animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-400">
+            {/* Fancy Search Bar with Glass Transition */}
             <div className="w-full flex items-center bg-white rounded-full p-1.5 border border-white/20 shadow-2xl max-w-2xl transition-all duration-500 ease-in-out group focus-within:bg-white/40 focus-within:backdrop-blur-xl focus-within:ring-2 focus-within:ring-white/50">
               <input 
                 value={searchQuery}
@@ -174,6 +179,7 @@ export default function LocalLensApp() {
         </div>
       </section>
 
+      {/* Explore View */}
       <section className={cn(
         "absolute inset-0 z-20 bg-background transition-transform duration-1000 ease-in-out flex flex-col overflow-hidden min-h-screen",
         isExploring ? "translate-y-0" : "translate-y-full"
@@ -235,6 +241,7 @@ export default function LocalLensApp() {
         </div>
       </section>
 
+      {/* Place Detail Overlay */}
       <PlaceDetailView 
         place={selectedPlace} 
         onClose={closePlaceDetail} 
