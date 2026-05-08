@@ -1,4 +1,3 @@
-
 "use client"
 
 import React, { useState, useMemo, useEffect } from 'react';
@@ -56,15 +55,16 @@ export default function LocalLensApp() {
   }, []);
 
   const filteredPlaces = useMemo(() => {
+    const queryWords = searchQuery.toLowerCase().split(/\s+/).filter(Boolean);
+    
     return MOCK_PLACES.filter((place) => {
-      const query = searchQuery.toLowerCase();
-      const matchesSearch = 
-        place.name.toLowerCase().includes(query) ||
-        place.city.toLowerCase().includes(query) ||
-        place.category.toLowerCase().includes(query);
-
-      const matchesMode = 
-        mode === 'tourist' ? place.isTouristFavorite : place.isHiddenGem;
+      const matchesMode = mode === 'tourist' ? place.isTouristFavorite : place.isHiddenGem;
+      
+      if (queryWords.length === 0) return matchesMode;
+      
+      // If user typed "Mumbai cafes", we want words to match across city, category, or name
+      const searchableText = `${place.name} ${place.city} ${place.category} ${place.description}`.toLowerCase();
+      const matchesSearch = queryWords.every(word => searchableText.includes(word));
 
       return matchesSearch && matchesMode;
     });
