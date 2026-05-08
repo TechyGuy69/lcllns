@@ -15,7 +15,7 @@ import { cn } from '@/lib/utils';
 const HERO_IMAGES = [
   {
     url: "https://picsum.photos/seed/taj-sunrise/1920/1080",
-    hint: "taj mahal"
+    hint: "taj mahal sunrise"
   },
   {
     url: "https://picsum.photos/seed/varanasi-ghats/1920/1080",
@@ -136,7 +136,8 @@ export default function LocalLensApp() {
               "font-headline font-bold text-white tracking-tight leading-tight transition-all duration-700 text-shadow-strong",
               isExploring ? "text-2xl md:text-4xl" : "text-4xl md:text-7xl mb-4 md:mb-6"
             )}>
-              See India <span className="italic font-normal text-white">differently.</span>
+              <span className="text-white">See India </span>
+              <span className="italic font-normal text-white">differently.</span>
             </h1>
             {!isExploring && (
               <p className="text-sm md:text-lg text-white font-medium max-w-xl mx-auto leading-relaxed text-shadow-soft animate-in fade-in duration-1000 delay-300">
