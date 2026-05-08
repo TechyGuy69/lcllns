@@ -9,8 +9,6 @@ import { ResultsPanel } from '@/components/local-lens/ResultsPanel';
 import { PlaceDetailView } from '@/components/local-lens/PlaceDetailView';
 import { MOCK_PLACES, Place } from '@/lib/mock-data';
 import { Toaster } from '@/components/ui/toaster';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useFirestore, useCollection } from '@/firebase';
 import { collection, query, limit, getDocs, addDoc } from 'firebase/firestore';
@@ -124,15 +122,15 @@ export default function LocalLensApp() {
   };
 
   return (
-    <main className="relative h-screen w-full bg-black overflow-hidden selection:bg-accent/30 selection:text-white">
+    <main className="relative min-h-screen w-full bg-black overflow-hidden selection:bg-accent/30 selection:text-white">
       
       {/* Home Page Section */}
       <section className={cn(
-        "absolute inset-0 z-10 transition-transform duration-1000 ease-in-out flex items-center justify-center text-center px-6",
+        "absolute inset-0 z-10 transition-transform duration-1000 ease-in-out flex items-center justify-center text-center px-6 min-h-screen",
         isExploring ? "-translate-y-full" : "translate-y-0"
       )}>
         
-        {/* Background Carousel */}
+        {/* Background */}
         <div className="absolute inset-0">
           {HERO_IMAGES.map((img, idx) => (
             <div 
@@ -155,28 +153,28 @@ export default function LocalLensApp() {
           <div className="absolute inset-0 bg-black/40" />
         </div>
 
-        {/* Home Content Container */}
-        <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center gap-8">
+        {/* Branding Logo - Positioned Absolute Relative to Section */}
+        <h1 className="absolute top-8 left-8 text-white text-xl md:text-2xl font-bold tracking-tight z-20 opacity-90">
+          LocalLens
+        </h1>
+
+        {/* Content Container */}
+        <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center gap-6 md:gap-8">
           
-          {/* Logo Alignment */}
-          <h1 className="absolute top-0 md:-top-24 left-0 md:-left-32 text-white text-xl md:text-2xl font-semibold tracking-tight opacity-90">
-            LocalLens
+          {/* Heading */}
+          <h1 className="text-white text-5xl md:text-8xl font-headline leading-tight drop-shadow-2xl">
+            See India <br />
+            <span className="italic font-normal opacity-90">differently.</span>
           </h1>
 
-          {/* Impactful Heading */}
-          <div className="space-y-4">
-            <h1 className="text-white text-5xl md:text-8xl font-headline leading-tight drop-shadow-2xl animate-in fade-in slide-in-from-bottom-8 duration-1000">
-              See India <br />
-              <span className="italic font-normal opacity-90">differently.</span>
-            </h1>
-            <p className="text-white/80 text-base md:text-xl max-w-2xl mx-auto leading-relaxed text-shadow-soft animate-in fade-in duration-1000 delay-300">
-              Skip the crowds. Discover the quiet sanctuaries and local haunts where India truly lives.
-            </p>
-          </div>
+          {/* Subtext */}
+          <p className="text-white/80 text-base md:text-xl max-w-2xl mx-auto leading-relaxed text-shadow-soft">
+            Skip the crowds. Discover the quiet sanctuaries and local haunts where India truly lives.
+          </p>
 
-          {/* Search Bar - Professional Scale */}
-          <div className="flex items-center w-full max-w-2xl bg-white/10 backdrop-blur-xl border border-white/20 rounded-full p-2 shadow-2xl animate-in zoom-in-95 duration-700 delay-500 hover:bg-white/15 transition-all">
-            <div className="pl-4 text-white/50">
+          {/* Search Bar */}
+          <div className="flex items-center w-full max-w-2xl bg-white/90 backdrop-blur-xl border border-white/20 rounded-full p-2 shadow-2xl transition-all">
+            <div className="pl-4 text-gray-400">
               <Search className="w-5 h-5" />
             </div>
             <input 
@@ -184,7 +182,7 @@ export default function LocalLensApp() {
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && onExplore()}
               placeholder="Find a hidden café or quiet trail..."
-              className="flex-1 bg-transparent border-0 outline-none px-4 text-lg text-white placeholder:text-white/40 font-medium h-12"
+              className="flex-1 bg-transparent border-0 outline-none px-4 text-base md:text-lg text-gray-800 placeholder:text-gray-400 font-medium h-12"
             />
             <button 
               onClick={onExplore}
@@ -195,7 +193,7 @@ export default function LocalLensApp() {
           </div>
 
           {/* Shortcuts / Pills */}
-          <div className="flex flex-wrap justify-center gap-3 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-700">
+          <div className="flex flex-wrap justify-center gap-3">
             {SHORTCUTS.map((shortcut) => (
               <button 
                 key={shortcut.label}
@@ -211,7 +209,7 @@ export default function LocalLensApp() {
 
       {/* Discovery Page Section */}
       <section className={cn(
-        "absolute inset-0 z-20 bg-background transition-transform duration-1000 ease-in-out flex flex-col overflow-hidden",
+        "absolute inset-0 z-20 bg-background transition-transform duration-1000 ease-in-out flex flex-col overflow-hidden min-h-screen",
         isExploring ? "translate-y-0" : "translate-y-full"
       )}>
         <header className="relative z-30 flex items-center justify-between px-6 py-4 md:px-12 md:py-6 shrink-0 bg-background/80 backdrop-blur-md border-b border-border/10">
