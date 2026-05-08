@@ -98,7 +98,7 @@ export function PlaceDetailView({ place, onClose }: PlaceDetailViewProps) {
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
               {[
                 { label: 'Rating', val: place.rating, icon: <Star className="w-4 h-4 fill-current text-amber-500" /> },
-                { label: 'Reviews', val: place.reviews.toLocaleString(), icon: <Users className="w-4 h-4 text-muted-foreground" /> },
+                { label: 'Reviews', val: (place.reviews || 0).toLocaleString(), icon: <Users className="w-4 h-4 text-muted-foreground" /> },
                 { label: 'Crowd', val: place.crowdLevel, icon: <div className="w-4 h-4 rounded-full bg-primary/20 flex items-center justify-center text-[10px] font-bold">!</div> },
                 { label: 'Local Vibe', val: `${place.authenticityScore}%`, icon: <Sparkles className="w-4 h-4 text-accent" /> },
               ].map((stat, i) => (

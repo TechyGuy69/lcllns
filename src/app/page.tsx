@@ -57,13 +57,18 @@ export default function LocalLensApp() {
   // One-time seed function to populate Firestore with mock data if it's empty
   useEffect(() => {
     async function seedData() {
-      const q = query(collection(db, 'places'), limit(1));
-      const snapshot = await getDocs(q);
-      if (snapshot.empty) {
-        MOCK_PLACES.forEach(place => {
-          const { id, ...data } = place;
-          addDoc(collection(db, 'places'), data);
-        });
+      if (!db) return;
+      try {
+        const q = query(collection(db, 'places'), limit(1));
+        const snapshot = await getDocs(q);
+        if (snapshot.empty) {
+          MOCK_PLACES.forEach(place => {
+            const { id, ...data } = place;
+            addDoc(collection(db, 'places'), data);
+          });
+        }
+      } catch (e) {
+        console.warn("Seeding skipped: Ensure Firebase is configured.");
       }
     }
     seedData();
