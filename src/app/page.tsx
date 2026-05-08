@@ -133,15 +133,16 @@ export default function LocalLensApp() {
         {/* Logo Container */}
         <div className="absolute top-8 left-8 md:top-12 md:left-12 z-30 animate-in fade-in slide-in-from-top-4 duration-1000">
           {logoImage ? (
-            <Image 
-              src={logoImage.imageUrl}
-              alt="LocalLens Logo"
-              width={180}
-              height={60}
-              className="h-10 md:h-14 w-auto object-contain"
-              priority
-              data-ai-hint={logoImage.imageHint}
-            />
+            <div className="relative w-48 h-16 md:w-64 md:h-20">
+              <Image 
+                src={logoImage.imageUrl}
+                alt="LocalLens Logo"
+                fill
+                className="object-contain"
+                priority
+                data-ai-hint={logoImage.imageHint}
+              />
+            </div>
           ) : (
             <h1 className="text-white font-headline text-3xl font-bold tracking-tight">LocalLens</h1>
           )}
