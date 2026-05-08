@@ -220,9 +220,9 @@ export default function LocalLensApp() {
         <header className="relative z-30 flex items-center justify-between px-6 py-4 md:px-12 md:py-6 shrink-0 bg-background/80 backdrop-blur-md border-b border-border/10">
           <button 
             onClick={goHome}
-            className="flex items-center gap-2 text-primary/70 hover:text-primary font-bold text-[10px] uppercase tracking-[0.2em] transition-all bg-white/50 backdrop-blur-sm px-4 py-2.5 rounded-full border border-border/20 shadow-sm"
+            className="flex items-center justify-center text-primary/70 hover:text-primary transition-all bg-white/50 backdrop-blur-sm p-2.5 rounded-full border border-border/20 shadow-sm hover:scale-110 active:scale-95"
           >
-            <Compass className="w-4 h-4" /> <span className="hidden sm:inline">Home</span>
+            <ChevronLeft className="w-5 h-5" />
           </button>
 
           <div className="bg-white/90 backdrop-blur-xl p-1 rounded-full flex gap-1 shadow-md border border-border/40 w-full max-w-[140px] md:max-w-xs">
