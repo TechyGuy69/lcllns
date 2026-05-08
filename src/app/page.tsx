@@ -45,7 +45,7 @@ const SUGGESTIONS = [
 
 export default function LocalLensApp() {
   const db = useFirestore();
-  const placesCollection = useMemo(() => collection(db, 'places'), [db]);
+  const placesCollection = useMemo(() => (db ? collection(db, 'places') : null), [db]);
   const { data: firestorePlaces, loading: firestoreLoading } = useCollection(placesCollection);
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -65,16 +65,14 @@ export default function LocalLensApp() {
         const q = query(collection(db, 'places'), limit(1));
         const snapshot = await getDocs(q);
         if (snapshot.empty) {
-          console.log("Seeding Firestore with initial places...");
           const promises = MOCK_PLACES.map(place => {
             const { id, ...data } = place;
             return addDoc(collection(db, 'places'), data);
           });
           await Promise.all(promises);
-          console.log("Seeding complete.");
         }
       } catch (e) {
-        console.warn("Seeding skipped or failed: Ensure Firebase is configured correctly.");
+        // Silent fail for seeding
       }
     }
     seedData();
@@ -87,7 +85,6 @@ export default function LocalLensApp() {
     return () => clearInterval(interval);
   }, []);
 
-  // Fallback to MOCK_PLACES if firestore is empty or loading
   const places = useMemo(() => {
     if (firestorePlaces && firestorePlaces.length > 0) {
       return firestorePlaces as Place[];
@@ -99,14 +96,10 @@ export default function LocalLensApp() {
     const queryWords = searchQuery.toLowerCase().split(/\s+/).filter(Boolean);
     
     return places.filter((place) => {
-      // Filtering logic: matches the selected mode (tourist vs hidden)
       const matchesMode = mode === 'tourist' ? place.isTouristFavorite : place.isHiddenGem;
-      
       if (queryWords.length === 0) return matchesMode;
-      
       const searchableText = `${place.name} ${place.city} ${place.category} ${place.description}`.toLowerCase();
       const matchesSearch = queryWords.every(word => searchableText.includes(word));
-
       return matchesSearch && matchesMode;
     });
   }, [searchQuery, mode, places]);
@@ -139,15 +132,18 @@ export default function LocalLensApp() {
       )}>
         {/* Logo Container */}
         <div className="absolute top-8 left-8 md:top-12 md:left-12 z-30 animate-in fade-in slide-in-from-top-4 duration-1000">
-          {logoImage && (
+          {logoImage ? (
             <Image 
               src={logoImage.imageUrl}
               alt="LocalLens Logo"
-              width={160}
-              height={54}
-              className="h-10 md:h-14 w-auto object-contain brightness-0 invert"
+              width={180}
+              height={60}
+              className="h-10 md:h-14 w-auto object-contain"
+              priority
               data-ai-hint={logoImage.imageHint}
             />
+          ) : (
+            <h1 className="text-white font-headline text-3xl font-bold tracking-tight">LocalLens</h1>
           )}
         </div>
 
