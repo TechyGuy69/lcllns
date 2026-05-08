@@ -14,7 +14,6 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useFirestore, useCollection } from '@/firebase';
 import { collection, query, limit, getDocs, addDoc } from 'firebase/firestore';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 const HERO_IMAGES = [
   {
@@ -54,8 +53,6 @@ export default function LocalLensApp() {
   const [isPanelExpanded, setIsPanelExpanded] = useState(false);
   const [isExploring, setIsExploring] = useState(false);
   const [heroIndex, setHeroIndex] = useState(0);
-
-  const logoImage = useMemo(() => PlaceHolderImages.find(img => img.id === 'logo-main'), []);
 
   // Seed function to populate Firestore with mock data if it's empty
   useEffect(() => {
@@ -126,34 +123,6 @@ export default function LocalLensApp() {
   return (
     <main className="relative h-screen w-full bg-background overflow-hidden">
       
-      {/* PERSISTENT NAVIGATION BAR */}
-      <nav className="fixed top-0 left-0 w-full h-20 md:h-24 px-6 md:px-12 flex items-center justify-between z-[100] pointer-events-none">
-        <div className="flex items-center pointer-events-auto">
-          {logoImage ? (
-            <div 
-              className="relative w-40 h-10 md:w-56 md:h-14 cursor-pointer group animate-in fade-in slide-in-from-top-4 duration-1000"
-              onClick={goHome}
-            >
-              <Image 
-                src={logoImage.imageUrl}
-                alt="LocalLens Logo"
-                fill
-                className="object-contain drop-shadow-[0_4px_12px_rgba(0,0,0,0.6)] transition-transform duration-300 group-hover:scale-105"
-                priority
-                data-ai-hint={logoImage.imageHint}
-              />
-            </div>
-          ) : (
-            <h1 
-              className="text-white font-headline text-2xl md:text-3xl font-bold tracking-tight cursor-pointer drop-shadow-xl"
-              onClick={goHome}
-            >
-              LocalLens
-            </h1>
-          )}
-        </div>
-      </nav>
-
       {/* Home Page Section */}
       <section className={cn(
         "absolute inset-0 z-10 transition-transform duration-1000 ease-in-out bg-black",
@@ -234,7 +203,7 @@ export default function LocalLensApp() {
         "absolute inset-0 z-20 bg-background transition-transform duration-1000 ease-in-out flex flex-col overflow-hidden",
         isExploring ? "translate-x-0" : "translate-x-full"
       )}>
-        <header className="relative z-30 flex items-center justify-between px-6 py-6 md:px-12 mt-20 md:mt-24">
+        <header className="relative z-30 flex items-center justify-between px-6 py-6 md:px-12 mt-4 md:mt-8">
           <button 
             onClick={goHome}
             className="flex items-center gap-2 text-primary/60 hover:text-primary font-bold text-[10px] uppercase tracking-[0.2em] transition-all"
