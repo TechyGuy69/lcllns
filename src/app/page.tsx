@@ -14,7 +14,6 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useFirestore, useCollection } from '@/firebase';
 import { collection, query, limit, getDocs, addDoc } from 'firebase/firestore';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 const HERO_IMAGES = [
   {
@@ -54,8 +53,6 @@ export default function LocalLensApp() {
   const [isPanelExpanded, setIsPanelExpanded] = useState(false);
   const [isExploring, setIsExploring] = useState(false);
   const [heroIndex, setHeroIndex] = useState(0);
-
-  const brandLogo = PlaceHolderImages.find(img => img.id === 'brand-logo');
 
   useEffect(() => {
     async function seedData() {
@@ -136,31 +133,6 @@ export default function LocalLensApp() {
         "absolute inset-0 z-10 transition-transform duration-1000 ease-in-out bg-black",
         isExploring ? "-translate-x-full" : "translate-x-0"
       )}>
-        {/* Branding - Top Left */}
-        <div className="absolute top-6 left-6 z-[20] flex items-center gap-3">
-          {brandLogo && (
-            <div className="relative w-8 h-8">
-              <Image 
-                src={brandLogo.imageUrl} 
-                alt="Logo"
-                fill
-                className="object-contain"
-              />
-            </div>
-          )}
-          <span className="text-white font-headline font-bold text-lg tracking-tight text-shadow-soft">
-            LocalLens
-          </span>
-        </div>
-
-        {/* Gemini AI Badge - Top Right */}
-        <div className="absolute top-6 right-6 z-[20]">
-          <div className="flex items-center gap-2 bg-black/20 backdrop-blur-md border border-white/20 rounded-full px-4 py-1.5 shadow-xl">
-            <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-            <span className="text-white/90 text-[10px] font-bold uppercase tracking-widest">Gemini AI</span>
-          </div>
-        </div>
-
         {/* Carousel Images */}
         {HERO_IMAGES.map((img, idx) => (
           <div 
@@ -233,22 +205,6 @@ export default function LocalLensApp() {
                 </button>
               ))}
             </div>
-          </div>
-        </div>
-
-        {/* Bottom Stats Section */}
-        <div className="absolute bottom-10 inset-x-0 z-[10] flex justify-center items-center gap-12 md:gap-24 opacity-60">
-          <div className="text-center">
-            <div className="text-white font-headline font-bold text-xl mb-1">20+</div>
-            <div className="text-white/60 text-[9px] uppercase tracking-widest font-bold">Places</div>
-          </div>
-          <div className="text-center">
-            <div className="text-white font-headline font-bold text-xl mb-1">10</div>
-            <div className="text-white/60 text-[9px] uppercase tracking-widest font-bold">Cities</div>
-          </div>
-          <div className="text-center">
-            <div className="text-white font-headline font-bold text-xl mb-1 flex items-center justify-center gap-1">AI</div>
-            <div className="text-white/60 text-[9px] uppercase tracking-widest font-bold">Powered</div>
           </div>
         </div>
       </section>
