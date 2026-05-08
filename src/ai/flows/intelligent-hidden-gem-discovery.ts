@@ -66,10 +66,37 @@ const intelligentHiddenGemDiscoveryFlow = ai.defineFlow(
     outputSchema: AnalyzePlaceForHiddenGemOutputSchema,
   },
   async input => {
-    const {output} = await prompt(input);
-    if (!output) {
-      throw new Error('Failed to get output from AI prompt.');
+    let attempts = 0;
+    const maxAttempts = 3;
+    
+    while (attempts < maxAttempts) {
+      try {
+        const {output} = await prompt(input);
+        if (!output) {
+          throw new Error('Failed to get output from AI prompt.');
+        }
+        return output;
+      } catch (error: any) {
+        attempts++;
+        
+        // Identify transient errors that are worth retrying
+        const isTransientError = 
+          error.message?.includes('503') || 
+          error.message?.includes('high demand') ||
+          error.message?.includes('429') ||
+          error.message?.includes('UNAVAILABLE');
+                           
+        if (attempts < maxAttempts && isTransientError) {
+          // Wait before retrying: 2s, 4s
+          const delay = Math.pow(2, attempts) * 1000;
+          await new Promise(resolve => setTimeout(resolve, delay));
+          continue;
+        }
+        
+        // If it's the last attempt or not a transient error, throw it
+        throw error;
+      }
     }
-    return output;
+    throw new Error('AI analysis failed after multiple attempts due to high service demand.');
   }
 );
