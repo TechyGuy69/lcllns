@@ -136,19 +136,20 @@ export default function LocalLensApp() {
         "absolute inset-0 z-10 transition-transform duration-1000 ease-in-out bg-black",
         isExploring ? "-translate-x-full" : "translate-x-0"
       )}>
-        {/* Branding Overlay */}
-        <div className="absolute top-10 left-10 z-[20] animate-in fade-in slide-in-from-top-4 duration-1000 flex items-center gap-4">
+        {/* Branding Overlay - Top Left */}
+        <div className="absolute top-12 left-12 z-[20] animate-in fade-in slide-in-from-top-4 duration-1000 flex items-center gap-6">
           {brandLogo && (
-            <div className="relative w-12 h-12 md:w-14 md:h-14">
+            <div className="relative w-16 h-16 md:w-24 md:h-24">
               <Image 
                 src={brandLogo.imageUrl} 
                 alt="LocalLens Logo"
                 fill
-                className="object-contain drop-shadow-lg"
+                className="object-contain drop-shadow-2xl"
+                priority
               />
             </div>
           )}
-          <span className="text-white font-headline font-bold text-3xl md:text-5xl tracking-tight text-shadow-strong select-none">
+          <span className="text-white font-headline font-bold text-4xl md:text-7xl tracking-tight text-shadow-strong select-none">
             LocalLens
           </span>
         </div>
@@ -176,12 +177,12 @@ export default function LocalLensApp() {
         <div className="absolute inset-0 hero-overlay z-[1]" />
 
         {/* Home Screen Content */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center px-4 md:px-8 text-center z-10 pt-24">
-          <div className="mb-12 md:mb-20 max-w-4xl transform animate-in fade-in slide-in-from-bottom-8 duration-1000">
-            <h1 className="font-headline font-bold text-white tracking-tight leading-tight text-5xl md:text-8xl mb-6 md:mb-10 text-shadow-strong">
+        <div className="absolute inset-0 flex flex-col items-center justify-center px-4 md:px-8 text-center z-10 pt-48">
+          <div className="mb-12 md:mb-20 max-w-5xl transform animate-in fade-in slide-in-from-bottom-8 duration-1000">
+            <h1 className="font-headline font-bold text-white tracking-tight leading-tight text-6xl md:text-9xl mb-6 md:mb-10 text-shadow-strong">
               See India <span className="text-white">differently.</span>
             </h1>
-            <p className="text-sm md:text-xl text-white font-medium max-w-2xl mx-auto leading-relaxed text-shadow-soft opacity-90 px-6">
+            <p className="text-sm md:text-2xl text-white font-medium max-w-3xl mx-auto leading-relaxed text-shadow-soft opacity-90 px-6">
               Skip the crowds. Discover the quiet sanctuaries and local haunts where India truly lives.
             </p>
           </div>
@@ -196,11 +197,11 @@ export default function LocalLensApp() {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && onExplore()}
                 placeholder="Find a hidden cafe or quiet trail..."
-                className="bg-transparent border-0 ring-0 focus-visible:ring-0 text-sm md:text-lg h-10 md:h-14 placeholder:text-primary/30 font-medium"
+                className="bg-transparent border-0 ring-0 focus-visible:ring-0 text-sm md:text-xl h-12 md:h-16 placeholder:text-primary/30 font-medium"
               />
               <Button 
                 onClick={onExplore}
-                className="rounded-full bg-accent hover:bg-accent/90 text-white h-10 md:h-14 px-6 md:px-10 font-bold text-[10px] md:text-xs tracking-[0.15em] uppercase gap-2 shadow-lg shrink-0"
+                className="rounded-full bg-accent hover:bg-accent/90 text-white h-12 md:h-16 px-8 md:px-12 font-bold text-[10px] md:text-sm tracking-[0.15em] uppercase gap-2 shadow-lg shrink-0"
               >
                 Explore <ArrowRight className="w-4 h-4" />
               </Button>
@@ -211,7 +212,7 @@ export default function LocalLensApp() {
                 <button 
                   key={city}
                   onClick={() => handleShortcutClick(city)}
-                  className="px-8 py-3 rounded-full bg-white/10 backdrop-blur-md border border-white/30 text-white text-[10px] md:text-[12px] font-bold hover:bg-white/30 transition-all shadow-sm uppercase tracking-widest"
+                  className="px-10 py-4 rounded-full bg-white/10 backdrop-blur-md border border-white/30 text-white text-[10px] md:text-[14px] font-bold hover:bg-white/30 transition-all shadow-sm uppercase tracking-widest"
                 >
                   {city}
                 </button>
