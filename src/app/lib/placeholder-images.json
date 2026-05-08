@@ -1,0 +1,46 @@
+{
+  "placeholderImages": [
+    {
+      "id": "kolkata-cafe",
+      "description": "Artisan cafe in Kolkata",
+      "imageUrl": "https://picsum.photos/seed/kol-cafe/800/600",
+      "imageHint": "kolkata cafe"
+    },
+    {
+      "id": "delhi-park",
+      "description": "Serene park in Delhi",
+      "imageUrl": "https://picsum.photos/seed/del-park/800/600",
+      "imageHint": "delhi park"
+    },
+    {
+      "id": "mumbai-hidden",
+      "description": "Hidden coastal spot in Mumbai",
+      "imageUrl": "https://picsum.photos/seed/mum-hidden/800/600",
+      "imageHint": "mumbai shore"
+    },
+    {
+      "id": "jaipur-fort",
+      "description": "Historic fort in Jaipur",
+      "imageUrl": "https://picsum.photos/seed/jai-fort/800/600",
+      "imageHint": "jaipur fort"
+    },
+    {
+      "id": "bangalore-garden",
+      "description": "Lush garden in Bangalore",
+      "imageUrl": "https://picsum.photos/seed/blr-garden/800/600",
+      "imageHint": "bangalore garden"
+    },
+    {
+      "id": "goa-beach",
+      "description": "Quiet beach in South Goa",
+      "imageUrl": "https://picsum.photos/seed/goa-beach/800/600",
+      "imageHint": "goa beach"
+    },
+    {
+      "id": "map-bg",
+      "description": "Abstract dark map background",
+      "imageUrl": "https://picsum.photos/seed/dark-map/1920/1080",
+      "imageHint": "dark map"
+    }
+  ]
+}
