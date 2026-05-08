@@ -63,13 +63,16 @@ export default function LocalLensApp() {
         const q = query(collection(db, 'places'), limit(1));
         const snapshot = await getDocs(q);
         if (snapshot.empty) {
-          MOCK_PLACES.forEach(place => {
+          console.log("Seeding Firestore with initial places...");
+          const promises = MOCK_PLACES.map(place => {
             const { id, ...data } = place;
-            addDoc(collection(db, 'places'), data);
+            return addDoc(collection(db, 'places'), data);
           });
+          await Promise.all(promises);
+          console.log("Seeding complete.");
         }
       } catch (e) {
-        console.warn("Seeding skipped: Ensure Firebase is configured.");
+        console.warn("Seeding skipped or failed: Ensure Firebase is configured correctly.");
       }
     }
     seedData();
@@ -82,7 +85,13 @@ export default function LocalLensApp() {
     return () => clearInterval(interval);
   }, []);
 
-  const places = (firestorePlaces as Place[]) || [];
+  // Fallback to MOCK_PLACES if firestore is empty or loading
+  const places = useMemo(() => {
+    if (firestorePlaces && firestorePlaces.length > 0) {
+      return firestorePlaces as Place[];
+    }
+    return MOCK_PLACES;
+  }, [firestorePlaces]);
 
   const filteredPlaces = useMemo(() => {
     const queryWords = searchQuery.toLowerCase().split(/\s+/).filter(Boolean);
@@ -150,7 +159,7 @@ export default function LocalLensApp() {
         <div className="absolute inset-0 flex flex-col items-center justify-center px-4 md:px-8 text-center z-10">
           <div className="mb-8 md:mb-12 max-w-4xl transform animate-in fade-in slide-in-from-bottom-8 duration-1000">
             <h1 className="font-headline font-bold text-white tracking-tight leading-tight text-4xl md:text-7xl mb-4 md:mb-6 text-shadow-strong">
-              See India differently.
+              See India <span className="text-white">differently.</span>
             </h1>
             <p className="text-sm md:text-lg text-white font-medium max-w-xl mx-auto leading-relaxed text-shadow-soft opacity-90">
               Skip the crowds. Discover the quiet sanctuaries and local haunts where India truly lives.
