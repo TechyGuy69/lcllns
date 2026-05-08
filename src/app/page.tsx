@@ -150,6 +150,7 @@ export default function LocalLensApp() {
         
         <div className="absolute inset-0 hero-overlay z-[1]" />
 
+        {/* Home Screen Content */}
         <div className="absolute inset-0 flex flex-col items-center justify-center px-4 md:px-8 text-center z-10">
           <div className="mb-8 md:mb-12 max-w-4xl transform animate-in fade-in slide-in-from-bottom-8 duration-1000">
             <h1 className="font-headline font-bold text-white tracking-tight leading-tight text-4xl md:text-7xl mb-4 md:mb-6 text-shadow-strong">
@@ -203,7 +204,7 @@ export default function LocalLensApp() {
         "absolute inset-0 z-20 bg-background transition-transform duration-1000 ease-in-out flex flex-col overflow-hidden",
         isExploring ? "translate-x-0" : "translate-x-full"
       )}>
-        <header className="relative z-30 flex items-center justify-between px-6 py-6 md:px-12 mt-4 md:mt-8">
+        <header className="relative z-30 flex items-center justify-between px-6 py-4 md:px-12 md:py-8">
           <button 
             onClick={goHome}
             className="flex items-center gap-2 text-primary/60 hover:text-primary font-bold text-[10px] uppercase tracking-[0.2em] transition-all"
