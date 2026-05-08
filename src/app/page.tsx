@@ -57,7 +57,7 @@ export default function LocalLensApp() {
 
   const logoImage = useMemo(() => PlaceHolderImages.find(img => img.id === 'logo-main'), []);
 
-  // One-time seed function to populate Firestore with mock data if it's empty
+  // Seed function to populate Firestore with mock data if it's empty
   useEffect(() => {
     async function seedData() {
       if (!db) return;
@@ -65,7 +65,9 @@ export default function LocalLensApp() {
         const q = query(collection(db, 'places'), limit(1));
         const snapshot = await getDocs(q);
         if (snapshot.empty) {
-          const promises = MOCK_PLACES.map(place => {
+          // Filter out any potential non-place entities and seed correctly
+          const validMockPlaces = MOCK_PLACES.filter(p => p.name && p.lat && p.lng);
+          const promises = validMockPlaces.map(place => {
             const { id, ...data } = place;
             return addDoc(collection(db, 'places'), data);
           });
@@ -87,7 +89,8 @@ export default function LocalLensApp() {
 
   const places = useMemo(() => {
     if (firestorePlaces && firestorePlaces.length > 0) {
-      return firestorePlaces as Place[];
+      // Filter out anything that might have been accidentally seeded as a place but isn't
+      return firestorePlaces.filter((p: any) => p.lat && p.lng) as Place[];
     }
     return MOCK_PLACES;
   }, [firestorePlaces]);
@@ -125,25 +128,25 @@ export default function LocalLensApp() {
   return (
     <main className="relative h-screen w-full bg-background overflow-hidden">
       
-      {/* Persistent Logo Container - Outside of sliding sections for visibility */}
-      <div className="absolute top-8 left-8 md:top-12 md:left-12 z-[60] pointer-events-none">
+      {/* PERSISTENT BRAND LOGO - Fixed position at top left */}
+      <div className="absolute top-6 left-6 md:top-10 md:left-10 z-[100]">
         {logoImage ? (
           <div 
-            className="relative w-48 h-16 md:w-64 md:h-20 pointer-events-auto cursor-pointer group animate-in fade-in slide-in-from-top-4 duration-1000"
+            className="relative w-40 h-12 md:w-56 md:h-16 cursor-pointer group animate-in fade-in slide-in-from-top-4 duration-1000"
             onClick={goHome}
           >
             <Image 
               src={logoImage.imageUrl}
               alt="LocalLens Logo"
               fill
-              className="object-contain transition-transform duration-300 group-hover:scale-105 drop-shadow-2xl"
+              className="object-contain drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)] transition-transform duration-300 group-hover:scale-105"
               priority
               data-ai-hint={logoImage.imageHint}
             />
           </div>
         ) : (
           <h1 
-            className="text-white font-headline text-3xl font-bold tracking-tight pointer-events-auto cursor-pointer drop-shadow-lg"
+            className="text-white font-headline text-2xl md:text-3xl font-bold tracking-tight cursor-pointer drop-shadow-xl"
             onClick={goHome}
           >
             LocalLens
@@ -232,14 +235,15 @@ export default function LocalLensApp() {
         isExploring ? "translate-x-0" : "translate-x-full"
       )}>
         <header className="relative z-30 flex items-center justify-between px-6 py-6 md:px-12">
+          {/* Back button offset to avoid logo collision on mobile */}
           <button 
             onClick={goHome}
-            className="flex items-center gap-2 text-primary/60 hover:text-primary font-bold text-[10px] uppercase tracking-[0.2em] transition-all"
+            className="flex items-center gap-2 text-primary/60 hover:text-primary font-bold text-[10px] uppercase tracking-[0.2em] transition-all ml-0 md:ml-48"
           >
             <ChevronLeft className="w-4 h-4" /> Back Home
           </button>
 
-          <div className="bg-white/90 backdrop-blur-xl p-1 rounded-full flex gap-1 shadow-md border border-border/40 w-full max-w-[200px] md:max-w-sm">
+          <div className="bg-white/90 backdrop-blur-xl p-1 rounded-full flex gap-1 shadow-md border border-border/40 w-full max-w-[180px] md:max-w-sm">
             <button
               onClick={() => setMode('tourist')}
               className={cn(
