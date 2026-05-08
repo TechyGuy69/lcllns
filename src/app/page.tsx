@@ -3,7 +3,7 @@
 
 import React, { useState, useMemo, useEffect } from 'react';
 import Image from 'next/image';
-import { Search, ArrowRight, Compass, Sparkles, ChevronLeft } from 'lucide-react';
+import { ArrowRight, Compass, Sparkles, ChevronLeft } from 'lucide-react';
 import { InteractiveMap } from '@/components/local-lens/InteractiveMap';
 import { ResultsPanel } from '@/components/local-lens/ResultsPanel';
 import { PlaceDetailView } from '@/components/local-lens/PlaceDetailView';
@@ -14,22 +14,10 @@ import { useFirestore, useCollection } from '@/firebase';
 import { collection, query, limit, getDocs, addDoc } from 'firebase/firestore';
 
 const HERO_IMAGES = [
-  {
-    url: "https://picsum.photos/seed/taj-sunrise/1920/1080",
-    hint: "taj mahal sunrise"
-  },
-  {
-    url: "https://picsum.photos/seed/varanasi-ghats/1920/1080",
-    hint: "varanasi india"
-  },
-  {
-    url: "https://picsum.photos/seed/himalaya-peaks/1920/1080",
-    hint: "himalayas mountains"
-  },
-  {
-    url: "https://picsum.photos/seed/kerala-backwaters/1920/1080",
-    hint: "kerala boat"
-  }
+  "https://images.unsplash.com/photo-1524492412937-b28074a5d7da",
+  "https://images.unsplash.com/photo-1506461883276-594a12b11cf3",
+  "https://images.unsplash.com/photo-1526715469105-2365c34c256a",
+  "https://images.unsplash.com/photo-1477587458883-47145ed94245"
 ];
 
 const SHORTCUTS = [
@@ -43,7 +31,7 @@ const SHORTCUTS = [
 export default function LocalLensApp() {
   const db = useFirestore();
   const placesCollection = useMemo(() => (db ? collection(db, 'places') : null), [db]);
-  const { data: firestorePlaces, loading: firestoreLoading } = useCollection(placesCollection);
+  const { data: firestorePlaces } = useCollection(placesCollection);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [mode, setMode] = useState<'tourist' | 'hidden'>('tourist');
@@ -73,7 +61,7 @@ export default function LocalLensApp() {
   useEffect(() => {
     const interval = setInterval(() => {
       setHeroIndex((prev) => (prev + 1) % HERO_IMAGES.length);
-    }, 6000);
+    }, 8000);
     return () => clearInterval(interval);
   }, []);
 
@@ -126,83 +114,81 @@ export default function LocalLensApp() {
       
       {/* Home Page Section */}
       <section className={cn(
-        "absolute inset-0 z-10 transition-transform duration-1000 ease-in-out flex items-center justify-center text-center px-6 min-h-screen",
+        "absolute inset-0 z-10 transition-transform duration-1000 ease-in-out min-h-screen",
         isExploring ? "-translate-y-full" : "translate-y-0"
       )}>
         
-        {/* Background */}
+        {/* Background Layer */}
         <div className="absolute inset-0">
-          {HERO_IMAGES.map((img, idx) => (
+          {HERO_IMAGES.map((url, idx) => (
             <div 
-              key={img.url}
+              key={url}
               className={cn(
                 "absolute inset-0 transition-opacity duration-[2000ms] ease-in-out",
                 heroIndex === idx ? "opacity-100 scale-105" : "opacity-0 scale-100"
               )}
             >
               <Image 
-                src={img.url}
+                src={url}
                 alt="India"
                 fill
                 priority={idx === 0}
                 className="object-cover"
-                data-ai-hint={img.hint}
               />
             </div>
           ))}
-          <div className="absolute inset-0 bg-black/40" />
+          <div className="absolute inset-0 bg-black/50" />
         </div>
 
-        {/* Branding Logo - Positioned Absolute Relative to Section */}
-        <h1 className="absolute top-8 left-8 text-white text-xl md:text-2xl font-bold tracking-tight z-20 opacity-90">
+        {/* Logo - Fixed Top Left of Screen */}
+        <div className="absolute top-8 left-8 text-white text-lg md:text-xl font-semibold z-20">
           LocalLens
-        </h1>
+        </div>
 
-        {/* Content Container */}
-        <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center gap-6 md:gap-8">
-          
-          {/* Heading */}
-          <h1 className="text-white text-5xl md:text-8xl font-headline leading-tight drop-shadow-2xl">
-            See India <br />
-            <span className="italic font-normal opacity-90">differently.</span>
-          </h1>
+        {/* Main Content Layer */}
+        <div className="relative z-10 min-h-screen w-full flex items-center justify-center px-6">
+          <div className="max-w-3xl w-full text-center flex flex-col items-center space-y-8 md:space-y-10">
+            
+            {/* Heading */}
+            <h1 className="text-white text-4xl md:text-7xl font-headline leading-tight drop-shadow-2xl">
+              See India <br />
+              <span className="italic font-normal">differently.</span>
+            </h1>
 
-          {/* Subtext */}
-          <p className="text-white/80 text-base md:text-xl max-w-2xl mx-auto leading-relaxed text-shadow-soft">
-            Skip the crowds. Discover the quiet sanctuaries and local haunts where India truly lives.
-          </p>
+            {/* Subtext */}
+            <p className="text-white/80 text-sm md:text-lg max-w-lg leading-relaxed text-shadow-soft">
+              Skip the crowds. Discover the quiet sanctuaries and local haunts where India truly lives.
+            </p>
 
-          {/* Search Bar */}
-          <div className="flex items-center w-full max-w-2xl bg-white/90 backdrop-blur-xl border border-white/20 rounded-full p-2 shadow-2xl transition-all">
-            <div className="pl-4 text-gray-400">
-              <Search className="w-5 h-5" />
-            </div>
-            <input 
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && onExplore()}
-              placeholder="Find a hidden café or quiet trail..."
-              className="flex-1 bg-transparent border-0 outline-none px-4 text-base md:text-lg text-gray-800 placeholder:text-gray-400 font-medium h-12"
-            />
-            <button 
-              onClick={onExplore}
-              className="bg-[#2d5a44] text-white px-8 h-12 rounded-full hover:bg-[#234735] transition-all font-bold text-xs uppercase tracking-widest flex items-center gap-2 shadow-lg"
-            >
-              Explore <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
-
-          {/* Shortcuts / Pills */}
-          <div className="flex flex-wrap justify-center gap-3">
-            {SHORTCUTS.map((shortcut) => (
+            {/* Search Bar */}
+            <div className="w-full flex items-center bg-white/95 backdrop-blur-md rounded-full px-2 py-2 shadow-2xl max-w-xl transition-all border border-white/20">
+              <input 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && onExplore()}
+                placeholder="Find a hidden café or quiet trail..."
+                className="flex-1 bg-transparent outline-none text-gray-700 px-4 text-sm md:text-base h-10 md:h-12"
+              />
               <button 
-                key={shortcut.label}
-                onClick={() => handleShortcutClick(shortcut.query)}
-                className="px-6 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-white/70 text-[10px] md:text-xs font-bold uppercase tracking-widest hover:bg-white/20 hover:text-white transition-all shadow-md"
+                onClick={onExplore}
+                className="bg-green-700 text-white px-6 md:px-8 h-10 md:h-12 rounded-full hover:bg-green-800 transition-all font-bold text-xs uppercase tracking-widest flex items-center gap-2"
               >
-                {shortcut.label}
+                Explore <ArrowRight className="w-4 h-4" />
               </button>
-            ))}
+            </div>
+
+            {/* Pills */}
+            <div className="flex flex-wrap justify-center gap-2 mt-4">
+              {SHORTCUTS.map((shortcut) => (
+                <button 
+                  key={shortcut.label}
+                  onClick={() => handleShortcutClick(shortcut.query)}
+                  className="px-4 py-1.5 text-[10px] md:text-xs font-bold uppercase tracking-widest bg-white/10 text-white rounded-full backdrop-blur-sm border border-white/10 hover:bg-white/20 transition-all"
+                >
+                  {shortcut.label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </section>
